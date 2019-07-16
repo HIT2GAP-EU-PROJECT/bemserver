@@ -1,0 +1,30 @@
+{
+    "strict": true,
+    "debug": false,
+    "sp": {
+        "entityId": "https://<sp_domain>/saml/metadata/",
+        "assertionConsumerService": {
+            "url": "https://<sp_domain>/saml/acs",
+            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+        },
+        "singleLogoutService": {
+            "url": "https://<sp_domain>/saml/sls",
+            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+        },
+        "NameIDFormat": "urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified",
+        "x509cert": "",
+        "privateKey": ""
+    },
+    "idp": {
+        "entityId": "https://<idp_domain>/login/saml2/idp/metadata.php",
+        "singleSignOnService": {
+            "url": "https://<idp_domain>/login/saml2/idp/SSOService.php",
+            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+        },
+        "singleLogoutService": {
+            "url": "https://<idp_domain>/login/saml2/idp/SingleLogoutService.php",
+            "binding": "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect"
+        },
+        "x509cert": "<idp_cert>"
+    }
+}

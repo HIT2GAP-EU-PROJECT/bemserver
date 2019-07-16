@@ -1,0 +1,1 @@
+"""Api geographical information schemas"""

@@ -1,0 +1,38 @@
+{
+    "security": {
+        "nameIdEncrypted": false,
+        "authnRequestsSigned": false,
+        "logoutRequestSigned": false,
+        "logoutResponseSigned": true,
+        "signMetadata": false,
+        "wantMessagesSigned": false,
+        "wantAssertionsSigned": true,
+        "wantAssertionsEncrypted": true,
+        "wantNameId": true,
+        "wantNameIdEncrypted": false,
+        "wantAttributeStatement": true,
+        "requestedAuthnContext": true,
+        "requestedAuthnContextComparison": "exact",
+        "metadataValidUntil": "",
+        "metadataCacheDuration": "",
+        "signatureAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1",
+        "digestAlgorithm": "http://www.w3.org/2000/09/xmldsig#sha1"
+    },
+    "contactPerson": {
+        "technical": {
+            "givenName": "technical_name",
+            "emailAddress": "technical@example.com"
+        },
+        "support": {
+            "givenName": "support_name",
+            "emailAddress": "support@example.com"
+        }
+    },
+    "organization": {
+        "en-US": {
+            "name": "hit2gap",
+            "displayname": "Hit2Gap Platform Core API",
+            "url": "<sp_domain>"
+        }
+    }
+}
