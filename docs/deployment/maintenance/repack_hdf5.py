@@ -4,7 +4,7 @@ from pathlib import Path
 import subprocess
 import shutil
 
-BASE_PATH = Path('/srv/prj/hit2gap/h2g-platform-core/')
+BASE_PATH = Path('/srv/prj/hit2gap/bemserver/')
 
 PTREPACK = BASE_PATH / 'venv-hit2gap-platform-core/bin/ptrepack'
 

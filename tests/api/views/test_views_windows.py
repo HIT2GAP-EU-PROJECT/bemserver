@@ -5,8 +5,8 @@ from tests import TestCoreApi, TestCoreApiAuthCert
 from tests.utils import uuid_gen, get_dictionary_no_none
 from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
-from h2g_platform_core.api.extensions.database import db_accessor as dba
-from h2g_platform_core.models import Facade, Window
+from bemserver.api.extensions.database import db_accessor as dba
+from bemserver.models import Facade, Window
 
 
 @pytest.mark.usefixtures('init_app')

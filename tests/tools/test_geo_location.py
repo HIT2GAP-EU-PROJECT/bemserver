@@ -5,7 +5,7 @@ from math import isclose
 import pytest
 from tests import TestCoreTools
 
-from h2g_platform_core.tools.geo_location import (
+from bemserver.tools.geo_location import (
     convert_dms_to_dd, deduce_hemisphere_from_dms, deduce_hemisphere_from_dd)
 
 

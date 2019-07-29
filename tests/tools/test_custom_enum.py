@@ -4,7 +4,7 @@ from collections import OrderedDict
 
 from tests import TestCoreTools
 
-from h2g_platform_core.tools.custom_enum import HierarchyEnum
+from bemserver.tools.custom_enum import HierarchyEnum
 
 
 class TestToolsHierarchyEnum(TestCoreTools):

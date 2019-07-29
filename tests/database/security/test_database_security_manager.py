@@ -3,11 +3,11 @@
 import pytest
 from tests import TestCoreDatabase
 
-from h2g_platform_core.database.security.security_manager import (
+from bemserver.database.security.security_manager import (
     SecurityManager, UserAccount)
-from h2g_platform_core.database.security.exceptions import (
+from bemserver.database.security.exceptions import (
     UserAccountAlreadyExistError)
-from h2g_platform_core.database.exceptions import ItemNotFoundError
+from bemserver.database.exceptions import ItemNotFoundError
 
 
 class TestDatabaseSecurityManager(TestCoreDatabase):
@@ -99,11 +99,11 @@ class TestDatabaseSecurityManager(TestCoreDatabase):
         assert security_dir in str(security_mgr.uacc_filepath)
         assert security_dir in str(security_mgr.occ_uacc_filepath)
 
-        uacc = security_mgr.get('h2g-app-input-owm')
+        uacc = security_mgr.get('bemsvrapp-input-owm')
         assert isinstance(uacc, UserAccount)
         # shortcut to UserAccount has_roles
         assert security_mgr.has_roles(
-            'h2g-app-input-owm', ['module_data_provider'])
+            'bemsvrapp-input-owm', ['module_data_provider'])
 
         # create an account
         new_uacc = security_mgr.add_account('leguman', ['chuck'])

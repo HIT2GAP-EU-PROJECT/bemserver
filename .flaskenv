@@ -1,1 +1,1 @@
-FLASK_APP=h2g_platform_core.api
+FLASK_APP=bemserver.api

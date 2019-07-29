@@ -5,9 +5,9 @@ from tests import TestCoreDatabaseOntology
 from marshmallow import ValidationError
 
 
-from h2g_platform_core.database import WindowDB, SiteDB
-from h2g_platform_core.database.exceptions import ItemNotFoundError
-from h2g_platform_core.models import Window, SurfaceInfo
+from bemserver.database import WindowDB, SiteDB
+from bemserver.database.exceptions import ItemNotFoundError
+from bemserver.models import Window, SurfaceInfo
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')

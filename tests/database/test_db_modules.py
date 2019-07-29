@@ -5,9 +5,9 @@ from uuid import uuid4 as gen_uuid
 import pytest
 from tests import TestCoreDatabaseOntology
 
-from h2g_platform_core.database import ServiceDB, ModelDB, OutputDB
-from h2g_platform_core.database.exceptions import ItemNotFoundError
-from h2g_platform_core.models import (
+from bemserver.database import ServiceDB, ModelDB, OutputDB
+from bemserver.database.exceptions import ItemNotFoundError
+from bemserver.models import (
     Service, Model, OutputEvent, OutputTimeSeries, ValuesDescription,
     Parameter)
 
@@ -302,12 +302,13 @@ class TestOutputDB(TestCoreDatabaseOntology):
         result = output_db.get_all()
         outputs = list(result)
         assert len(outputs) == 2
-        assert outputs[0].module_id == service_id
-        assert outputs[0].model_id == model_id
-        assert outputs[0].localization == output.localization
-        assert outputs[0].values_desc.unit == output.values_desc.unit
-        assert outputs[0].values_desc.kind == output.values_desc.kind
-        assert outputs[0].values_desc.sampling == output.values_desc.sampling
+        output_event = outputs[0] if isinstance(outputs[0], OutputTimeSeries) else outputs[1]
+        assert output_event.module_id == service_id
+        assert output_event.model_id == model_id
+        assert output_event.localization == output.localization
+        assert output_event.values_desc.unit == output.values_desc.unit
+        assert output_event.values_desc.kind == output.values_desc.kind
+        assert output_event.values_desc.sampling == output.values_desc.sampling
 
         #test relation between service and output
         model = ModelDB().get_by_id(model_id)

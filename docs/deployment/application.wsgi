@@ -35,5 +35,5 @@ os.environ['FLASK_SETTINGS_FILE'] = os.path.join(
 )
 
 # Unleash the beast
-from h2g_platform_core.api import create_app  # noqa
+from bemserver.api import create_app  # noqa
 application = create_app()

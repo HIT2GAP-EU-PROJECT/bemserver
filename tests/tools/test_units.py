@@ -5,7 +5,7 @@ from math import isclose
 
 from tests import TestCoreTools
 
-from h2g_platform_core.tools import units
+from bemserver.tools import units
 
 
 class TestToolsUnits(TestCoreTools):

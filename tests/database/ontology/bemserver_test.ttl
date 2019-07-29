@@ -1,0 +1,43 @@
+@prefix : <#> .
+@prefix fuseki: <http://jena.apache.org/fuseki#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix tdb: <http://jena.hpl.hp.com/2008/tdb#> .
+@prefix ja: <http://jena.hpl.hp.com/2005/11/Assembler#> .
+
+
+[]  rdf:type  fuseki:Server ;
+    fuseki:services (
+        <#service1>
+    )
+.
+
+## ---------------------------------------------------------------
+## Service with only SPARQL query on an inference model.
+## Inference model bbase data in TDB.
+<#service1>   rdf:type                fuseki:Service ;
+              fuseki:name             "bemserver_test" ;
+              fuseki:serviceQuery     "query" ,"sparql" ; # SPARQL query service
+              fuseki:serviceUpdate    "update" ;
+              fuseki:serviceUpload    "upload" ; # Non-SPARQL upload service
+              fuseki:serviceReadWriteGraphStore "data" ; # SPARQL Graph store protocol (read and write)
+ # A separate read-only graph store endpoint:
+            fuseki:serviceReadGraphStore "get" ; # SPARQL Graph store protocol (read only)y
+            fuseki:dataset               <#test_dataset> ;
+ .
+
+#<#test_dataset>  rdf:type        ja:DatasetTxnMem ;
+<#test_dataset>  rdf:type        ja:RDFDataset ;
+            ja:defaultGraph <#model_inf> ;
+ .
+
+<#model_inf>  a             ja:InfModel ;
+              ja:baseModel  [
+                  a       ja:MemoryModel;
+              ];
+              ja:reasoner [
+                  ja:reasonerURL  <http://jena.hpl.hp.com/2003/GenericRuleReasoner> ;
+                  ja:rulesFrom  <file:/fuseki/configuration/bemont.rules> ;
+                  # ja:rulesFrom    <https://github.com/HIT2GAP-EU-PROJECT/BEMOnt/raw/a10b4290eafafce32d74b90e41802d124583ac67/owlModels/bemont.rules>
+              ]
+.

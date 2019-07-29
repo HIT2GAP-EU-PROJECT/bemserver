@@ -3,11 +3,11 @@
 import uuid
 import pytest
 
-from h2g_platform_core.database import (
+from bemserver.database import (
     SiteDB, BuildingDB, FloorDB, SpaceDB, ZoneDB, FacadeDB, SlabDB, WindowDB,
     SensorDB, MeasureDB, ServiceDB, ModelDB)
 
-from h2g_platform_core.models import (
+from bemserver.models import (
     Site, GeographicInfo, Building, Floor, Space, SpaceOccupancy, Zone,
     SurfaceInfo, Facade, Slab, Window, Localization, Sensor, Measure,
     Service, Model, Parameter)

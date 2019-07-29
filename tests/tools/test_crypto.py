@@ -2,7 +2,7 @@
 
 from tests import TestCoreTools
 
-from h2g_platform_core.tools.crypto import encrypt, check_encryption
+from bemserver.tools.crypto import encrypt, check_encryption
 
 
 class TestToolsCrypto(TestCoreTools):

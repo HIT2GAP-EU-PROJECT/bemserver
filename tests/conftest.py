@@ -6,20 +6,20 @@ import pytest
 from fuseki_manager import FusekiAdminClient#, FusekiDataClient
 from fuseki_manager.exceptions import DatasetNotFoundError
 
-from h2g_platform_core.database.ontology.manager import (
+from bemserver.database.ontology.manager import (
     ontology_manager_factory)
 
 
 def ontology_db_config():
     return {
-        'dataset': 'hit2gap_test',
+        'dataset': 'bemserver_test',
         'host': 'localhost',
         'port': 3030,
         'ssl': False,
         'user': 'admin',
         'pass': 'pickasupersecurepassword',
         'metadata': {
-            'path': 'h2g_platform_core/database/ontology/metadata/owlModels',
+            'path': '../BEMOnt/models/RDF', # 'bemserver/database/ontology/metadata/owlModels',
             'files': [
                 'BuildingInfrastructure.rdf',
                 'Property.rdf',
@@ -29,7 +29,7 @@ def ontology_db_config():
         },
         'config_file': {
             'path': 'tests/database/ontology',
-            'file': 'hit2gap_test.ttl',
+            'file': 'bemserver_test.ttl',
         },
     }
 

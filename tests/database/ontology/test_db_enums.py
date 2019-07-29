@@ -4,7 +4,7 @@ import pytest
 
 from tests import TestCoreDatabaseOntology
 
-from h2g_platform_core.database.db_enums import DBEnumHandler
+from bemserver.database.db_enums import DBEnumHandler
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')

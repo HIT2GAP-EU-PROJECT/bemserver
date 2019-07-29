@@ -153,8 +153,8 @@ class TestApiViewsEventsPermissions(TestCoreApiAuthCert):
     def test_views_events_permissions(self, init_db_data):
         """Test protected api endpoint"""
 
-        # sign in as 'h2g-app-cleaning-timeseries' to post events
-        cert_data = generate_certificate_data('h2g-app-cleaning-timeseries')
+        # sign in as 'bemsvrapp-cleaning-timeseries' to post events
+        cert_data = generate_certificate_data('bemsvrapp-cleaning-timeseries')
         auth_header = self._auth_cert_login(cert_data)
 
         db_data = init_db_data

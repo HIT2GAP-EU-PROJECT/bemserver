@@ -4,7 +4,7 @@ import pytest
 from tests import TestCoreDatabase
 from tests.utils import uuid_gen
 
-from h2g_platform_core.database.filestorage.filestore import (
+from bemserver.database.filestorage.filestore import (
     FileStorageMgr, FileStorageEntry)
 
 

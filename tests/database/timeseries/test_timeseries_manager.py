@@ -9,9 +9,9 @@ import pandas as pd
 import pytest
 from tests import TestCoreDatabase
 
-from h2g_platform_core.models import Timeseries
+from bemserver.models import Timeseries
 
-from h2g_platform_core.database.timeseries.hdfstore import (
+from bemserver.database.timeseries.hdfstore import (
     HDFStoreTimeseriesMgr, HDF_LOCK)
 
 

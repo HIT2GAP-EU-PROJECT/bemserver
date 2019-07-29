@@ -4,7 +4,7 @@ from pathlib import Path
 
 import pytest
 
-from h2g_platform_core.api import create_app
+from bemserver.api import create_app
 
 from tests import TestCoreApi
 from tests.api.views.conftest import TestingConfig

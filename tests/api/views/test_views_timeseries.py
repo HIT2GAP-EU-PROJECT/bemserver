@@ -16,10 +16,10 @@ import pytest
 from tests import TestCore, TestCoreApi
 from tests.utils import celsius_to_fahrenheit
 
-from h2g_platform_core.models import Timeseries
-from h2g_platform_core.api.views.timeseries.tsio import (
+from bemserver.models import Timeseries
+from bemserver.api.views.timeseries.tsio import (
     get_timeseries_manager, tsload, tsdump)
-from h2g_platform_core.api.views.timeseries.exceptions import (
+from bemserver.api.views.timeseries.exceptions import (
     TimeseriesConfigError)
 
 

@@ -6,8 +6,8 @@ from unittest import mock
 import pytest
 from tests import TestCoreDatabaseOntology
 
-from h2g_platform_core.database.ontology.exceptions import SPARQLError
-from h2g_platform_core.database.ontology.manager import (
+from bemserver.database.ontology.exceptions import SPARQLError
+from bemserver.database.ontology.manager import (
     PREFIX, SPARQLOP, ontology_manager_factory)
 
 
@@ -15,7 +15,7 @@ class TestOntologyManagerPrefixEnum():
     """Unit test for PREFIX"""
 
     def test_ontology_manager_prefix_enum_alias_uri(self):
-        assert PREFIX.ROOT.alias_uri('lol') == 'h2g:lol'
+        assert PREFIX.ROOT.alias_uri('lol') == 'bem:lol'
 
     def test_ontology_manager_prefix_enum_get_name(self):
         assert PREFIX.get_name(
@@ -56,7 +56,7 @@ class TestOntologyManager(TestCoreDatabaseOntology):
 
     def test_ontology_manager_exceptions(self):
 
-        logger = logging.getLogger('h2g_platform_core')
+        logger = logging.getLogger('bemserver')
 
         onto_mgr = ontology_manager_factory.get_ontology_manager()
 

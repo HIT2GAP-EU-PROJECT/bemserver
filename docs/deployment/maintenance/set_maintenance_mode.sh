@@ -1,6 +1,6 @@
 #!/bin/sh
 
-BASE_PATH=/srv/prj/hit2gap/h2g-platform-core/
+BASE_PATH=/srv/prj/hit2gap/bemserver/
 SETTINGS_FILE=${BASE_PATH}application/settings.cfg
 
 # Put application in maintenance mode

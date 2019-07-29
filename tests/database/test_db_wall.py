@@ -4,9 +4,9 @@ import pytest
 from tests import TestCoreDatabaseOntology
 from marshmallow import ValidationError
 
-from h2g_platform_core.database import FacadeDB, SiteDB
-from h2g_platform_core.database.exceptions import ItemNotFoundError
-from h2g_platform_core.models import Facade, SurfaceInfo
+from bemserver.database import FacadeDB, SiteDB
+from bemserver.database.exceptions import ItemNotFoundError
+from bemserver.models import Facade, SurfaceInfo
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')

@@ -50,7 +50,7 @@ class TestApiViewsAuthCertificate(TestCoreApi):
         response = self._auth_cert_login(certificate_data)
         assert response.status_code == 200
         assert response.json == {
-            'uid': 'h2g-app-cleaning-timeseries', 'type': 'machine',
+            'uid': 'bemsvrapp-cleaning-timeseries', 'type': 'machine',
             'roles': ['module_data_processor']}
 
         # verify authentication cookie

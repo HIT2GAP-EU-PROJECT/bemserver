@@ -4,10 +4,10 @@
 
 import sys
 import getopt
-from h2g_platform_core.basicservices.bim.ifc_import import IfcImport
-from h2g_platform_core.database import DBAccessor, init_handlers
+from bemserver.basicservices.bim.ifc_import import IfcImport
+from bemserver.database import DBAccessor, init_handlers
 
-ONTO_URL = 'http://h2g-platform-core.nobatek.com:3030/hit2gap/'
+ONTO_URL = 'http://bemserver.nobatek.com:3030/hit2gap/'
 
 
 def main(argv):

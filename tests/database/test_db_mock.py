@@ -5,7 +5,7 @@ import pytest
 from tests import TestCoreDatabaseMock
 from tests.utils import uuid_gen
 
-from h2g_platform_core.database.exceptions import (
+from bemserver.database.exceptions import (
     ItemNotFoundError, ItemSaveError, ItemDeleteError)
 
 

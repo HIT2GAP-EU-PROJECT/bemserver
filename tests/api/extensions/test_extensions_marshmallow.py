@@ -6,7 +6,7 @@ import pytest
 
 import marshmallow as ma
 
-from h2g_platform_core.api.extensions.marshmallow.fields import StringList
+from bemserver.api.extensions.marshmallow.fields import StringList
 
 
 class StrList:

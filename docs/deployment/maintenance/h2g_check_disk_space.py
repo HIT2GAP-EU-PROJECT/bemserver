@@ -10,8 +10,8 @@ G_BYTES = 1024 * M_BYTES
 THRESHOLD_REPACK = 10 * G_BYTES
 THRESHOLD_MAINTENANCE = 2 * G_BYTES
 
-REPACK_SCRIPT_PATH = '/srv/prj/hit2gap/h2g-platform-core/repack.sh'
-MAINTENANCE_SCRIPT_PATH = '/srv/prj/hit2gap/h2g-platform-core/set_maintenance_mode.sh'
+REPACK_SCRIPT_PATH = '/srv/prj/hit2gap/bemserver/repack.sh'
+MAINTENANCE_SCRIPT_PATH = '/srv/prj/hit2gap/bemserver/set_maintenance_mode.sh'
 
 
 # If free space too low, repack.

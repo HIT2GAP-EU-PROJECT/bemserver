@@ -4,8 +4,8 @@ import pytest
 
 from tests import TestCoreModel
 
-from h2g_platform_core.models.tree import Node
-from h2g_platform_core.models.exceptions import TreeNodeAlreadyHasParentError
+from bemserver.models.tree import Node
+from bemserver.models.exceptions import TreeNodeAlreadyHasParentError
 
 
 class TestModelTree(TestCoreModel):

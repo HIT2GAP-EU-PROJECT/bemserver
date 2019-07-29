@@ -16,7 +16,7 @@ with open(path.join(_SETUP_PATH, 'README.md'), encoding='utf-8') as f:
 
 
 setup(
-    name='h2g-platform-core',
+    name='bemserver',
     version='0.0.1',
     description='Hit2gap platform Core',
     long_description=_LONG_DESCRIPTION,

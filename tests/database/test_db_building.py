@@ -5,10 +5,10 @@ from tests import TestCoreDatabaseOntology
 
 from marshmallow import ValidationError
 
-from h2g_platform_core.database import BuildingDB
-from h2g_platform_core.database.utils import generate_id
-from h2g_platform_core.database.exceptions import ItemNotFoundError
-from h2g_platform_core.models import Building
+from bemserver.database import BuildingDB
+from bemserver.database.utils import generate_id
+from bemserver.database.exceptions import ItemNotFoundError
+from bemserver.models import Building
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')

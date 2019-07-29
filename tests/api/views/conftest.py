@@ -13,29 +13,29 @@ from tests.database.filestorage.conftest import (
     ifc_file_data_stream, ifc_zip_file_data, ifc_multi_zip_file_data)
 from tests.database.security.conftest import gen_user_accounts
 
-from h2g_platform_core.api.default_api_settings import TestingConfig
-from h2g_platform_core.api import create_app
-from h2g_platform_core.api.extensions.database import db_accessor
-from h2g_platform_core.models.geography import GeographicInfo
-from h2g_platform_core.models import (
+from bemserver.api.default_api_settings import TestingConfig
+from bemserver.api import create_app
+from bemserver.api.extensions.database import db_accessor
+from bemserver.models.geography import GeographicInfo
+from bemserver.models import (
     Site, Building, Floor, Space, Zone, Facade, Slab, Window)
-from h2g_platform_core.models.space import SpaceOccupancy
-from h2g_platform_core.models.spatial import (
+from bemserver.models.space import SpaceOccupancy
+from bemserver.models.spatial import (
     SpatialInfo, SurfaceInfo)  # , OrientedSpatialInfo)
-from h2g_platform_core.models import (
+from bemserver.models import (
     IFCFile, Occupant, AgeCategory,
     OccupantWorkspace, Comfort, ComfortPerception,
     Sensor, Measure, Localization)
-from h2g_platform_core.models.modules import (
+from bemserver.models.modules import (
     Service, Model, Parameter,
     OutputEvent, OutputTimeSeries, ValuesDescription)
 
-from h2g_platform_core.tools.account_generator import (
+from bemserver.tools.account_generator import (
     generate_login_id, generate_pwd)
 
-from h2g_platform_core.database.filestorage import FileStorageMgr
-from h2g_platform_core.database.relational import db
-from h2g_platform_core.database.security.security_manager import (
+from bemserver.database.filestorage import FileStorageMgr
+from bemserver.database.relational import db
+from bemserver.database.security.security_manager import (
     SecurityManager, UserAccount)
 
 
@@ -440,9 +440,9 @@ def _create_occupant_users(request):
 def _create_users(request, site_ids):
     site_ids = [str(site_id) for site_id in site_ids]
     module_users_data = [
-        {'uid': 'h2g-app-input-owm', 'pwd': None, 'user_type': 'machine',
+        {'uid': 'bemsvrapp-input-owm', 'pwd': None, 'user_type': 'machine',
          'roles': ['module_data_provider'], 'sites': ['*']},
-        {'uid': 'h2g-app-cleaning-timeseries', 'pwd': None,
+        {'uid': 'bemsvrapp-cleaning-timeseries', 'pwd': None,
          'user_type': 'machine', 'roles': ['module_data_processor'],
          'sites': ['*']},
         {'uid': 'multi-site', 'pwd': None, 'user_type': 'user',
@@ -569,12 +569,12 @@ def ifc_multi_zip_file_obj(request):
     return zip_file_name, build_file_obj(zip_file_name, zip_file_data)
 
 
-def generate_certificate_data(cn_data='h2g-app-cleaning-timeseries'):
+def generate_certificate_data(cn_data='bemsvrapp-cleaning-timeseries'):
     """Generate a sample of valid certificate data."""
     return 'CN={},AND=other_stuff'.format(cn_data)
 
 
-@pytest.fixture(params=['h2g-app-cleaning-timeseries'])
+@pytest.fixture(params=['bemsvrapp-cleaning-timeseries'])
 def certificate_data(request):
     """Return a sample of valid data for certificate authentication."""
     return generate_certificate_data(request.param)

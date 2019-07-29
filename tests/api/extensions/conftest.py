@@ -10,7 +10,7 @@ from flask.views import MethodView
 
 from flask_rest_api import Api, Blueprint, Page
 
-from h2g_platform_core.api.extensions.rest_api.hateoas import ma_hateoas
+from bemserver.api.extensions.rest_api.hateoas import ma_hateoas
 
 
 class AppConfig():

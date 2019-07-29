@@ -2,7 +2,7 @@
 
 from tests import TestCoreModel
 
-from h2g_platform_core.models import User
+from bemserver.models import User
 
 
 class TestModelUser(TestCoreModel):

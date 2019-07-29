@@ -8,10 +8,10 @@ Installation
 .. code-block:: shell
 
     # Create virtual environment
-    $ virtualenv -p /usr/bin/python3 $VIRTUALENVS_DIR/h2g-platform-core
+    $ virtualenv -p /usr/bin/python3 $VIRTUALENVS_DIR/bemserver
 
     # Activate virtualenv
-    $ source $VIRTUALENVS_DIR/h2g-platform-core/bin/activate
+    $ source $VIRTUALENVS_DIR/bemserver/bin/activate
 
     # Install python header files and development stuff
     # (libxmlsec1-dev is required by python3-saml)
@@ -35,7 +35,7 @@ Installation
 
     Place the extracted archive in the site-packages folder of the virtualenv:
 
-        $VIRTUALENVS_DIR/h2g-platform-core/lib/python3.5/site-packages/
+        $VIRTUALENVS_DIR/bemserver/lib/python3.5/site-packages/
 
 
 ### Install Jena / Fuseki
@@ -70,7 +70,7 @@ Installation
 
 .. code-block:: shell
 
-    $ git clone https://github.com/HIT2GAP-EU-PROJECT/HIT2GAPOnt
+    $ git clone https://github.com/HIT2GAP-EU-PROJECT/BEMOnt
 
     From the web interface, select the new "hit2gap" dataset and upload files.
     Load following files from ontology repo:
@@ -101,7 +101,7 @@ Development
     $ py.test -m 'not slow'
 
     # Run tests with coverage
-    $ py.test --cov=h2g_platform_core --cov-report term-missing
+    $ py.test --cov=bemserver --cov-report term-missing
 
 
 Running the application
@@ -115,13 +115,13 @@ Running the application
     FLASK_ENV=development  # development or production
     FLASK_SETTINGS_FILE=  # path to optional settings path
 
-Since h2g-platform-core uses python-dotenv, you may store them in an .env file at the root of the application.
+Since bemserver uses python-dotenv, you may store them in an .env file at the root of the application.
 
 
 ### Launch core api server
 
 
-From the activated h2g-core virtual environment, once the environment variables are set.
+From the activated BEMServer virtual environment, once the environment variables are set.
 
 .. code-block:: shell
 
@@ -160,8 +160,8 @@ The db file should be created automatically. If not, try to to create an empty D
 
 .. code-block:: shell
 
-    $ touch h2g.db
-    $ chown www-data:www-data h2g.db
+    $ touch event.db
+    $ chown www-data:www-data event.db
     $ chmod 600 sqlite.db
 
 You may want to shut down the application during the process.

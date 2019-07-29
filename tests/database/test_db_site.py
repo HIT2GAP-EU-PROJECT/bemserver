@@ -3,9 +3,9 @@
 import pytest
 from tests import TestCoreDatabaseOntology
 
-from h2g_platform_core.database import SiteDB
-from h2g_platform_core.database.exceptions import ItemNotFoundError
-from h2g_platform_core.models import Site, GeographicInfo
+from bemserver.database import SiteDB
+from bemserver.database.exceptions import ItemNotFoundError
+from bemserver.models import Site, GeographicInfo
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')

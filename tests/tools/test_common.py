@@ -4,7 +4,7 @@ import datetime as dt
 
 from tests import TestCoreTools
 
-from h2g_platform_core.tools.common import check_list_instances
+from bemserver.tools.common import check_list_instances
 
 
 class TestToolsCommon(TestCoreTools):

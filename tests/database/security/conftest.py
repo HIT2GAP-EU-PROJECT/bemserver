@@ -4,16 +4,16 @@ import os
 
 import pytest
 
-from h2g_platform_core.database.security.security_manager import (
+from bemserver.database.security.security_manager import (
     SecurityManager, UserAccount)
 
 
 @pytest.fixture
 def gen_user_accounts(tmpdir):
     module_users_data = [
-        {'uid': 'h2g-app-input-owm', 'pwd': None, 'user_type': 'machine',
+        {'uid': 'bemsvrapp-input-owm', 'pwd': None, 'user_type': 'machine',
          'roles': ['module_data_provider'], 'sites': ['*']},
-        {'uid': 'h2g-app-cleaning-timeseries', 'pwd': None,
+        {'uid': 'bemsvrapp-cleaning-timeseries', 'pwd': None,
          'user_type': 'machine', 'roles': ['module_data_processor'],
          'sites': ['*']},
         {'uid': 'multi-site', 'pwd': None, 'user_type': 'user',

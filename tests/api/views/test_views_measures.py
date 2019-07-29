@@ -4,8 +4,8 @@ import pytest
 from tests import TestCoreApi, TestCoreApiAuthCert
 from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
-from h2g_platform_core.api.extensions.database import db_accessor as dba
-from h2g_platform_core.models import Measure
+from bemserver.api.extensions.database import db_accessor as dba
+from bemserver.models import Measure
 
 
 @pytest.mark.usefixtures('init_app')

@@ -3,8 +3,8 @@
 import pytest
 from tests import TestCoreBasicServices
 
-from h2g_platform_core.basicservices.bim.ifc_import import IfcImport
-from h2g_platform_core.models import (
+from bemserver.basicservices.bim.ifc_import import IfcImport
+from bemserver.models import (
     Site, Building, Floor, Space, Zone, Facade, Slab, Window)
 
 

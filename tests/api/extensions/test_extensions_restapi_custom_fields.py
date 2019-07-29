@@ -7,7 +7,7 @@ from werkzeug import FileStorage
 
 import marshmallow as ma
 
-from h2g_platform_core.api.extensions.rest_api.custom_fields import FileField
+from bemserver.api.extensions.rest_api.custom_fields import FileField
 
 
 class TestApiExtensionsCustomFields(TestCoreApi):

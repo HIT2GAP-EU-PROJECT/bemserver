@@ -14,9 +14,9 @@ Install apache, WSGI plugin and activate ssl
     $ aptitude install apache2 libapache2-mod-wsgi-py3
     $ a2enmod ssl
 
-Create a new site in /etc/apache2/sites-available using h2g-platform-core.conf
+Create a new site in /etc/apache2/sites-available using bemserver.conf
 as an example.
-h2g-platform-core-ssl.conf includes certificate authentication rules.
+bemserver-ssl.conf includes certificate authentication rules.
 
 ### Application installation and configuration
 
@@ -65,7 +65,7 @@ to go.
 .. code-block:: shell
 
     # Launch every Sunday at noon
-    0 12 * * 0 /srv/prj/hit2gap/h2g-platform-core/repack_hdf5.sh
+    0 12 * * 0 /srv/prj/hit2gap/bemserver/repack_hdf5.sh
 
 ### Authentication
 
@@ -81,5 +81,5 @@ Activate site in apache and reload configuration:
 
 .. code-block:: shell
 
-    $ a2ensite h2g-platform-core
+    $ a2ensite bemserver
     $ systemctl reload apache2

@@ -2,7 +2,7 @@
 
 from tests import TestCoreModel
 
-#from h2g_platform_core.models.system import SystemType
+#from bemserver.models.system import SystemType
 
 
 class TestModelSystem(TestCoreModel):

@@ -3,7 +3,7 @@
 import pytest
 from tests import TestCoreModel
 
-from h2g_platform_core.models.energy import EnergyCategory
+from bemserver.models.energy import EnergyCategory
 
 
 class TestModelEnergy(TestCoreModel):

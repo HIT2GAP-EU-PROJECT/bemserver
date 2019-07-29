@@ -4,7 +4,7 @@ from tests import TestCoreApi
 
 import marshmallow as ma
 
-from h2g_platform_core.api.extensions.rest_api.schemas import ObjectSchema
+from bemserver.api.extensions.rest_api.schemas import ObjectSchema
 
 
 class TestApiExtensionsSchemas(TestCoreApi):

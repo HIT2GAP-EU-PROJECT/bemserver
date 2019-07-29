@@ -3,8 +3,8 @@
 import json
 from urllib.parse import urljoin
 
-from h2g_platform_core.database.db_mock import DatabaseMock
-# from h2g_platform_core.database.ontology.manager import (
+from bemserver.database.db_mock import DatabaseMock
+# from bemserver.database.ontology.manager import (
 #     ontology_manager_factory)
 
 

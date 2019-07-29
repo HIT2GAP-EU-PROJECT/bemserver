@@ -4,7 +4,7 @@ import pytest
 from tests import TestCoreApi
 from tests.api.views.conftest import TestingConfig
 
-from h2g_platform_core.api.extensions.auth import is_auth_enabled
+from bemserver.api.extensions.auth import is_auth_enabled
 
 
 class TestingConfigAuthEnabled(TestingConfig):

@@ -2,10 +2,10 @@
 
 import pytest
 
-from h2g_platform_core.models.quantity import Quantity
-from h2g_platform_core.database.db_quantity import QuantityDB
-from h2g_platform_core.database.ontology.manager import PREFIX
-from h2g_platform_core.database.exceptions import ItemNotFoundError
+from bemserver.models.quantity import Quantity
+from bemserver.database.db_quantity import QuantityDB
+from bemserver.database.ontology.manager import PREFIX
+from bemserver.database.exceptions import ItemNotFoundError
 
 
 class TestDBQuantity():
@@ -29,8 +29,8 @@ class TestDBQuantity():
         quantity = Quantity("Area", 323.324, "SquareMeter")
         quantity_db = QuantityDB()
         _id = quantity_db.create(quantity)
-        uri = PREFIX.H2G_PROPERTY.alias_uri(_id)
-        dummy_uri = PREFIX.H2G_PROPERTY.alias_uri('dummy')
+        uri = PREFIX.PROPERTY.alias_uri(_id)
+        dummy_uri = PREFIX.PROPERTY.alias_uri('dummy')
         quantity_get = quantity_db.get(uri)
         self._assert_equal(quantity, quantity_get)
         with pytest.raises(ItemNotFoundError):

@@ -8,8 +8,8 @@ import pytest
 from tests import TestCoreModel
 from tests.utils import uuid_gen
 
-from h2g_platform_core.models.thing import Thing
-from h2g_platform_core.tools.common import check_list_instances
+from bemserver.models.thing import Thing
+from bemserver.tools.common import check_list_instances
 
 
 class TestModelThing(TestCoreModel):

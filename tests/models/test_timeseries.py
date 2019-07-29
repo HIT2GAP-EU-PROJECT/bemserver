@@ -11,8 +11,8 @@ import pytest
 from tests import TestCoreModel
 from tests.utils import celsius_to_fahrenheit
 
-from h2g_platform_core.models import Timeseries
-from h2g_platform_core.models.timeseries.exceptions import (
+from bemserver.models import Timeseries
+from bemserver.models.timeseries.exceptions import (
     TimeseriesInvalidIndexTypeError,
     TimeseriesMissingColumnError, TimeseriesInvalidColumnsError,
     TimeseriesUnitConversionError)

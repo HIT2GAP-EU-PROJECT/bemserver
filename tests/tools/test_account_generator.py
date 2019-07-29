@@ -3,7 +3,7 @@
 import pytest
 from tests import TestCoreTools
 
-from h2g_platform_core.tools.account_generator import (
+from bemserver.tools.account_generator import (
     _gen_random_str, generate_login_id, generate_pwd)
 
 

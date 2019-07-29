@@ -4,9 +4,9 @@ import marshmallow as ma
 
 from tests import TestCoreApi
 
-from h2g_platform_core.api.extensions.rest_api.doc_responses import (
+from bemserver.api.extensions.rest_api.doc_responses import (
     build_responses)
-from h2g_platform_core.api.extensions.rest_api.schemas import ErrorSchema
+from bemserver.api.extensions.rest_api.schemas import ErrorSchema
 
 
 class TestApiExtensionsDocResponses(TestCoreApi):

@@ -3,9 +3,9 @@
 import pytest
 from tests import TestCoreDatabaseOntology
 
-from h2g_platform_core.database import MeasureDB, SensorDB, SpaceDB
-from h2g_platform_core.database.exceptions import ItemNotFoundError
-from h2g_platform_core.models import Measure, MeasureValueProperties
+from bemserver.database import MeasureDB, SensorDB, SpaceDB
+from bemserver.database.exceptions import ItemNotFoundError
+from bemserver.models import Measure, MeasureValueProperties
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -41,6 +41,7 @@ class TestMeasureDB(TestCoreDatabaseOntology):
         new_measure_id = measure_db.create(measure)
         assert new_measure_id is not None
         assert new_measure_id == measure.id
+        print(new_measure_id)
 
         # check that database is not empty now
         result = measure_db.get_all()

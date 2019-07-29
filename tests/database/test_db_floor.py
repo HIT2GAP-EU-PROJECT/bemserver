@@ -3,9 +3,9 @@
 import pytest
 from tests import TestCoreDatabaseOntology
 
-from h2g_platform_core.database import FloorDB
-from h2g_platform_core.database.exceptions import ItemNotFoundError
-from h2g_platform_core.models import Floor
+from bemserver.database import FloorDB
+from bemserver.database.exceptions import ItemNotFoundError
+from bemserver.models import Floor
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')

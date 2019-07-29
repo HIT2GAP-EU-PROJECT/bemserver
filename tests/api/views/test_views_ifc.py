@@ -8,8 +8,8 @@ from tests.utils import uuid_gen
 from tests.api.utils import build_file_obj
 from tests.database.filestorage.conftest import ifc_file_data
 
-from h2g_platform_core.api.views.ifc.exceptions import IFCFileBadArchiveError
-from h2g_platform_core.database.exceptions import ItemSaveError
+from bemserver.api.views.ifc.exceptions import IFCFileBadArchiveError
+from bemserver.database.exceptions import ItemSaveError
 
 
 # TODO: all tests must be improved when a real database will be available...

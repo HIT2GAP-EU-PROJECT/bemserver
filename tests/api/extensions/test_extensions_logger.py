@@ -7,7 +7,7 @@ from flask import Flask
 from tests import TestCoreApi
 from tests.api.views.conftest import TestingConfig
 
-from h2g_platform_core.api.extensions.logger import init_app
+from bemserver.api.extensions.logger import init_app
 
 
 class TestingConfigLoggerTests(TestingConfig):

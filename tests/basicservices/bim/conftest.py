@@ -3,7 +3,7 @@
 import pytest
 from tests.utils import build_data_samples_path
 
-from h2g_platform_core.database import DBAccessor, init_handlers
+from bemserver.database import DBAccessor, init_handlers
 
 
 @pytest.fixture(params=['sample_test.ifc'])
