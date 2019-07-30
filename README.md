@@ -1,7 +1,7 @@
 BEMServer
 =========
 
-![](docs/BEM SERVER-Color-rgb-logo.png)
+<img src="https://github.com/HIT2GAP-EU-PROJECT/bemserver/blob/master/docs/BEM%20SERVER-Color-rgb-logo.png" alt="drawing" width="300"/>
 
 **Table of Contents**
 
