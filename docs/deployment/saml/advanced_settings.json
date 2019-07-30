@@ -30,8 +30,8 @@
     },
     "organization": {
         "en-US": {
-            "name": "hit2gap",
-            "displayname": "Hit2Gap Platform Core API",
+            "name": "bemserver",
+            "displayname": "BEMServer APIs",
             "url": "<sp_domain>"
         }
     }

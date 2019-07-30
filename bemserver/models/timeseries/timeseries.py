@@ -260,7 +260,7 @@ class Timeseries():
         if target_unit is None:
             raise TimeseriesUnitConversionError('Target unit must be defined.')
 
-        # get hit2gap units equivalency in Pint units
+        # get bemserver units equivalency in Pint units
         pint_source_unit = units.get_pint_unit(source_unit)
         pint_target_unit = units.get_pint_unit(target_unit)
         if pint_source_unit is None:

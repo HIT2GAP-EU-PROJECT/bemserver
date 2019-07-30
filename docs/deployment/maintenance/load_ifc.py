@@ -7,7 +7,7 @@ import getopt
 from bemserver.basicservices.bim.ifc_import import IfcImport
 from bemserver.database import DBAccessor, init_handlers
 
-ONTO_URL = 'http://bemserver.nobatek.com:3030/hit2gap/'
+ONTO_URL = 'http://bemserver.nobatek.com:3030/bemserver/'
 
 
 def main(argv):

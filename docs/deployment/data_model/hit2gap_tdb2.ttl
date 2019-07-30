@@ -43,7 +43,7 @@ tdb2:GraphTDB2 rdfs:subClassOf ja:Model .
  ja:baseModel <#tdbGraph> ;
  ja:reasoner [
       ja:reasonerURL <http://jena.hpl.hp.com/2003/GenericRuleReasoner> ;
-      ja:rulesFrom <file:./hit2gap.rules>
+      ja:rulesFrom <file:./bemserver.rules>
  ] .
 
 <#tdbDataset> rdf:type tdb2:DatasetTDB2 ;
