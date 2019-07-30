@@ -1,6 +1,19 @@
 Installation
 ============
 
+BEMServer is built upon different tools and use various libraries. The main dependencies are:
+
+- the use of [SQLite](https://www.sqlite.org/index.html) to store events
+- the use of [Apache Jena](https://jena.apache.org/index.html) to store the BEMOnt data model
+
+Additionally, one may need to secure the APIs. Three modes have been used and tested:
+
+- JSON web token
+- credentials using SAML
+- certificates generated with caman
+
+Finally, an IFC extractor has been developed so as to populate the data model from an IFC file. This tool uses the IfcOpenShell library.
+
 ### Install and configure dependencies
 
 ### Install core itself
@@ -64,7 +77,11 @@ Installation
 
     To manage the ontology, browse http://localhost:3030/
 
-    Create a new dataset called "hit2gap"
+    Create a new dataset called "bemserver", using the bemserver.ttl file in https://github.com/HIT2GAP-EU-PROJECT/bemserver/blob/master/docs/deployment/data_model/bemserver_tdb.ttl
+    
+    $ docker cp YOUR/PATH/TO/bemserver_tdb.ttl fuseki-data:/fuseki/configuration/
+    
+    Beware bemserver.ttl creates a persistent dataset called 'bemserver'. You may wish to have it loaded in the memory. See the [Jena documentation](https://jena.apache.org/documentation/) for more information on how to configure your dataset.
 
     Clone ontology repo
 
@@ -78,9 +95,15 @@ Installation
     - BuildingInfrastructure.rdf
     - Property.rdf
     - SensorRepresentation.rdf
-      UserBehaviour.rdf
-      sosa.owl
-      ssn.owl
+    - UserBehaviour.rdf
+    - sosa.owl
+    - ssn.owl
+      
+.. code-block:: shell
+
+    $ docker cp YOUR_FOLDER/BEMOnt/models/bemont.rules fuseki-data:/fuseki/configuration/
+    
+    This will install the inference file associated to your bemserver dataset.
 
 ### TODO: describe configuration to use inference rules
 
