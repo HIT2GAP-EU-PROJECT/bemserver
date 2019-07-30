@@ -48,3 +48,5 @@ Want to be part of the developing team? Want to contribute to the project and jo
 
 
 - Lara Kallab, Richard Chbeir, Pierre Bourreau, Pascale Brassier, Michael Mrissa - ***HIT2GAP: Towards a better building energy management***, Energy Procedia, Volume 122, 2017 - http://www.sciencedirect.com/science/article/pii/S1876610217330035
+
+Also, see the [presentation on slideShare](https://www.slideshare.net/pbourreau/bemserver-open-source-platform-for-building-energy-management)
