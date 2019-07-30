@@ -78,9 +78,9 @@ Finally, an IFC extractor has been developed so as to populate the data model fr
     To manage the ontology, browse http://localhost:3030/
 
     Create a new dataset called "bemserver", using the bemserver.ttl file in https://github.com/HIT2GAP-EU-PROJECT/bemserver/blob/master/docs/deployment/data_model/bemserver_tdb.ttl
-    
+
     $ docker cp YOUR/PATH/TO/bemserver_tdb.ttl fuseki-data:/fuseki/configuration/
-    
+
     Beware bemserver.ttl creates a persistent dataset called 'bemserver'. You may wish to have it loaded in the memory. See the [Jena documentation](https://jena.apache.org/documentation/) for more information on how to configure your dataset.
 
     Clone ontology repo
@@ -89,7 +89,7 @@ Finally, an IFC extractor has been developed so as to populate the data model fr
 
     $ git clone https://github.com/HIT2GAP-EU-PROJECT/BEMOnt
 
-    From the web interface, select the new "hit2gap" dataset and upload files.
+    From the web interface, select the new "bemserver" dataset and upload files.
     Load following files from ontology repo:
 
     - BuildingInfrastructure.rdf
@@ -98,11 +98,11 @@ Finally, an IFC extractor has been developed so as to populate the data model fr
     - UserBehaviour.rdf
     - sosa.owl
     - ssn.owl
-      
+
 .. code-block:: shell
 
     $ docker cp YOUR_FOLDER/BEMOnt/models/bemont.rules fuseki-data:/fuseki/configuration/
-    
+
     This will install the inference file associated to your bemserver dataset.
 
 ### TODO: describe configuration to use inference rules

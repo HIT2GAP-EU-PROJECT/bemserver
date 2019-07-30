@@ -65,7 +65,7 @@ to go.
 .. code-block:: shell
 
     # Launch every Sunday at noon
-    0 12 * * 0 /srv/prj/hit2gap/bemserver/repack_hdf5.sh
+    0 12 * * 0 /path_to_/bemserver/repack_hdf5.sh
 
 ### Authentication
 
