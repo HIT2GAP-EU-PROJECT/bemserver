@@ -80,6 +80,7 @@ Finally, an IFC extractor has been developed so as to populate the data model fr
     Create a new dataset called "bemserver", using the bemserver_tdb.ttl file in https://github.com/HIT2GAP-EU-PROJECT/bemserver/blob/master/docs/deployment/data_model/bemserver_tdb.ttl
 
     $ docker cp YOUR/PATH/TO/bemserver_tdb.ttl fuseki-data:/fuseki/configuration/
+    $ docker restart fuseki
 
     Beware bemserver_tdb.ttl creates a persistent dataset called 'bemserver'. You may wish to have it loaded in memory. See the [Jena documentation](https://jena.apache.org/documentation/) for more information on how to configure your dataset.
 
