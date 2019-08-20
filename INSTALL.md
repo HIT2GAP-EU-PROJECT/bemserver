@@ -28,7 +28,7 @@ Finally, an IFC extractor has been developed so as to populate the data model fr
 
     # Install python header files and development stuff
     # (libxmlsec1-dev is required by python3-saml)
-    $ aptitude install g++ make python3-dev libxmlsec1-dev
+    $ aptitude install g++ make python3-dev libxmlsec1-dev pkg-config
 
     # Install
     pip install -r requirements.txt
@@ -78,17 +78,26 @@ Finally, an IFC extractor has been developed so as to populate the data model fr
     To manage the ontology, browse http://localhost:3030/
 
     Create a new dataset called "bemserver", using the bemserver_tdb.ttl file in https://github.com/HIT2GAP-EU-PROJECT/bemserver/blob/master/docs/deployment/data_model/bemserver_tdb.ttl
+    This also requires an inference rules file from the ontoglogy repository, so first clone BEMOnt, and install the .rules file in the docker image of fuseki.
 
-    $ docker cp YOUR/PATH/TO/bemserver_tdb.ttl fuseki-data:/fuseki/configuration/
-    $ docker restart fuseki
+    .. code-block:: shell
+        $ git clone https://github.com/HIT2GAP-EU-PROJECT/BEMOnt
+        $ docker cp YOUR/PATH/TO/BEMOnt/models/bemont.rules fuseki-data:/fuseki/configuration/
+
+        This will install the inference file associated to your bemserver dataset.
+
+
+    .. code-block:: shell
+
+        $ docker cp YOUR/PATH/TO/bemserver/bemserver_tdb.ttl fuseki-data:/fuseki/configuration/
+        $ docker restart fuseki
+
+    You can check the existence of the bemserver dataset browsing http://localhost:3030/.
 
     Beware bemserver_tdb.ttl creates a persistent dataset called 'bemserver'. You may wish to have it loaded in memory. See the [Jena documentation](https://jena.apache.org/documentation/) for more information on how to configure your dataset.
 
-    Clone ontology repo
 
 .. code-block:: shell
-
-    $ git clone https://github.com/HIT2GAP-EU-PROJECT/BEMOnt
 
     From the web interface, select the new "bemserver" dataset and upload files.
     Load following files from ontology repo:
@@ -97,14 +106,9 @@ Finally, an IFC extractor has been developed so as to populate the data model fr
     - Property.rdf
     - SensorRepresentation.rdf
     - UserBehaviour.rdf
-    - sosa.owl
-    - ssn.owl
-
-.. code-block:: shell
-
-    $ docker cp YOUR_FOLDER/BEMOnt/models/bemont.rules fuseki-data:/fuseki/configuration/
-
-    This will install the inference file associated to your bemserver dataset.
+    - Services.rdf
+    - sosa.rdf
+    - ssn.rdf
 
 ### TODO: describe configuration to use inference rules
 
