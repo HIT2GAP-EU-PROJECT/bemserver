@@ -74,6 +74,15 @@ Finally, an IFC extractor has been developed so as to populate the data model fr
     # On subsequent runs, just use
     $ docker restart fuseki
 
+    For testing purpose, you can install the shiro.ini file into your docker image:
+
+    .. code-block:: shell
+
+        $ docker cp YOUR/PATH/TO/bemserver/docs/deployment/data_model/shiro.ini fuseki-data:/fuseki/
+        $ docker restart fuseki
+
+    **Beware this should be modified when deploying the solution at the production level to ensure a safer access to the dataset.**
+
 
     To manage the ontology, browse http://localhost:3030/
 
@@ -89,7 +98,7 @@ Finally, an IFC extractor has been developed so as to populate the data model fr
 
     .. code-block:: shell
 
-        $ docker cp YOUR/PATH/TO/bemserver/bemserver_tdb.ttl fuseki-data:/fuseki/configuration/
+        $ docker cp YOUR/PATH/TO/bemserver/docs/deployment/data_model/bemserver_tdb.ttl fuseki-data:/fuseki/configuration/
         $ docker restart fuseki
 
     You can check the existence of the bemserver dataset browsing http://localhost:3030/.

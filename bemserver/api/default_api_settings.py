@@ -51,8 +51,10 @@ class Config():
     LOGGER_BACKUP = 30
 
     # 3. storage
+    # 3.1 Time Series storage
     TIMESERIES_BACKEND = 'hdfstore'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
+    # 3.2 Triple store
 
     # 4. maintenance
     MAINTENANCE_MODE = False

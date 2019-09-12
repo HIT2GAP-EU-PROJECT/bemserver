@@ -16,8 +16,6 @@ def ontology_db_config():
         'host': 'localhost',
         'port': 3030,
         'ssl': False,
-        'user': 'admin',
-        'pass': 'pickasupersecurepassword',
         'metadata': {
             'path': '../BEMOnt/models/RDF', # 'bemserver/database/ontology/metadata/owlModels',
             'files': [
@@ -44,8 +42,7 @@ def init_onto_db(use_file=False):
 
     admin_client = FusekiAdminClient(
         host=db_config['host'], port=db_config.get('port'),
-        is_secured=db_config.get('ssl', False),
-        user=db_config.get('user'), pwd=db_config.get('pass'))
+        is_secured=db_config.get('ssl', False))
 
     try:
         admin_client.delete_dataset(db_config['dataset'], force_drop_data=True)
