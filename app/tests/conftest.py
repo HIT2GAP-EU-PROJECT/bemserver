@@ -13,7 +13,7 @@ from bemserver.database.ontology.manager import (
 
 def ontology_db_config():
 
-    test_settings_file = os.getenv('TEST_SETTINGS_FILE')
+    test_settings_file = os.getenv('BEMTEST_SETTINGS_FILE')
     config = configparser.ConfigParser()    
     config.read(test_settings_file)
     cfg = config['TESTING']
