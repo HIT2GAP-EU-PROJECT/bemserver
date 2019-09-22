@@ -1,0 +1,15 @@
+.git
+.gitignore
+.github
+.gitmodules
+
+.dockerignore
+Dockerfile
+
+docs
+/tmp
+
+*.yml
+
+**/__pycache__
+**/*.pyc
