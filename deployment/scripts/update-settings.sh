@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-# Update BEMSERVER settings files from environment variables.
+# Update settings files from environment variables.
 # Get environment variables beginning with PATTERN and update or create values in CONFIG_FILE
-# Usage: update-settings "BEMSERVER_" "/config/settings.cfg"
+# Usage: ./update-settings.sh "BEMSRV_" "/config/settings.cfg"
 #
 
 CONFIG_FILE=$2
