@@ -1,4 +1,5 @@
 import os
+import configparser
 from pathlib import Path
 
 import pytest
@@ -11,13 +12,18 @@ from bemserver.database.ontology.manager import (
 
 
 def ontology_db_config():
+
+    test_settings_file = os.getenv('TEST_SETTINGS_FILE')
+    config = configparser.ConfigParser()    
+    config.read(test_settings_file)
+    cfg = config['TESTING']
     return {
-        'dataset': 'bemserver_test',
-        'host': 'localhost',
-        'port': 3030,
+        'dataset': cfg['DATASET'],
+        'host': cfg['HOST'],
+        'port': cfg['PORT'],
         'ssl': False,
         'metadata': {
-            'path': '../BEMOnt/models/RDF', # 'bemserver/database/ontology/metadata/owlModels',
+            'path': cfg['METADATA_PATH'],
             'files': [
                 'BuildingInfrastructure.rdf',
                 'Property.rdf',
