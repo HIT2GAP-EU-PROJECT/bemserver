@@ -1,29 +1,30 @@
 import os
-import configparser
 from pathlib import Path
+from urllib.parse import urlparse
 
 import pytest
 
 from fuseki_manager import FusekiAdminClient#, FusekiDataClient
 from fuseki_manager.exceptions import DatasetNotFoundError
 
+from bemserver.api.default_api_settings import TestingConfig
 from bemserver.database.ontology.manager import (
     ontology_manager_factory)
 
 
 def ontology_db_config():
 
-    test_settings_file = os.getenv('BEMTEST_SETTINGS_FILE')
-    config = configparser.ConfigParser()    
-    config.read(test_settings_file)
-    cfg = config['TESTING']
+    models_path = os.getenv('ONTOLOGY_MODELS_PATH') or TestingConfig.ONTOLOGY_MODELS_PATH
+    url_string = os.getenv('ONTOLOGY_BASE_URL') or TestingConfig.ONTOLOGY_BASE_URL
+    url = urlparse(url_string)
+    
     return {
-        'dataset': cfg['DATASET'],
-        'host': cfg['HOST'],
-        'port': cfg['PORT'],
+        'dataset': url.path.strip('/'),
+        'host': url.hostname,
+        'port': url.port,
         'ssl': False,
         'metadata': {
-            'path': cfg['METADATA_PATH'],
+            'path': models_path,
             'files': [
                 'BuildingInfrastructure.rdf',
                 'Property.rdf',

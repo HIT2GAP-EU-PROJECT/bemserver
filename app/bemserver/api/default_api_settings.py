@@ -121,6 +121,7 @@ class TestingConfig(Config):
     LOGGER_DIR = '/dummy'  # Replaced in init_app fixture
     LOGGER_LEVEL = 'DEBUG'
     ONTOLOGY_BASE_URL = 'http://localhost:3030/bemserver_test/'
+    ONTOLOGY_MODELS_PATH = '../../BEMOnt/models/RDF'
     TIMESERIES_BACKEND_STORAGE_DIR = '/dummy'  # Replaced in init_app fixture
     FILE_STORAGE_DIR = '/dummy'  # Replaced in init_app fixture
     SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
