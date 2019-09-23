@@ -1,13 +1,12 @@
 #!/bin/bash
 set -e
 
-
-# Setup file conf
+# Update bemserver config file from environment variables.
+# Select all env variables begin with pattern "BERSERV_" and update values in $FLASK_SETTINGS_FILE.
 /scripts/update-settings.sh "BEMSRV_" ${FLASK_SETTINGS_FILE}
-/scripts/update-settings.sh "BEMTEST_" ${BEMTEST_SETTINGS_FILE}
 
 # Activate venv
-source ${BEMSRV_VENV_PATH}/bin/activate
+source ${VIRTUAL_ENV}/bin/activate
 
 # Run flask
 if [ "$1" = 'flask' ] && [ "$2" = 'run' ]; then
