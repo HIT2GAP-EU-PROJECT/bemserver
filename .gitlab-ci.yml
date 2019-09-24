@@ -31,8 +31,8 @@ build:
   <<: *dockerindocker
   stage: build
   script:
-    - docker pull $DK_IMAGE_TEST
-    - docker build -t $DK_IMAGE_TEST .
+    - docker pull $DK_IMAGE_RELEASE
+    - docker build -t $DK_IMAGE_TEST --cache-from $DK_IMAGE_RELEASE .
     - docker push $DK_IMAGE_TEST
   only:
     - development
