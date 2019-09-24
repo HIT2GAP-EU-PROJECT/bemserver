@@ -1,3 +1,10 @@
+FROM alpine:3.10
+
+RUN apk add --no-cache wget unzip
+RUN wget https://github.com/IfcOpenShell/IfcOpenShell/releases/download/v0.5.0-preview2/ifcopenshell-python35-master-9ad68db-linux64.zip \
+    && unzip ifcopenshell-python35-master-9ad68db-linux64.zip
+
+
 FROM debian:stretch-slim
 
 ARG _APP_PATH=/app/bemserver
@@ -21,7 +28,7 @@ RUN python3 -m venv ${VIRTUAL_ENV} \
     && pip install -r dev-requirements.txt
 
 # Copy dependencies / application / config
-COPY deployment/dependencies/ifcopenshell ${VIRTUAL_ENV}/lib/python3.5/site-packages/ifcopenshell/
+COPY --from=0 ifcopenshell ${VIRTUAL_ENV}/lib/python3.5/site-packages/ifcopenshell/
 COPY app ./
 COPY config/* ${_CONFIG_PATH}/
 
