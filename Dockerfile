@@ -1,8 +1,9 @@
 FROM alpine:3.10
 
-RUN apk add --no-cache wget unzip
-RUN wget https://github.com/IfcOpenShell/IfcOpenShell/releases/download/v0.5.0-preview2/ifcopenshell-python35-master-9ad68db-linux64.zip \
-    && unzip ifcopenshell-python35-master-9ad68db-linux64.zip
+RUN apk add --no-cache wget unzip git
+RUN git clone https://github.com/HIT2GAP-EU-PROJECT/BEMOnt.git \
+    && wget -q https://github.com/IfcOpenShell/IfcOpenShell/releases/download/v0.5.0-preview2/ifcopenshell-python35-master-9ad68db-linux64.zip \
+    && unzip -q ifcopenshell-python35-master-9ad68db-linux64.zip
 
 
 FROM debian:stretch-slim
@@ -24,13 +25,24 @@ WORKDIR ${_APP_PATH}/
 COPY app/dev-requirements.txt app/requirements.txt ./
 RUN python3 -m venv ${VIRTUAL_ENV} \
     && . ${VIRTUAL_ENV}/bin/activate \
-    && pip install --upgrade pip \
-    && pip install -r dev-requirements.txt
+    && pip install -q --upgrade pip \
+    && pip install -qr dev-requirements.txt
 
 # Copy dependencies / application / config
 COPY --from=0 ifcopenshell ${VIRTUAL_ENV}/lib/python3.5/site-packages/ifcopenshell/
 COPY app ./
 COPY config/* ${_CONFIG_PATH}/
+
+ENV ONTOLOGY_MODELS_PATH=/app/models
+COPY --from=0 \
+    BEMOnt/models/RDF/BuildingInfrastructure.rdf \
+    BEMOnt/models/RDF/Property.rdf \
+    BEMOnt/models/RDF/SensorRepresentation.rdf \
+    BEMOnt/models/RDF/UserBehaviour.rdf \
+    BEMOnt/models/RDF/Services.rdf \
+    BEMOnt/models/RDF/sosa.rdf \
+    BEMOnt/models/RDF/ssn.rdf \
+    ${ONTOLOGY_MODELS_PATH}/
 
 # Set environment variables
 ENV LC_ALL=C.UTF-8 LANG=C.UTF-8 \

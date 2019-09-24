@@ -11,62 +11,54 @@ stages:
   - release
 
 variables:
-  DOCKER_DRIVER: overlay2
   DK_IMAGE_TEST: "nbkinef4/bemserver:test"
   DK_IMAGE_RELEASE: "nbkinef4/bemserver:latest"
-  CI_REPOSITORY_URL: https://index.docker.io/v1/
 
-
-
-default:
+.dockerindocker: $dockerindocker
   image: docker:git
   services:
     - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    CI_REPOSITORY_URL: https://index.docker.io/v1/
   before_script:
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REPOSITORY_URL
 
 
 build:
+  <<: *dockerindocker
   stage: build
   script:
     - docker build -t $DK_IMAGE_TEST .
     - docker push $DK_IMAGE_TEST
   only:
     - development
-    - staging
     - master
 
 
 test:
   stage: test
+  image:
+    name: $DK_IMAGE_TEST
+    entrypoint: /bin/bash
+  variables:
+    FLASK_ENV: "development"
+    ONTOLOGY_BASE_URL: "http://fuseki:3030/bemserver_test"
+  services:
+    - nbkinef4/bemserver-fuseki:latest
   script:
-    - docker pull $DK_IMAGE_TEST
-    # Apache Jena Fuseki container for triple storage
-    - docker run -d --rm
-        -v fuseki-data:/fuseki
-        -v ontology-data:/staging
-        --name fuseki
-        nbkinef4/bemserver-fuseki:latest
-    # BEMServer container
-    - docker run --rm
-        -e FLASK_ENV=development
-        -e ONTOLOGY_BASE_URL="http://fuseki:3030/bemserver_test"
-        -e ONTOLOGY_MODELS_PATH=/staging/models
-        -v ontology-data:/staging
-        --link fuseki --name bemserver
-        $DK_IMAGE_TEST py.test --cov=bemserver --cov-report term-missing
+    - py.test --cov=bemserver --cov-report term-missing
   only:
     - development
-    - staging
     - master
 
 
 release:
+  <<: *dockerindocker
   stage: release
   script:
     - docker pull $DK_IMAGE_TEST
     - docker tag $DK_IMAGE_TEST $DK_IMAGE_RELEASE
     - docker push $DK_IMAGE_RELEASE
   only:
-    - staging
     - master
