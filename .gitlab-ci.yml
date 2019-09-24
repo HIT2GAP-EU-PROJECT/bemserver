@@ -41,13 +41,13 @@ build:
 
 test:
   stage: test
-  image:
-    name: $DK_IMAGE_TEST
+  image: $DK_IMAGE_TEST 
   variables:
     FLASK_ENV: "development"
     ONTOLOGY_BASE_URL: "http://fuseki:3030/bemserver_test"
   services:
-    - nbkinef4/bemserver-fuseki:latest
+    - name: nbkinef4/bemserver-fuseki:latest
+      alias: fuseki
   script:
     - py.test --cov=bemserver --cov-report term-missing
   only:
