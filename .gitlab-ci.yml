@@ -42,7 +42,6 @@ test:
   stage: test
   image:
     name: $DK_IMAGE_TEST
-    entrypoint: ["/bin/bash"]
   variables:
     FLASK_ENV: "development"
     ONTOLOGY_BASE_URL: "http://fuseki:3030/bemserver_test"
