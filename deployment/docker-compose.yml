@@ -1,0 +1,42 @@
+version: '3.7'
+services:
+
+  fuseki:
+    image: nbkinef4/bemserver-fuseki:latest
+    restart: always
+    volumes:
+      - "fuseki-data:/fuseki"
+    expose:
+      - "3030"
+    ports:
+      - "3030:3030"
+    environment:
+      - JVM_ARGS=-Xmx2048M
+      - ADMIN_PASSWORD=pickasupersecurepassword
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  bemserver:
+    image: nbkinef4/bemserver:latest
+    restart: always
+    volumes:
+      - "bemserver-data:/app/config"
+    ports:
+      - "8080:8080"
+    environment:
+      - FLASK_ENV=development
+      - FLASK_PORT=8080
+      - FLASK_HOST=0.0.0.0
+
+      - ONTOLOGY_BASE_URL="http://fuseki:3030/bemserver"
+      - ONTOLOGY_MODELS_PATH="/app/models"
+
+      # # It is possible to edit settings.cfg directly from env variables.
+      # # Use BEMSRV_NAME_OF_VARIABLE_IN_CONFIG=value
+
+volumes:
+  fuseki-data:
+  bemserver-data:

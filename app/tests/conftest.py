@@ -1,23 +1,30 @@
 import os
 from pathlib import Path
+from urllib.parse import urlparse
 
 import pytest
 
 from fuseki_manager import FusekiAdminClient#, FusekiDataClient
 from fuseki_manager.exceptions import DatasetNotFoundError
 
+from bemserver.api.default_api_settings import TestingConfig
 from bemserver.database.ontology.manager import (
     ontology_manager_factory)
 
 
 def ontology_db_config():
+
+    models_path = os.getenv('ONTOLOGY_MODELS_PATH') or TestingConfig.ONTOLOGY_MODELS_PATH
+    url_string = os.getenv('ONTOLOGY_BASE_URL') or TestingConfig.ONTOLOGY_BASE_URL
+    url = urlparse(url_string)
+    
     return {
-        'dataset': 'bemserver_test',
-        'host': 'localhost',
-        'port': 3030,
+        'dataset': url.path.strip('/'),
+        'host': url.hostname,
+        'port': url.port,
         'ssl': False,
         'metadata': {
-            'path': '../BEMOnt/models/RDF', # 'bemserver/database/ontology/metadata/owlModels',
+            'path': models_path,
             'files': [
                 'BuildingInfrastructure.rdf',
                 'Property.rdf',

@@ -1,3 +1,3 @@
-[submodule "bemserver/database/ontology/metadata"]
-	path = bemserver/database/ontology/metadata
+[submodule "BEMOnt"]
+	path = app/bemserver/database/ontology/metadata
 	url = https://github.com/HIT2GAP-EU-PROJECT/BEMOnt.git

@@ -1,2 +1,0 @@
-.
--e git://github.com/Nobatek/ifc-datareader.git@35e5151c0baf9cbf1f2a8d72d20f8e14d2c86f4c#egg=ifc_datareader

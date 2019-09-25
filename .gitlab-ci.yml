@@ -1,0 +1,66 @@
+# This CI/CD configuration provides a standard pipeline for
+# * building a Docker image,
+# * storing the image in the container registry,
+# * running tests from a buildpack,
+# * publish realease if tests succeed
+
+
+stages:
+  - build
+  - test
+  - release
+
+variables:
+  DK_IMAGE_TEST: "nbkinef4/bemserver:test"
+
+
+.dockerindocker: &dockerindocker
+  image: docker:git
+  services:
+    - docker:dind
+  variables:
+    DOCKER_DRIVER: overlay2
+    DK_IMAGE_TEST: "nbkinef4/bemserver:test"
+    DK_IMAGE_RELEASE: "nbkinef4/bemserver:latest"
+    CI_REPOSITORY_URL: https://index.docker.io/v1/
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REPOSITORY_URL
+
+
+build:
+  <<: *dockerindocker
+  stage: build
+  script:
+    - docker pull $DK_IMAGE_RELEASE
+    - docker build -t $DK_IMAGE_TEST --cache-from $DK_IMAGE_RELEASE .
+    - docker push $DK_IMAGE_TEST
+  only:
+    - development
+    - master
+
+
+test:
+  stage: test
+  image: $DK_IMAGE_TEST 
+  variables:
+    FLASK_ENV: "development"
+    ONTOLOGY_BASE_URL: "http://fuseki:3030/bemserver_test"
+  services:
+    - name: nbkinef4/bemserver-fuseki:latest
+      alias: fuseki
+  script:
+    - py.test --cov=bemserver --cov-report term-missing
+  only:
+    - development
+    - master
+
+
+release:
+  <<: *dockerindocker
+  stage: release
+  script:
+    - docker pull $DK_IMAGE_TEST
+    - docker tag $DK_IMAGE_TEST $DK_IMAGE_RELEASE
+    - docker push $DK_IMAGE_RELEASE
+  only:
+    - master
