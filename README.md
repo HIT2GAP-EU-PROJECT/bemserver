@@ -1,7 +1,8 @@
-BEMServer
-=========
 
-<img src="https://github.com/HIT2GAP-EU-PROJECT/bemserver/blob/master/docs/BEM%20SERVER-Color-rgb-logo.png" alt="drawing" width="300"/>
+
+<img src="https://raw.githubusercontent.com/HIT2GAP-EU-PROJECT/bemserver/master/docs/BEM%20SERVER-Color-rgb-logo.png" alt="BEMServer" width="300"/>
+
+
 
 **Table of Contents**
 
@@ -11,6 +12,8 @@ BEMServer
 2. [User guidelines](#user)
 3. [Developer guidelines](#developer)
 4. [Related work](#documentation)
+
+
 
 ## Description <a name="description"></a>
 

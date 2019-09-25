@@ -4,7 +4,7 @@ Installation
 BEMServer is built upon different tools and use various libraries. The main dependencies are:
 
 - the use of [SQLite](https://www.sqlite.org/index.html) to store events
-- the use of [Apache Jena](https://jena.apache.org/index.html) to store the BEMOnt data model
+- the use of [Apache Jena Fuseki](https://jena.apache.org/index.html) to store the BEMOnt data model
 
 Additionally, one may need to secure the APIs. Three modes have been used and tested:
 
@@ -14,131 +14,120 @@ Additionally, one may need to secure the APIs. Three modes have been used and te
 
 Finally, an IFC extractor has been developed so as to populate the data model from an IFC file. This tool uses the IfcOpenShell library.
 
-### Install and configure dependencies
+## Install core
 
-### Install core itself
+```bash
+# In application folder
+cd bemserver/app/
 
-.. code-block:: shell
+# Update package list
+apt-get update
 
-    # Create virtual environment
-    $ virtualenv -p /usr/bin/python3 $VIRTUALENVS_DIR/bemserver
+# Install required packages, python header files and development stuff
+# (libxmlsec1-dev is required by python3-saml)
+apt-get install g++ make libxmlsec1-dev pkg-config
+apt-get install python3-dev python3-venv
 
-    # Activate virtualenv
-    $ source $VIRTUALENVS_DIR/bemserver/bin/activate
+# Create virtual environment
+python3 -m venv $YOUR_VIRTUALENV_DIR/bemserver
 
-    # Install python header files and development stuff
-    # (libxmlsec1-dev is required by python3-saml)
-    $ aptitude install g++ make python3-dev libxmlsec1-dev pkg-config
+# Activate virtual environment
+source $YOUR_VIRTUALENV_DIR/bemserver/bin/activate
 
-    # Install
-    pip install -r requirements.txt
-    # an upgrade of pip can be required (for example scipy dependancy requires it)
-    python -m pip install --upgrade pip
+# Upgrade pip
+pip install --upgrade pip
 
+# Install
+pip install -r requirements.txt
 
-### Install IfcOpenShell
+```
 
-    IfcOpenShell has to be installed manually.
+## Install IfcOpenShell
 
-    Download IfcOpenShell-python archive from the official site:
+IfcOpenShell has to be installed manually. The IfcOpenShell-python archive can be found in the [official website](http://ifcopenshell.org/python.html).
 
-        http://ifcopenshell.org/python.html
-
-    (acceptable version >= 0.5.0 preview 2)
-
-    Place the extracted archive in the site-packages folder of the virtualenv:
-
-        $VIRTUALENVS_DIR/bemserver/lib/python3.5/site-packages/
+**Version >="0.5.0 preview 2" is required.**
 
 
-### Install Jena / Fuseki
+```bash
+# In a temporary folder
+cd /tmp
 
-    Jena / Fuseki is distributed as a docker container:
+# Download IfcOpenShell-python archive
+wget https://github.com/IfcOpenShell/IfcOpenShell/releases/download/v0.5.0-preview2/ifcopenshell-python35-master-9ad68db-linux64.zip
 
-        https://hub.docker.com/r/stain/jena-fuseki/
+# Unzip archive
+unzip ifcopenshell-python35-master-9ad68db-linux64.zip
 
-.. code-block:: shell
+# Place ifcopenshell in the python environment's site-packages folder
+mv ifcopenshell $YOUR_VIRTUALENV_DIR/bemserver/lib/python3.5/site-packages/
+```
 
-    # Create persistent storage volume container first
-    $ docker run --name fuseki-data -v /fuseki busybox
+## Install Apache Jena Fuseki
 
-    # Create jena/fuseki container using that volume
-    $ docker run -d --name fuseki -p 3030:3030 \
-      --volumes-from fuseki-data \
-      -e ADMIN_PASSWORD=pickasupersecurepassword \
-      -e JVM_ARGS=-Xmx2048M \
-      --log-opt max-size=10m --log-opt max-file=3 \
-      --restart unless-stopped \
-      stain/jena-fuseki
+Apache Jena Fuseki is required to store the BEMOnt model. A preconfigured docker image is distributed to ease Apache Jena Fuseki configuration with Bemserver:  https://hub.docker.com/r/nbkinef4/bemserver-fuseki
 
-    # On subsequent runs, just use
-    $ docker restart fuseki
+```bash
+# Create a fuseki container
+docker run -d --name fuseki -p 3030:3030 \
+	-v fuseki-data:/fuseki \
+	-e ADMIN_PASSWORD=pickasupersecurepassword \
+    -e JVM_ARGS=-Xmx2048M \
+    --log-opt max-size=10m --log-opt max-file=3 \
+    --restart unless-stopped \
+    nbkinef4\bemserver-fuseki
 
-    For testing purpose, you can install the shiro.ini file into your docker image:
+# On subsequent runs, just use
+docker restart fuseki
 
-    .. code-block:: shell
+```
 
-        $ docker cp YOUR/PATH/TO/bemserver/docs/deployment/data_model/shiro.ini fuseki-data:/fuseki/
-        $ docker restart fuseki
+#### Web interface
 
-    **Beware this should be modified when deploying the solution at the production level to ensure a safer access to the dataset.**
+You can manage ontology browsing: http://localhost:3030/
 
+#### Configuration files
 
-    To manage the ontology, browse http://localhost:3030/
+- `/fuseki/shiro.ini` - *Beware this file should be modified when deploying the solution at the production level to ensure a safer access to the dataset.*
 
-    Create a new dataset called "bemserver", using the bemserver_tdb.ttl file in https://github.com/HIT2GAP-EU-PROJECT/bemserver/blob/master/docs/deployment/data_model/bemserver_tdb.ttl
-    This also requires an inference rules file from the ontoglogy repository, so first clone BEMOnt, and install the .rules file in the docker image of fuseki.
+- `/fuseki/configuration/bemserver_tdb.ttl` - *Beware bemserver_tdb.ttl creates a persistent dataset called 'bemserver'. See the [Jena documentation](https://jena.apache.org/documentation/) for more information on how to configure your dataset.*
 
-    .. code-block:: shell
-        $ git clone https://github.com/HIT2GAP-EU-PROJECT/BEMOnt
-        $ docker cp YOUR/PATH/TO/BEMOnt/models/bemont.rules fuseki-data:/fuseki/configuration/
+#### More info
 
-        This will install the inference file associated to your bemserver dataset.
-
-
-    .. code-block:: shell
-
-        $ docker cp YOUR/PATH/TO/bemserver/docs/deployment/data_model/bemserver_tdb.ttl fuseki-data:/fuseki/configuration/
-        $ docker restart fuseki
-
-    You can check the existence of the bemserver dataset browsing http://localhost:3030/.
-
-    Beware bemserver_tdb.ttl creates a persistent dataset called 'bemserver'. You may wish to have it loaded in memory. See the [Jena documentation](https://jena.apache.org/documentation/) for more information on how to configure your dataset.
+- [Apache Jena official website](https://jena.apache.org/index.html)
+- [Apache Jena Fuseki](https://jena.apache.org/documentation/fuseki2/index.html)
+- [Docker documentation](https://docs.docker.com/)
+- [Docker installation on Debian](https://docs.docker.com/install/linux/docker-ce/debian/)
 
 
-.. code-block:: shell
+<!--#### TODO: describe configuration to use inference rules-->
 
-    From the web interface, select the new "bemserver" dataset and upload files.
-    Load following files from ontology repo:
 
-    - BuildingInfrastructure.rdf
-    - Property.rdf
-    - SensorRepresentation.rdf
-    - UserBehaviour.rdf
-    - Services.rdf
-    - sosa.rdf
-    - ssn.rdf
 
-### TODO: describe configuration to use inference rules
 
 Development
 ===========
 
 ### Tests
 
-.. code-block:: shell
+```bash
+# In application folder
+cd bemserver/app/
 
-    # Install test dependencies
-    $ pip install -e .[test]
+# Install test dependencies
+pip install -r dev-requirements.txt
 
-    # Run tests
-    $ py.test
+# Run tests
+py.test
 
-    # Skip slow tests
-    $ py.test -m 'not slow'
+# Skip slow tests
+py.test -m 'not slow'
 
-    # Run tests with coverage
-    $ py.test --cov=bemserver --cov-report term-missing
+# Run tests with coverage
+py.test --cov=bemserver --cov-report term-missing
+```
+
+
 
 
 Running the application
@@ -146,13 +135,12 @@ Running the application
 
 ### Settings environment variables
 
+```bash
+FLASK_ENV=development  # development or production
+FLASK_SETTINGS_FILE=  # path to optional settings path
+```
 
-.. code-block:: shell
-
-    FLASK_ENV=development  # development or production
-    FLASK_SETTINGS_FILE=  # path to optional settings path
-
-Since bemserver uses python-dotenv, you may store them in an .env file at the root of the application.
+Since bemserver uses python-dotenv, you may store them in an .env file at the root of the application folder (`app`).
 
 
 ### Launch core api server
@@ -160,10 +148,12 @@ Since bemserver uses python-dotenv, you may store them in an .env file at the ro
 
 From the activated BEMServer virtual environment, once the environment variables are set.
 
-.. code-block:: shell
+```bash
+# Run API
+flask run --host=0.0.0.0 --port=8080
+```
 
-    # Run API
-    $ flask run
+
 
 
 Managing the SQL database
@@ -180,10 +170,11 @@ another database instance.
 
 Set environment variables (see above). Then,
 
-.. code-block:: shell
 
-    # Create migration script
-    $ flask db migrate --message 'Useful message' --rev-id optional_rev_id
+```bash
+# Create migration script
+flask db migrate --message 'Useful message' --rev-id optional_rev_id
+```
 
 The sripts are written in the "migrations" directory. They should be reviewed
 carefully, as Alembic (use internally by Flask-Migrate) has shortcomings.
@@ -195,11 +186,11 @@ SQLALCHEMY_DATABASE_URI points to the DB file. The directory should be writable 
 
 The db file should be created automatically. If not, try to to create an empty DB file using `touch`:
 
-.. code-block:: shell
-
-    $ touch event.db
-    $ chown www-data:www-data event.db
-    $ chmod 600 sqlite.db
+```bash
+touch event.db
+chown www-data:www-data event.db
+chmod 600 sqlite.db
+```
 
 You may want to shut down the application during the process.
 
@@ -207,10 +198,12 @@ Finally, use flask CLI to create/upgrade the DB.
 
 Set environment variables (see above). Then,
 
-.. code-block:: shell
+```bash
+# Migrate the base
+flask db upgrade
+```
 
-    # Migrate the base
-    $ flask db upgrade
+
 
 
 Managing API authentication
