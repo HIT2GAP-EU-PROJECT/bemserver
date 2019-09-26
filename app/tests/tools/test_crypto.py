@@ -1,8 +1,8 @@
 """Tests for crypto tools"""
 
-from tests import TestCoreTools
-
 from bemserver.tools.crypto import encrypt, check_encryption
+
+from tests import TestCoreTools
 
 
 class TestToolsCrypto(TestCoreTools):

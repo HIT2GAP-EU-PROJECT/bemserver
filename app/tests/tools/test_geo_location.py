@@ -3,10 +3,10 @@
 from math import isclose
 
 import pytest
-from tests import TestCoreTools
-
 from bemserver.tools.geo_location import (
     convert_dms_to_dd, deduce_hemisphere_from_dms, deduce_hemisphere_from_dd)
+
+from tests import TestCoreTools
 
 
 class TestToolsGeoLocation(TestCoreTools):
@@ -60,7 +60,7 @@ class TestToolsGeoLocation(TestCoreTools):
     def test_tools_geo_location_errors(self):
         """Test on errors"""
 
-        # wrong args (DMS values must be 3 or 4 floats as is or in a tuple)
+        # wrong args (DMS values must be 3 or 4 floats as is or in a tuple)
         with pytest.raises(TypeError):
             convert_dms_to_dd()
         with pytest.raises(TypeError):
@@ -74,7 +74,7 @@ class TestToolsGeoLocation(TestCoreTools):
         with pytest.raises(TypeError):
             convert_dms_to_dd((51, 29))
 
-        # DMS values must be all positive or negative
+        # DMS values must be all positive or negative
         # converting DMS to DD
         with pytest.raises(ValueError):
             convert_dms_to_dd(-51, 29, 59, 999999)

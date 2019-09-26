@@ -1,8 +1,8 @@
 """Tests for api events views"""
 
 import datetime as dt
-
 import pytest
+
 from tests import TestCoreApi, TestCoreApiAuthCert
 from tests.api.views.conftest import (
     TestingConfigAuthCertificateEnabled, generate_certificate_data)
@@ -172,7 +172,8 @@ class TestApiViewsEventsPermissions(TestCoreApiAuthCert):
                 'site_id': site1_id,
                 'building_id': 'BuildingID',
                 'sensor_ids': ['dev_1', 'dev_2'],
-                'start_time': dt.datetime(2017, 6, 1).isoformat(),},
+                'start_time': dt.datetime(2017, 6, 1).isoformat(),
+            },
             {
                 'execution_timestamp': dt.datetime.now().isoformat(),
                 'application': 'MyApp2',
@@ -181,7 +182,8 @@ class TestApiViewsEventsPermissions(TestCoreApiAuthCert):
                 'site_id': 'site42',
                 'building_id': 'BuildingID',
                 'sensor_ids': ['dev_1', 'dev_2'],
-                'start_time': dt.datetime(2017, 6, 4).isoformat(),},
+                'start_time': dt.datetime(2017, 6, 4).isoformat(),
+            },
         ]
         for event_data in event_datas:
             response = self.post_item(headers=auth_header, **event_data)

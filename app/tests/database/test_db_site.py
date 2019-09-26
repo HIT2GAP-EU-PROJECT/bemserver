@@ -1,11 +1,12 @@
 """Tests the interface Site/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
 
 from bemserver.database import SiteDB
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import Site, GeographicInfo
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -39,7 +40,7 @@ class TestSiteDB(TestCoreDatabaseOntology):
         assert new_site_id is not None
         assert new_site_id == site.id
 
-        # check that database is not empty now
+        # check that database is not empty now
         result = site_db.get_all()
         sites = list(result)
         assert len(sites) == 1
@@ -50,10 +51,10 @@ class TestSiteDB(TestCoreDatabaseOntology):
         assert sites[0].geographic_info.longitude == geo_info.longitude
         assert sites[0].geographic_info.altitude == geo_info.altitude
 
-        #ensure we can access the parent site
+        # ensure we can access the parent site
         assert site_db.get_parent(site.id) == str(site.id)
 
-        #test filtering parent site in the query
+        # test filtering parent site in the query
         sites = site_db.get_all(sites=['afakeid', site.id])
         assert {site_.id for site_ in sites} == {site.id}
 
@@ -62,7 +63,7 @@ class TestSiteDB(TestCoreDatabaseOntology):
         site_ids = init_sites
         site_db = SiteDB()
 
-        # get all items
+        # get all items
         result = site_db.get_all()
         sites = list(result)
         assert len(sites) == 2
@@ -79,7 +80,7 @@ class TestSiteDB(TestCoreDatabaseOntology):
         site.geographic_info.altitude = new_altitude
         site_db.update(site.id, site)
 
-        # check that item has really been updated in database
+        # check that item has really been updated in database
         updated_site = site_db.get_by_id(site.id)
         assert updated_site.id == site.id
         assert updated_site.name == site.name

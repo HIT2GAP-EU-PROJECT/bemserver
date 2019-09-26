@@ -5,8 +5,8 @@ from enum import Enum, unique as enum_unique
 from .thing import Thing
 from ..tools.custom_enum import HierarchyEnum
 
-#from . import SystemType
-from .exceptions import OccupantUnknownElectronicFamilyError
+# from . import SystemType
+# from .exceptions import OccupantUnknownElectronicFamilyError
 
 
 @enum_unique
@@ -161,7 +161,7 @@ class Occupant(Thing):
         self.comfort_operation_frequencies = comfort_operation_frequencies
         self.token_id = token_id
 
-    #@classmethod
+    # @classmethod
     # def get_electronic_families(cls):
     #     """Return available electronics family for occupant profile"""
     #     return [
@@ -172,7 +172,8 @@ class Occupant(Thing):
     #
     # @classmethod
     # def get_electronic_types_by_family(cls, family_type_name):
-    #     """Return available electronics type by family for occupant profile"""
+    #     """Return available electronics type by family for occupant profile
+    #     """
     #     try:
     #         family_type = SystemType[family_type_name]
     #     except KeyError:

@@ -4,13 +4,11 @@ import time
 from io import BytesIO
 import zipfile
 import os
-
-from uuid import uuid1 as uuid_gen
-
+from uuid import uuid1 as uuid_gen  # noqa
 from contextlib import contextmanager
 
 
-# taken from http://stackoverflow.com/a/35458249
+# taken from http://stackoverflow.com/a/35458249
 @contextmanager
 def not_raises(expected_exception):
     """Check that an assertion does not raise any exception."""
@@ -54,5 +52,7 @@ def celsius_to_fahrenheit(value, *, decimals=2):
 
 
 def get_dictionary_no_none(dictionary):
-    '''Returns a dictionary based on the input one, where None values are removed'''
-    return {x:dictionary[x] for x in dictionary if dictionary[x] is not None}
+    """Returns a dictionary based on the input one, where all None values
+    are removed
+    """
+    return {x: dictionary[x] for x in dictionary if dictionary[x] is not None}

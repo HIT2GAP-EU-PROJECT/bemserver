@@ -1,8 +1,8 @@
 """Fixtures for file storage manager tests."""
 
 from io import BytesIO
-
 import pytest
+
 from tests.utils import zip_file_stream, build_data_samples_path
 
 

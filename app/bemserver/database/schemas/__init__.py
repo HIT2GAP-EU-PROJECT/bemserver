@@ -5,12 +5,12 @@ from .schemas import (
     SpaceOccupancySchema, SurfaceInfoSchema,
     SiteSchema, BuildingSchema, FloorSchema, SpaceSchema, ZoneSchema,
     FacadeSchema, SlabSchema, WindowSchema
-)
+)  # noqa
 from .system_schemas import (
     LocalizationSchema, MeasureValuePropertiesSchema,
     MeasureMaterialPropertiesSchema,
     SystemSchema, SensorSchema, MeasureSchema
-)
+)  # noqa
 from .service_schemas import (
     ServiceSchema, ModelSchema, OutputTSSchema, OutputEventSchema, OutputSchema
-)
+)  # noqa

@@ -42,8 +42,9 @@ class BuildingSchema(ObjectSchema):
         required=True,
         validate=validate_kind,
         description='''Building type. See
-            /api-docs/redoc#tag/buildings/paths/\~1buildings\~1types\~1/get for the
-            full list of possible types, and use the value in the `name` field.'''
+            /api-docs/redoc#tag/buildings/paths/\\~1buildings\\~1types\\~1/get
+            for the full list of possible types, and use the value in the
+            `name` field.'''
     )
     area = ma.fields.Float(
         required=True,
@@ -61,7 +62,7 @@ class BuildingSchema(ObjectSchema):
 
 
 ##########
-# Schemas for API query parameters or request body
+# Schemas for API query parameters or request body
 
 class BuildingQueryArgsSchema(ma.Schema):
     """Building get query parameters schema"""
@@ -80,8 +81,8 @@ class BuildingQueryArgsSchema(ma.Schema):
     site_id = ma.fields.UUID(
         description='Filter by the associated site, using the site UUID.'
     )
+    # TODO: should be min_area or max_area.
     # area = ma.fields.Integer(
-    #     #TODO should be min_area or max_area.
     #     description='Filter by the total surface of the building'
     # )
 
@@ -113,7 +114,7 @@ class BuildingHateoasSchema(ma_hateoas.Schema):
         'parent': ma_hateoas.URLFor(
             endpoint='sites.SitesById', site_id='<site_id>'),
         'kinds': ma_hateoas.URLFor(endpoint='buildings.BuildingTypes'),
-        # TODO: write this endpoint
+        # TODO: write this endpoint
         # 'distance_units': ma_hateoas.URLFor(
         #     endpoint='distanceunits.distanceunits'),
     }, description='HATEOAS resource links')

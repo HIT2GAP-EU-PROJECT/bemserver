@@ -1,14 +1,14 @@
 """Tests the interface Building/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
-
 from marshmallow import ValidationError
 
 from bemserver.database import BuildingDB
 from bemserver.database.utils import generate_id
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import Building
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -37,12 +37,13 @@ class TestBuildingDB(TestCoreDatabaseOntology):
         assert list(result) == []
 
         # create an item
-        building = Building('Building #0', 'BarRestaurant', site_ids[0], area=666)
+        building = Building(
+            'Building #0', 'BarRestaurant', site_ids[0], area=666)
         new_building_id = building_db.create(building)
         assert new_building_id is not None
         assert new_building_id == building.id
 
-        # check that database is not empty now
+        # check that database is not empty now
         result = building_db.get_all()
         buildings = list(result)
         assert len(buildings) == 1
@@ -53,7 +54,7 @@ class TestBuildingDB(TestCoreDatabaseOntology):
         assert buildings[0].site_id == building.site_id == site_ids[0]
 
         # error: invalid site
-        # TODO: test this at `Thing` level ?
+        # TODO: test this at `Thing` level ?
         building.site_id = generate_id()
         with pytest.raises(ValidationError) as exc:
             building_db.update(building.id, building)
@@ -84,7 +85,7 @@ class TestBuildingDB(TestCoreDatabaseOntology):
         building_ids = init_buildings
         building_db = BuildingDB()
 
-        # get all items
+        # get all items
         result = building_db.get_all()
         buildings = list(result)
         assert len(buildings) == 2
@@ -101,7 +102,7 @@ class TestBuildingDB(TestCoreDatabaseOntology):
         building.area = new_area
         building_db.update(building.id, building)
 
-        # check that item has really been updated in database
+        # check that item has really been updated in database
         updated_building = building_db.get_by_id(building.id)
         assert updated_building.id == building.id
         assert updated_building.name == building.name

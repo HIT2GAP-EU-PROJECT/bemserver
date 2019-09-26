@@ -51,7 +51,8 @@ class PREFIX(enum.Enum):
     SERVICES = ('services', 'http://bemserver.org/services#')
     ROOT = ('bem', 'http://bemserver.org#')
 
-    IFC2x3 = ('ifc2x3', 'http://www.buildingsmart-tech.org/ifcOWL/IFC2X3_Final#')
+    IFC2x3 = (
+        'ifc2x3', 'http://www.buildingsmart-tech.org/ifcOWL/IFC2X3_Final#')
     IFC4 = ('ifc4', 'http://ifcowl.openbimstandards.org/IFC4_ADD2/index.html#')
     ONTO_MG = ('mg', 'http://hit2gap.eu/ontomg#')
     SSN = ('ssn', 'http://www.w3.org/ns/ssn/')
@@ -63,6 +64,7 @@ class PREFIX(enum.Enum):
     RDF = ('rdf', 'http://www.w3.org/1999/02/22-rdf-syntax-ns#')
     HYDRA = ('hydra', 'http://www.w3.org/ns/hydra/core#')
     SCHEMA = ('schema', 'http://schema.org/')
+
 
 class QueryResult:
     """A simple class to encapsulate relevant informations for results"""
@@ -138,9 +140,8 @@ class OntologyMgr:
                 sprqlw.SPARQLExceptions.SPARQLWrapperException,
                 urllib.error.URLError
         ) as exc:
-            logger.error(
-                'Error while executing SPARQL query: {}\nQuery:\n{}'
-                .format(exc, sparqlw.queryString))
+            logger.error('Error while executing SPARQL query: %s\nQuery:\n%s',
+                         exc, sparqlw.queryString)
             raise SPARQLError(exc)
 
     def perform(self, sparqlop, query):

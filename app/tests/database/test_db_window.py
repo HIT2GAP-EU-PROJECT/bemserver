@@ -1,13 +1,13 @@
 """Tests the interface Window/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
 from marshmallow import ValidationError
-
 
 from bemserver.database import WindowDB, SiteDB
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import Window, SurfaceInfo
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -36,7 +36,6 @@ class TestWindowDB(TestCoreDatabaseOntology):
         assert list(result) == []
 
         # create an item
-
         window = Window('Window #0', facade_ids[0],
                         SurfaceInfo(3.3, 1.3, 0.09), covering='Curtain',
                         glazing='DoubleGlazing', u_value=54.32)

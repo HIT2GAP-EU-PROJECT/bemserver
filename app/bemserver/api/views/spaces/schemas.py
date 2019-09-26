@@ -66,7 +66,7 @@ class SpaceSchema(ObjectSchema):
         validate=validate_kind,
         description='''The type associated to the space. For a full list of
             possible types, see
-            /api-docs/redoc#tag/spaces/paths/\~1spaces\~1types\~1/get.'''
+            /api-docs/redoc#tag/spaces/paths/\\~1spaces\\~1types\\~1/get.'''
     )
     description = ma.fields.String(
         validate=ma.validate.Length(max=250),

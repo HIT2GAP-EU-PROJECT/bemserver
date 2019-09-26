@@ -10,9 +10,9 @@ from ....models import Service
 # from ....database.db_enums import DBEnumHandler
 
 
-def validate_kind(value):
-    """Validate a input kind."""
-    # TODO
+# TODO: do a validator?
+# def validate_kind(value):
+#     """Validate a input kind."""
 #     dbhandler = DBEnumHandler()
 #     service_types = dbhandler.get_service_types()
 #     service_type_names = service_types.get_names()

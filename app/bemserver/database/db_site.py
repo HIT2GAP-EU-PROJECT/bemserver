@@ -81,7 +81,7 @@ class SiteDB(ThingDB):
         query += self._str_select(GeographicInfo, "longitude")
         query += self._str_select(GeographicInfo, "climate", optional=True)
         query += self._str_select(GeographicInfo, "hemisphere", optional=True)
-        #handle filter
+        # handle filter
         query += self._build_filters(**filters)
         query += "}"
         return query
@@ -128,15 +128,15 @@ class SiteDB(ThingDB):
 
     def _str_insert(self, obj, attr, optional=False):
         """Build up the line corresponding to an object attribute, into
-        a SPARQL insert method, in the form "relation value". Value is extracted
-        from obj.attr, the relation is extracted from a dictionary.
+        a SPARQL insert method, in the form "relation value". Value is
+        extracted from obj.attr, the relation is extracted from a dictionary.
 
         :param subj String: the "subject" of the triple to be created
         :param obj Object: an object
         :param attr String: the name of the attribute
         :param optional boolean: True if the element to be inserted is optional
-        :param return: a String to be inserted into the INSERT query, of the form
-            rel value
+        :param return: a String to be inserted into the INSERT query, of the
+            form rel value
         """
         return str_insert(
             self.CLASS_TO_FIELD_TO_RELATION[obj.__class__],

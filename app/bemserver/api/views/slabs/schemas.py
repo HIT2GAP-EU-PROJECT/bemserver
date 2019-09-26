@@ -1,7 +1,5 @@
 """Api slabs module schemas"""
 
-# pylint: disable=too-few-public-methods
-
 import marshmallow as ma
 
 from ...extensions.rest_api import rest_api
@@ -28,7 +26,7 @@ class SlabSchema(ObjectSchema):
 
     _OBJ_CLS = Slab
 
-    id = ma.fields.UUID(  # pylint: disable=invalid-name
+    id = ma.fields.UUID(
         required=True,
         description='Slab ID'
     )
@@ -111,7 +109,7 @@ class SlabHateoasSchema(ma_hateoas.Schema):
         'collection': ma_hateoas.URLFor(endpoint='slabs.Slabs'),
         'parent': ma_hateoas.URLFor(
             endpoint='buildings.BuildingsById', building_id='<building_id>'),
-        #  TODO: write this endpoint
+        # TODO: write this endpoint
         # 'distance_units': ma_hateoas.URLFor(
         #     endpoint='distanceunits.distanceunits'),
     }, description='HATEOAS resource links')
@@ -119,7 +117,7 @@ class SlabHateoasSchema(ma_hateoas.Schema):
     _embedded = ma_hateoas.Hyperlinks(schema={
         'windows': {
             '_links': {
-                #  TODO: just do it !
+                # TODO: just do it !
                 # 'collection': ma_hateoas.URLFor(
                 #     endpoint='windows.Windows', floor_id='<id>')
             }

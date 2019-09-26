@@ -5,13 +5,7 @@ from pathlib import Path
 import datetime as dt
 import time
 from random import randint
-
 import pytest
-from tests.api.utils import JSONResponse, build_file_obj
-
-from tests.database.filestorage.conftest import (
-    ifc_file_data_stream, ifc_zip_file_data, ifc_multi_zip_file_data)
-from tests.database.security.conftest import gen_user_accounts
 
 from bemserver.api.default_api_settings import TestingConfig
 from bemserver.api import create_app
@@ -37,6 +31,10 @@ from bemserver.database.filestorage import FileStorageMgr
 from bemserver.database.relational import db
 from bemserver.database.security.security_manager import (
     SecurityManager, UserAccount)
+
+from tests.api.utils import JSONResponse, build_file_obj
+from tests.database.filestorage.conftest import (
+    ifc_file_data_stream, ifc_zip_file_data, ifc_multi_zip_file_data)
 
 
 class TestingConfigAuthCertificateEnabled(TestingConfig):
@@ -212,7 +210,8 @@ def _create_facades(building_ids, spaces):
 def _create_slabs(building_ids, floors):
     slabs_data = [
         {'name': 'slab_A', 'kind': 'BaseSlab', 'building_id': building_ids[0]},
-        {'name': 'slab_B', 'kind': 'FloorSlab', 'building_id': building_ids[0]},
+        {'name': 'slab_B', 'kind': 'FloorSlab',
+         'building_id': building_ids[0]},
         {'name': 'slab_C', 'building_id': building_ids[2]},
         {'name': 'slab_D', 'kind': 'Roof', 'building_id': building_ids[3]},
     ]

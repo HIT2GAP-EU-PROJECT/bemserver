@@ -21,8 +21,8 @@ class TreeSchemaView(ma.Schema):
         """Schema Meta properties"""
         strict = True
         ordered = True
-        dump_only = (
-            'children', 'label', 'level', 'name', 'parent', 'label_breadcrumb',)
+        dump_only = ('children', 'label', 'level', 'name', 'parent',
+                     'label_breadcrumb',)
 
     name = ma.fields.String(
         description='Type name'
@@ -98,7 +98,6 @@ class GeographicInfoSchema(ObjectSchema):
             values, see
             /api-docs/redoc#tag/geographical/paths/~1geographical~1climates~1/get'''
     )
-
 
 
 @rest_api.definition('GeographicInfo')
@@ -200,6 +199,7 @@ class LocalizationSchema(ObjectSchema):
         description='Unique identifier of a space',
     )
 
+
 class SystemSchema(ObjectSchema):
 
     _OBJ_CLS = System
@@ -208,7 +208,7 @@ class SystemSchema(ObjectSchema):
         """Schema Meta properties"""
         strict = True
 
-    id = ma.fields.UUID(  # pylint: disable=invalid-name
+    id = ma.fields.UUID(
         required=True,
         dump_only=True,
         description='System ID'
@@ -238,16 +238,20 @@ class SystemQueryArgsSchema(ma.Schema):
         description='System name'
     )
     site_id = ma.fields.UUID(
-        description='The unique identifier of the site in which the device is located'
+        description=(
+            'The unique identifier of the site in which the device is located')
     )
     building_id = ma.fields.UUID(
-        description='The unique identifier of the building in which the device is located'
+        description=(
+            'The unique identifier of the building in which device is located')
     )
     floor_id = ma.fields.UUID(
-        description='The unique identifier of the floor in which the device is located'
+        description=(
+            'The unique identifier of the floor in which device is located')
     )
     space_id = ma.fields.UUID(
-        description='The unique identifier of the space in which the device is located'
+        description=(
+            'The unique identifier of the space in which device is located')
     )
 
 
@@ -273,16 +277,17 @@ class SystemHateoasSchema(ma_hateoas.Schema):
             endpoint='systems.systembyid', device_id='<id>'),
         # 'site': ma_hateoas.URLFor(
         #     endpoint='sites.sitebyid', site_id='<site_id>')
-        #TODO create endpoint devices.devicetypes
-        #'kind': ma_hateoas.URLFor(endpoint='devices.devicetypes'),
-        #TODO create endpoints or URLs at least
-        #'systems': ma.fields.Nested(_RelationToSystem),
-        #'energy': ma.fields.Nested(_RelationToEnergy),
+        # TODO: create endpoint devices.devicetypes
+        # 'kind': ma_hateoas.URLFor(endpoint='devices.devicetypes'),
+        # TODO: create endpoints or URLs at least
+        # 'systems': ma.fields.Nested(_RelationToSystem),
+        # 'energy': ma.fields.Nested(_RelationToEnergy),
         # 'measures': ma.fields.List(
-        #     ma_hateoas.URLFor(endpoint='measures.measurebyid', device_id='<id>')
-        #)
+        #     ma_hateoas.URLFor(
+        #         endpoint='measures.measurebyid', device_id='<id>')
+        # )
 
-        # TODO: write this endpoint
+        # TODO: write this endpoint
         # 'distance_units': ma_hateoas.URLFor(
         #     endpoint='distanceunits.distanceunits'),
     }, description='HATEOAS resource links')

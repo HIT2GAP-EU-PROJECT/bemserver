@@ -1,11 +1,12 @@
 """Tests the interface Measure/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
 
 from bemserver.database import MeasureDB, SensorDB, SpaceDB
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import Measure, MeasureValueProperties
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -33,7 +34,6 @@ class TestMeasureDB(TestCoreDatabaseOntology):
         assert list(result) == []
 
         # create an item
-
         measure = Measure(
             init_sensors[0], 'DegreeCelsius', 'Air', 'Temperature',
             description='A sample measure', outdoor=True, set_point=True,
@@ -74,7 +74,6 @@ class TestMeasureDB(TestCoreDatabaseOntology):
 
         # assert set(measures[0].measures) == set(measure.measures)
 
-
     def test_db_measure_filter(
             self, init_spaces, init_sensors, get_created_building_ids):
         space_ids = init_spaces
@@ -95,7 +94,8 @@ class TestMeasureDB(TestCoreDatabaseOntology):
                     description='New sample measure'))
         measure_db.create(
             Measure(sensor_ids[1], 'DegreeCelsius', 'Air', 'Temperature',
-                    associated_locations=[str(space_ids[1]), str(space_ids[0])],
+                    associated_locations=[
+                        str(space_ids[1]), str(space_ids[0])],
                     description='New sample measure'))
 
         measures = list(measure_db.get_all(location_id=space_ids[0]))
@@ -137,8 +137,8 @@ class TestMeasureDB(TestCoreDatabaseOntology):
         material_pties = MeasureValueProperties(frequency=new_frequency)
         measure.value_properties = material_pties
         measure_db.update(measure.id, measure)
-        #
-        # # check that item has really been updated in database
+
+        # check that item has really been updated in database
         updated_measure = measure_db.get_by_id(measure.id)
         assert updated_measure.id == measure.id
         assert updated_measure.description == new_description

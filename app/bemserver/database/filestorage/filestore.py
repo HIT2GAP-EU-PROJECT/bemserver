@@ -103,7 +103,8 @@ class FileStorageEntry():
     def __init__(self, base_dir_path, file_id):
         """
         :param Path|str dir_path: Main file storage folder.
-        :param UUID file_id: File storage entry ID (used as unique folder path).
+        :param UUID file_id: File storage entry ID
+            (it is used as unique folder path).
         """
         if file_id is None:
             raise ValueError('Invalid file_id.')
@@ -224,7 +225,7 @@ class FileStorageEntry():
             raise FileExistsError(file_name)
         try:
             self._file_name = file_name
-            # save data stream in a file on disk
+            # save data stream in a file on disk
             if not self.file_path.parent.exists():
                 self.file_path.parent.mkdir()
             buffer_size = 16384
@@ -232,7 +233,7 @@ class FileStorageEntry():
             with open(str(self.file_path), 'wb') as cur_file:
                 shutil.copyfileobj(data_stream, cur_file, buffer_size)
         except (ValueError, shutil.Error) as exc:
-            # on errors, clean storage folder (transaction-like)
+            # on errors, clean storage folder (transaction-like)
             self.delete(ignore_errors=True)
             raise FileStorageSaveError(exc)
         finally:
@@ -248,7 +249,8 @@ class FileStorageEntry():
             Error while deleting file's storage folder.
         """
         try:
-            shutil.rmtree(str(self.entry_dir_path), ignore_errors=ignore_errors)
+            shutil.rmtree(
+                str(self.entry_dir_path), ignore_errors=ignore_errors)
         except shutil.Error as exc:
             if not ignore_errors:
                 raise FileStorageDeleteError(exc)
@@ -265,9 +267,8 @@ class FileStorageEntry():
             file_paths = [self.file_path]
             if include_extracted and self.extracted_dir_path.exists():
                 file_paths.extend([
-                    extracted_file_path
-                    for extracted_file_path in self.extracted_dir_path.iterdir()
-                    if extracted_file_path.is_file()])
+                    x for x in self.extracted_dir_path.iterdir()
+                    if x.is_file()])
         return file_paths
 
     def extract(self, *, pwd=None):
@@ -275,7 +276,8 @@ class FileStorageEntry():
 
         :param str pwd: Password used for encrypted files, optional.
         :returns [Path]: The storage path(s) of uncompressed archive content.
-        :raises FileStorageNotCompressedError: File is not a compressed archive.
+        :raises FileStorageNotCompressedError:
+            File is not a compressed archive (gz...).
         """
         if not self.is_compressed():
             raise FileStorageNotCompressedError()
@@ -286,7 +288,8 @@ class FileStorageEntry():
             with zipfile.ZipFile(str(self.file_path), 'r') as zipped_file:
                 for z_file_name in zipped_file.namelist():
                     extracted_file_path = zipped_file.extract(
-                        z_file_name, path=str(self.extracted_dir_path), pwd=pwd)
+                        z_file_name, path=str(self.extracted_dir_path),
+                        pwd=pwd)
                     extracted_file_paths.append(Path(extracted_file_path))
         else:
             extracted_file_paths = self.extracted_file_paths

@@ -1,12 +1,13 @@
 """Tests the interface Wall/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
 from marshmallow import ValidationError
 
 from bemserver.database import FacadeDB, SiteDB
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import Facade, SurfaceInfo
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -36,7 +37,6 @@ class TestWallDB(TestCoreDatabaseOntology):
         assert list(result) == []
 
         # create an item
-
         facade = Facade('Facade #0', space_ids[:1], SurfaceInfo(32.3, 23, 0.9),
                         building_ids[1], 0.323, orientation='South',
                         interior=True)

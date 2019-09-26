@@ -25,7 +25,8 @@ class Model(Thing):
     """Model class"""
 
     def __init__(self, name, service_id, description=None, parameters=None,
-                 event_output_ids=None, timeseries_output_ids=None, *, id=None):
+                 event_output_ids=None, timeseries_output_ids=None, *,
+                 id=None):
         super().__init__(id=id)
         self.name = name
         self.description = description
@@ -37,6 +38,7 @@ class Model(Thing):
     def get_set_of_parameters(self):
         """Returns the list of parameters as a set of pairs (name, value)"""
         return set([(param.name, param.value) for param in self.parameters])
+
 
 class Parameter:
     """Parameter class"""
@@ -55,11 +57,13 @@ class Output(Thing):
         self.module_id = module_id
         self.model_id = model_id
 
+
 class OutputEvent(Output):
     """Output event class"""
 
     def __init__(self, module_id, model_id, *, id=None):
         super().__init__(module_id, model_id, id=id)
+
 
 class ValuesDescription:
     """Description of the data generated as time series"""
@@ -69,11 +73,12 @@ class ValuesDescription:
         self.unit = unit
         self.sampling = sampling
 
+
 class OutputTimeSeries(Output):
     """Output time series"""
 
-    def __init__(self, module_id, model_id, localization,
-                 values_desc, *, external_id=None, id=None):
+    def __init__(self, module_id, model_id, localization, values_desc,
+                 *, external_id=None, id=None):
         super().__init__(module_id, model_id, id=id)
         self.localization = localization
         self.values_desc = values_desc

@@ -1,8 +1,8 @@
 """Tests for system data model"""
 
-from tests import TestCoreModel
+# from bemserver.models.system import SystemType
 
-#from bemserver.models.system import SystemType
+from tests import TestCoreModel
 
 
 class TestModelSystem(TestCoreModel):

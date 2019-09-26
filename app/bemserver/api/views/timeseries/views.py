@@ -36,11 +36,13 @@ class TimeseriesById(MethodView):
     @limiter.limit(1)
     @api.doc(
         summary='Get values for a timeseries',
-        description='''Given a measure ID, returns the list of pairs (timestamp, value)
-        for this measure. **Beware that, if the time range is too wide in the request,
-        this can take a LONG time!**
+        description='''Given a measure ID, returns the list of pairs
+        (timestamp, value) for this measure. **Beware that, if the time range
+        is too wide in the request, this can take a LONG time!**
         Unit conversion can be performed for a request.<br>
-        *Example:* /timeseries/my_timeseries_id?start_time=2019-06-18T00:00:00&end_time=2019-06-19T00:00:00''',
+        *Example:* `/timeseries/my_timeseries_id?start_time=2019-06-18T00:00:00
+        &end_time=2019-06-19T00:00:00`
+        ''',
         responses=build_responses(
             [200, 404, 422, 500], schemas={200: TimeseriesSchema})
     )
@@ -136,6 +138,7 @@ def timeseries_by_id_stats(args, timeseries_id):
     ret_ts = get_timeseries_by_item(item, t_start, t_end)
     return ret_ts.stats()
 
+
 @api.route('/<string:timeseries_id>/resample')
 @auth_required(roles=[
     'building_manager', 'module_data_provider', 'module_data_processor'])
@@ -146,12 +149,12 @@ def timeseries_by_id_stats(args, timeseries_id):
                  frequency. It does downsampling but no upsampling:
                  the frequency passed as parameter need to be higher that the
                  original frequency of the timeseries.<br>Data are then
-                 aggregated according to the operation specified in the request.
-                 <br><br>For instance, an hourly measured energy consumption can be
-                 transformed into a daily energy consumption with parameters
-                 `'day`' and `'sum`'<br>A measure of ambient temperature collected
-                 every second, can be gathered at an hourly frequency with
-                 parameters `'hour`' and `'mean`'.'''),
+                 aggregated according to the operation specified in the
+                 request.<br><br>For instance, an hourly measured energy
+                 consumption can be transformed into a daily energy consumption
+                 with parameters `'day`' and `'sum`'<br>A measure of ambient
+                 temperature collected every second, can be gathered at an
+                 hourly frequency with parameters `'hour`' and `'mean`'.'''),
     responses=build_responses(
         [200, 404, 422, 500], schemas={200: TimeseriesSchema})
 )
@@ -165,21 +168,21 @@ def timeseries_by_id_resample(args, timeseries_id):
         timeseries_id, t_start, t_end, target_unit, freq, aggregation)
     return {'data': tsio.tsdump(ret_ts, to_isotime=True)}
 
+
 @api.route('/aggregate')
 @auth_required(roles=[
     'building_manager', 'module_data_provider', 'module_data_processor'])
 @limiter.limit(1)
 @api.doc(
     summary='Aggregate timeseries data.',
-    description=('This endpoint returns multiple timeseries aggregated. Data'
-                 'are aggregated according to the '
-                 'method (operation) specific in the requrest and resampled at '
-                 'a given frequency with specified method '
-                 '(resampling_method).<br>'
-                 '*Example* If `measure1` and `measure2` are both temperature'
-                 'measures in some room, one can get the average temperature in'
-                 'the room based on these two measures:<br>'
-                 '''`/timeseries/aggregate/?start_time=DATE1&end_time=DATE2&
+    description=('''This endpoint returns multiple timeseries aggregated. Data
+                 are aggregated according to the method (operation) specific in
+                 the requrest and resampled at a given frequency with specified
+                 method (resampling_method).<br>
+                 *Example* If `measure1` and `measure2` are both temperature
+                 measures in some room, one can get the average temperature in
+                 the room based on these two measures:<br>
+                 `/timeseries/aggregate/?start_time=DATE1&end_time=DATE2&
                  freq=min&ts_ids=['measure1','measure2']&operation=mean`'''),
     responses=build_responses(
         [200, 404, 422, 500], schemas={200: TimeseriesSchema})

@@ -2,7 +2,7 @@
 
 from io import BytesIO
 
-from .api_response import JSONResponse  # republishing
+from .api_response import JSONResponse  # noqa
 
 
 def build_file_obj(file_name, file_content):

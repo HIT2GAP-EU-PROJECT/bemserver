@@ -1,6 +1,7 @@
 """Tests for api output views"""
 
 import pytest
+
 from tests import TestCoreApi
 from tests.utils import uuid_gen
 
@@ -70,7 +71,8 @@ class TestApiViewsEventOutputs(TestCoreApi):
         assert response.status_code == 404
 
     @pytest.mark.parametrize(
-        'init_db_data', [{'gen_services': True, 'gen_models': True}], indirect=True)
+        'init_db_data', [{'gen_services': True, 'gen_models': True}],
+        indirect=True)
     def test_views_event_outputs_post(self, init_db_data):
         """Test post api endpoint"""
 
@@ -207,7 +209,8 @@ class TestApiViewsTimeSeriesOutputs(TestCoreApi):
         assert response.status_code == 404
 
     @pytest.mark.parametrize(
-        'init_db_data', [{'gen_services': True, 'gen_models': True}], indirect=True)
+        'init_db_data', [{'gen_services': True, 'gen_models': True}],
+        indirect=True)
     def test_views_timeseries_outputs_post(self, init_db_data):
         """Test post api endpoint"""
 

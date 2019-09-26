@@ -1,18 +1,15 @@
 """Tests for api building views"""
 
 from werkzeug.utils import secure_filename
-
 import pytest
-from tests import TestCoreApi
-from tests.utils import uuid_gen
-from tests.api.utils import build_file_obj
-from tests.database.filestorage.conftest import ifc_file_data
 
 from bemserver.api.views.ifc.exceptions import IFCFileBadArchiveError
 from bemserver.database.exceptions import ItemSaveError
 
-
-# TODO: all tests must be improved when a real database will be available...
+from tests import TestCoreApi
+from tests.utils import uuid_gen
+from tests.api.utils import build_file_obj
+from tests.database.filestorage.conftest import ifc_file_data
 
 
 @pytest.mark.usefixtures('init_app')
@@ -32,7 +29,7 @@ class TestApiViewsIFC(TestCoreApi):
     def test_views_ifc_get_list_empty(self):
         """Test get_list api endpoint"""
 
-        # Get IFC files list: no items
+        # Get IFC files list: no items
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 0
@@ -43,7 +40,7 @@ class TestApiViewsIFC(TestCoreApi):
     def test_views_ifc_get_list_filter(self):
         """Test get_list (with filter) api endpoint"""
 
-        # Get item list: 4 items found
+        # Get item list: 4 items found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -53,7 +50,7 @@ class TestApiViewsIFC(TestCoreApi):
         response = self.get_items(headers={'If-None-Match': etag_value})
         assert response.status_code == 304
 
-        # Get item list with a filter: 1 item found
+        # Get item list with a filter: 1 item found
         response = self.get_items(original_file_name='file_A.ifc')
         assert response.status_code == 200
         assert len(response.json) == 1
@@ -64,7 +61,7 @@ class TestApiViewsIFC(TestCoreApi):
     def test_views_ifc_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
-        # Get item list:
+        # Get item list:
         # sorting by name descending
         response = self.get_items(sort='-file_name')
         assert response.status_code == 200
@@ -115,7 +112,7 @@ class TestApiViewsIFC(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 0
 
-        # Post an ifc file
+        # Post an ifc file
         response = self.post_item(
             description='A description of the file...', file=ifc_file_obj,
             content_type='multipart/form-data')
@@ -124,7 +121,7 @@ class TestApiViewsIFC(TestCoreApi):
         assert response.json['original_file_name'] == file_name
         assert response.json['file_name'] == secure_filename(file_name)
 
-        # Get ifc file list: 1 item found
+        # Get ifc file list: 1 item found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 1
@@ -143,24 +140,24 @@ class TestApiViewsIFC(TestCoreApi):
         # missing file (422)
         response = self.post_item(content_type='multipart/form-data')
         assert response.status_code == 422
-        # wrong file format (422)
+        # wrong file format (422)
         response = self.post_item(
             file=build_file_obj('wrong_format.pdf', 'just a test'),
             content_type='multipart/form-data')
         assert response.status_code == 422
-        # more than ONE file in zipped archive (500)
+        # more than ONE file in zipped archive (500)
         with pytest.raises(IFCFileBadArchiveError):
             self.post_item(
                 file=zip_multi_file_obj, content_type='multipart/form-data')
-        # save error (500)
+        # save error (500)
         # XXX: update this test when database is not mocked anymore
         with pytest.raises(ItemSaveError):
             self.post_item(
                 file=build_file_obj('save_error.ifc', file_content),
                 content_type='multipart/form-data')
 
-        # Remarks:
-        # id is 'read only'
+        # Remarks:
+        # id is 'read only'
         new_id = str(uuid_gen())
         ifc_file_name = 'id_is_read_only.ifc'
         response = self.post_item(
@@ -182,7 +179,7 @@ class TestApiViewsIFC(TestCoreApi):
         assert response.status_code == 200
         etag_value = response.headers.get('etag', None)
 
-        # Delete an item...
+        # Delete an item...
         response = self.delete_item(
             item_id=str(ifc_file_id),
             headers={'If-Match': etag_value})
@@ -207,9 +204,8 @@ class TestApiViewsIFC(TestCoreApi):
         # Download file
         response = self.get_subitem_by_id(
             item_id=str(ifc_file_id),
-            subitem_params=
-            {'download': {'item_id': init_db_data['ifc_files'][ifc_file_id]}}
-            )
+            subitem_params={'download': {
+                'item_id': init_db_data['ifc_files'][ifc_file_id]}})
         assert response.status_code == 200
         assert response.data == bytes(file_content, 'utf-8')
 

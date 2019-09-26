@@ -46,8 +46,9 @@ class FloorSchema(ObjectSchema):
         required=True,
         validate=validate_kind,
         description='''A type associated to the floor. See
-            /api-docs/redoc#tag/floors/paths/\~1floors\~1types\~1/get for the full
-            list of available types, and use the value in the `name` field.'''
+            /api-docs/redoc#tag/floors/paths/\\~1floors\\~1types\\~1/get for
+            the full list of available types, and use the value in the
+            `name` field.'''
     )
     level = ma.fields.Integer(
         required=True,
@@ -69,7 +70,7 @@ class FloorSchema(ObjectSchema):
 
 
 ##########
-# Schemas for API query parameters or request body
+# Schemas for API query parameters or request body
 
 class FloorQueryArgsSchema(ma.Schema):
     """Floor get query parameters schema"""
@@ -117,7 +118,7 @@ class FloorHateoasSchema(ma_hateoas.Schema):
         'parent': ma_hateoas.URLFor(
             endpoint='buildings.BuildingsById', building_id='<building_id>'),
         'kinds': ma_hateoas.URLFor(endpoint='floors.FloorTypes'),
-        # TODO: write this endpoint
+        # TODO: write this endpoint
         # 'distance_units': ma_hateoas.URLFor(
         #     endpoint='distanceunits.distanceunits'),
     }, description='HATEOAS resource links')

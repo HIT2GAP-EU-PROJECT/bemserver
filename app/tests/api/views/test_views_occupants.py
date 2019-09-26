@@ -1,11 +1,9 @@
 """Tests for api occupant views"""
 
 import pytest
+
 from tests import TestCoreApi
 from tests.utils import uuid_gen, get_dictionary_no_none
-
-
-# TODO: all tests must be improved when a real database will be available...
 
 
 @pytest.mark.usefixtures('init_app')
@@ -17,17 +15,18 @@ class TestApiViewsOccupants(TestCoreApi):
     def test_views_occupants_get_list_empty(self):
         """Test get_list api endpoint"""
 
-        # Get list: no items
+        # Get list: no items
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 0
 
+    @pytest.mark.usefixtures('init_db_data')
     @pytest.mark.parametrize(
         'init_db_data', [{'gen_occupants': True}], indirect=True)
-    def test_views_occupants_get_list_filter(self, init_db_data):
+    def test_views_occupants_get_list_filter(self):
         """Test get_list (with filter) api endpoint"""
 
-        # Get list: 4 items found
+        # Get list: 4 items found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -37,18 +36,19 @@ class TestApiViewsOccupants(TestCoreApi):
         response = self.get_items(headers={'If-None-Match': etag_value})
         assert response.status_code == 304
 
-        # Get list with a filter: age_category found
+        # Get list with a filter: age_category found
         response = self.get_items(age_category='ac_65')
         assert response.status_code == 200
         assert len(response.json) == 2
 
+    @pytest.mark.usefixtures('init_db_data')
     @pytest.mark.parametrize(
         'init_db_data', [{'gen_occupants': True}], indirect=True)
-    def test_views_occupants_get_list_sort(self, init_db_data):
+    def test_views_occupants_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
-        # Get list:
-        # sorting by token_id descending
+        # Get list:
+        # sorting by token_id descending
         response = self.get_items(sort='-token_id')
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -84,11 +84,11 @@ class TestApiViewsOccupants(TestCoreApi):
     def test_views_occupants_post(self):
         """Test post api endpoint"""
 
-        # Post a new occupant
+        # Post a new occupant
         response = self.post_item(
             token_id='123456', gender='Male',
             age_category='ac_65',
-            workspace={'kind':'office', 'desk_location_window':'far'})
+            workspace={'kind': 'office', 'desk_location_window': 'far'})
         assert response.status_code == 201
         assert response.json['id'] is not None
         assert response.json['token_id'] == '123456'
@@ -101,7 +101,7 @@ class TestApiViewsOccupants(TestCoreApi):
         # AgeCategory not a number (422)
         response = self.post_item(
             token_id='123456', gender='Male', age_category='wrong',
-            workspace={'desk_location_window':'far', 'kind':'office'})
+            workspace={'desk_location_window': 'far', 'kind': 'office'})
         assert response.status_code == 422
 
     @pytest.mark.parametrize(
@@ -146,7 +146,7 @@ class TestApiViewsOccupants(TestCoreApi):
         assert response.status_code == 200
         etag_value = response.headers.get('etag', None)
 
-        # Delete a occupant...
+        # Delete a occupant...
         response = self.delete_item(
             item_id=occupant_id, headers={'If-Match': etag_value})
         # ...delete done

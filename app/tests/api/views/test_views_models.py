@@ -1,6 +1,7 @@
 """Tests for api model views"""
 
 import pytest
+
 from tests import TestCoreApi
 from tests.utils import uuid_gen
 

@@ -47,28 +47,28 @@ class EventSchema(ObjectSchema):
 
     site_id = ma.fields.String(
         required=True,
-        description='''The unique ID of the site; must be one of the `id` in'''
-        '''`/sites` API.'''
+        description='''The unique ID of the site; must be one of the `id` in
+            `/sites` API.'''
     )
     building_id = ma.fields.String(
-        description='''The unique ID of the building; must be one of the `id` in'''
-        '''`/buildings` API.'''
+        description='''The unique ID of the building; must be one of the `id` in
+            `/buildings` API.'''
     )
     floor_id = ma.fields.String(
-        description='''The unique ID of the floor; must be one of the `id` in'''
-        '''`/floors` API.'''
+        description='''The unique ID of the floor; must be one of the `id` in
+            `/floors` API.'''
     )
     space_id = ma.fields.String(
-        description='''The unique ID of the space; must be one of the `id` in'''
-        '''`/spaces` API.'''
+        description='''The unique ID of the space; must be one of the `id` in
+            `/spaces` API.'''
     )
     sensor_ids = StringList(
         missing=list,
         description='''A list of sensors, that originated the generation of the
-            event. This can be refer to faulty sensors  (`measures`
-            category); or the reason why an abnormal consumption was detected...
-            <br>The sensor_ids must be taken from the `id` field in the `/sensors`
-            API'''
+            event. This can be refer to faulty sensors  (`measures` category);
+            or the reason why an abnormal consumption was detected...
+            <br>The sensor_ids must be taken from the `id` field in the
+            `/sensors` API'''
     )
 
     level = ma.fields.String(
@@ -123,20 +123,20 @@ class EventQueryArgsSchema(SortQueryArgsSchema):
         ordered = True
 
     site_id = ma.fields.String(
-        description='''The unique ID of the site; must be one of the `id` in'''
-        '''`/sites` API.'''
+        description='''The unique ID of the site; must be one of the `id` in
+            `/sites` API.'''
     )
     building_id = ma.fields.String(
-        description='''The unique ID of the building; must be one of the `id` in'''
-        '''`/buildings` API.'''
+        description='''The unique ID of the building; must be one of the `id` in
+            `/buildings` API.'''
     )
     floor_id = ma.fields.String(
-        description='''The unique ID of the floor; must be one of the `id` in'''
-        '''`/floors` API.'''
+        description='''The unique ID of the floor; must be one of the `id` in
+            `/floors` API.'''
     )
     sensor_id = ma.fields.String(
-        description='''The unique ID of the sensor; must be one of the `id` in'''
-        '''`/sensors` API.'''
+        description='''The unique ID of the sensor; must be one of the `id` in
+            `/sensors` API.'''
     )
 
     level = ma.fields.String(
@@ -149,14 +149,18 @@ class EventQueryArgsSchema(SortQueryArgsSchema):
     )
 
     min_start_time = ma.fields.DateTime(
-        description='Events for which start_time >= min_start_time will be filtered in.',
+        description="""Events for which start_time >= min_start_time will be
+            filtered in.""",
         example='2017-01-01T00:00:00')
     max_start_time = ma.fields.DateTime(
-        description='Events for which start_time < max_start_time will be filterd in.',
+        description="""Events for which start_time < max_start_time will be
+            filterd in.""",
         example='2017-01-01T00:00:00')
     min_end_time = ma.fields.DateTime(
-        description='Events for which end_time >= end_start_time will be filtered in.',
+        description="""Events for which end_time >= end_start_time will be
+            filtered in.""",
         example='2017-01-01T00:00:00')
     max_end_time = ma.fields.DateTime(
-        description='Events for which end_time < end_start_time will be filtered in.',
+        description="""Events for which end_time < end_start_time will be
+            filtered in.""",
         example='2017-01-01T00:00:00')

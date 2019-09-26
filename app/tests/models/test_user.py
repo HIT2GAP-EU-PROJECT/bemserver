@@ -1,8 +1,8 @@
 """Tests for user data model"""
 
-from tests import TestCoreModel
-
 from bemserver.models import User
+
+from tests import TestCoreModel
 
 
 class TestModelUser(TestCoreModel):

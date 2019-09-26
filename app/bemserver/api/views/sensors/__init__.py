@@ -8,7 +8,6 @@ bp = Blueprint('sensors', __name__, url_prefix='/sensors',
 
 
 def init_app(app):
-    # pylint: disable=unused-variable
     """Initialize application with module"""
 
     from . import views  # noqa

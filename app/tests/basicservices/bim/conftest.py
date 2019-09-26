@@ -1,9 +1,10 @@
 """Fixtures for import_data basic services tests"""
 
 import pytest
-from tests.utils import build_data_samples_path
 
 from bemserver.database import DBAccessor, init_handlers
+
+from tests.utils import build_data_samples_path
 
 
 @pytest.fixture(params=['sample_test.ifc'])

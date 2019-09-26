@@ -2,13 +2,12 @@
 
 import logging
 from unittest import mock
-
 import pytest
-from tests import TestCoreDatabaseOntology
-
 from bemserver.database.ontology.exceptions import SPARQLError
 from bemserver.database.ontology.manager import (
     PREFIX, SPARQLOP, ontology_manager_factory)
+
+from tests import TestCoreDatabaseOntology
 
 
 class TestOntologyManagerPrefixEnum():
@@ -38,9 +37,9 @@ class TestOntologyManager(TestCoreDatabaseOntology):
             result = onto_mgr.perform(
                 SPARQLOP.SELECT,
                 """
-                    PREFIX ifc:<http://www.buildingsmart-tech.org/ifcOWL/IFC2X3_Final#>
-                    SELECT ?elt
-                    WHERE {?elt a ifc:IfcSite}
+PREFIX ifc:<http://www.buildingsmart-tech.org/ifcOWL/IFC2X3_Final#>
+SELECT ?elt
+WHERE {?elt a ifc:IfcSite}
                 """)
             return len(result.values)
 
@@ -48,9 +47,9 @@ class TestOntologyManager(TestCoreDatabaseOntology):
         onto_mgr.perform(
             SPARQLOP.INSERT,
             """
-                PREFIX ifc:<http://www.buildingsmart-tech.org/ifcOWL/IFC2X3_Final#>
-                INSERT DATA
-                {_:site1 a ifc:IfcSite}
+PREFIX ifc:<http://www.buildingsmart-tech.org/ifcOWL/IFC2X3_Final#>
+INSERT DATA
+{_:site1 a ifc:IfcSite}
             """)
         assert count_values() == count + 1
 

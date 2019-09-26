@@ -1,12 +1,13 @@
 """Tests for api zone views"""
 
 import pytest
-from tests import TestCoreApi, TestCoreApiAuthCert
-from tests.utils import uuid_gen
-from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 from bemserver.api.extensions.database import db_accessor as dba
 from bemserver.models import Building
+
+from tests import TestCoreApi, TestCoreApiAuthCert
+from tests.utils import uuid_gen
+from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 
 @pytest.mark.usefixtures('init_app')
@@ -18,7 +19,7 @@ class TestApiViewsZones(TestCoreApi):
     def test_views_zones_get_list_empty(self):
         """Test get_list api endpoint"""
 
-        # Get list: no items
+        # Get list: no items
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 0
@@ -32,7 +33,7 @@ class TestApiViewsZones(TestCoreApi):
         # retrieve database informations
         building_id = str(init_db_data['buildings'][0])
 
-        # Get list: 4 found
+        # Get list: 4 found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -42,19 +43,20 @@ class TestApiViewsZones(TestCoreApi):
         response = self.get_items(headers={'If-None-Match': etag_value})
         assert response.status_code == 304
 
-        # Get list with a filter: 4 zones found
+        # Get list with a filter: 4 zones found
         response = self.get_items(building_id=building_id)
         assert response.status_code == 200
         assert len(response.json) == 2
 
     @pytest.mark.xfail
+    @pytest.mark.usefixtures('init_db_data')
     @pytest.mark.parametrize('init_db_data', [
         {'gen_floors': True, 'gen_spaces': True, 'gen_zones': True}
         ], indirect=True)
-    def test_views_zones_get_list_sort(self, init_db_data):
+    def test_views_zones_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
-        # Get list:
+        # Get list:
         # sorting by name descending
         response = self.get_items(sort='-name')
         assert response.status_code == 200
@@ -64,7 +66,7 @@ class TestApiViewsZones(TestCoreApi):
         assert response.json[2]['name'] == 'zone_B'
         assert response.json[3]['name'] == 'zone_A'
 
-        # sorting by name ascending
+        # sorting by name ascending
         response = self.get_items(sort='name')
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -99,7 +101,7 @@ class TestApiViewsZones(TestCoreApi):
         assert response.status_code == 404
 
     @pytest.mark.parametrize('init_db_data', [
-        {'gen_buildings':True, 'gen_floors':True, 'gen_spaces':True}
+        {'gen_buildings': True, 'gen_floors': True, 'gen_spaces': True}
         ], indirect=True)
     def test_views_zones_post(self, init_db_data):
         """Test post api endpoint"""
@@ -117,9 +119,10 @@ class TestApiViewsZones(TestCoreApi):
         response = self.post_item(
             name='Zone 51', spaces=z_spaces, building_id=building_id)
         assert response.status_code == 422
-        assert response.json['errors'] == {'spaces': {'0': ['Reference not found']}}
+        assert response.json['errors'] == {
+            'spaces': {'0': ['Reference not found']}}
 
-        # Post a new item - with an existing space ID
+        # Post a new item - with an existing space ID
         z_spaces = [str(init_db_data['spaces'][0])]
         response = self.post_item(
             name='Zone 51', spaces=z_spaces, building_id=building_id)
@@ -130,13 +133,13 @@ class TestApiViewsZones(TestCoreApi):
         assert response.json['spaces'] == z_spaces
         assert 'description' not in response.json
 
-        # Get list: 1 found
+        # Get list: 1 found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 1
 
         # Remarks:
-        # id is 'read only'
+        # id is 'read only'
         new_id = str(uuid_gen())
         response = self.post_item(
             id=new_id, name='id_is_read_only', spaces=z_spaces,
@@ -163,9 +166,9 @@ class TestApiViewsZones(TestCoreApi):
         # Update...
         z_name_updated = 'Trap zone'
         response = self.put_item(
-            item_id=zone_id, name=z_name_updated, zones=zone_json.json['zones'],
-            spaces=zone_json.json['spaces'], building_id=building_id,
-            headers={'If-Match': etag_value})
+            item_id=zone_id, name=z_name_updated,
+            zones=zone_json.json['zones'], spaces=zone_json.json['spaces'],
+            building_id=building_id, headers={'If-Match': etag_value})
         # ...update done
         assert response.status_code == 200
         assert response.json['name'] == z_name_updated
@@ -186,7 +189,7 @@ class TestApiViewsZones(TestCoreApi):
         assert response.status_code == 200
         etag_value = response.headers.get('etag', None)
 
-        # Delete...
+        # Delete...
         response = self.delete_item(
             item_id=zone_id,
             headers={'If-Match': etag_value})
@@ -226,7 +229,7 @@ class TestApiViewsZonesPermissions(TestCoreApiAuthCert):
         assert response.status_code == 200
         assert len(response.json) == 3
         zone_data = response.json[0]
-        # verify that parent site IDs are in allowed site IDs
+        # verify that parent site IDs are in allowed site IDs
         for zone in response.json:
             site_id = dba.get_parent(Building, zone['building_id'])
             assert uacc.verify_scope(sites=[site_id])

@@ -13,7 +13,7 @@ class StrictDateTime(ma.fields.DateTime):
     Borrowed from umongo
     """
 
-    def __init__(self, load_as_tz_aware=False, *args, **kwargs):
+    def __init__(self, *args, load_as_tz_aware=False, **kwargs):
         super().__init__(*args, **kwargs)
         self.load_as_tz_aware = load_as_tz_aware
 

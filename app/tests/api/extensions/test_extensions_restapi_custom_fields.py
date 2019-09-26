@@ -1,13 +1,12 @@
 """Tests for api custom fields extensions"""
 
 import pytest
-from tests import TestCoreApi
-
-from werkzeug import FileStorage
-
 import marshmallow as ma
+from werkzeug.datastructures import FileStorage
 
 from bemserver.api.extensions.rest_api.custom_fields import FileField
+
+from tests import TestCoreApi
 
 
 class TestApiExtensionsCustomFields(TestCoreApi):
@@ -24,7 +23,6 @@ class TestApiExtensionsCustomFields(TestCoreApi):
                 allowed_file_extensions=('.pdf',)
             )
 
-
         file_storage = FileStorage(filename='test.pdf')
 
         file_datas = SampleSchema().load({
@@ -32,7 +30,7 @@ class TestApiExtensionsCustomFields(TestCoreApi):
         }).data
         assert file_datas['input_file'] == file_storage
 
-        # Errors
+        # Errors
         # validation: wrong file extension
         with pytest.raises(ma.ValidationError):
             SampleSchema().load({

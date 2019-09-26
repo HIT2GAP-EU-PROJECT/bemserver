@@ -1,10 +1,11 @@
 """Tests for api auth views"""
 
 import pytest
-from tests import TestCoreApi
-from tests.api.views.conftest import TestingConfig
 
 from bemserver.api.extensions.auth import is_auth_enabled
+
+from tests import TestCoreApi
+from tests.api.views.conftest import TestingConfig
 
 
 class TestingConfigAuthDemoEnabled(TestingConfig):
@@ -135,9 +136,10 @@ class TestApiViewsAuthDemo(TestCoreApi):
         assert 'access granted' in response.json
         assert login_id in response.json
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize(
         'init_app', [TestingConfigAuthDemoModesEnabled], indirect=True)
-    def test_views_auth_demo_cert_login(self, certificate_data, init_db_data):
+    def test_views_auth_demo_cert_login(self, certificate_data):
         # try to log in
         response = self.post_item(
             extra_uri='cert', headers={'SSL_CLIENT_S_DN': certificate_data})

@@ -2,17 +2,15 @@
 
 import datetime as dt
 import pytz
-
 import numpy as np
 import pandas as pd
-
 import pytest
-from tests import TestCoreDatabase
 
 from bemserver.models import Timeseries
-
 from bemserver.database.timeseries.hdfstore import (
     HDFStoreTimeseriesMgr, HDF_LOCK)
+
+from tests import TestCoreDatabase
 
 
 class TestHDFStoreTimeseriesManager(TestCoreDatabase):

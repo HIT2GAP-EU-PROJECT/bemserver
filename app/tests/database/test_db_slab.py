@@ -1,12 +1,12 @@
 """Tests the interface Slab/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
-from marshmallow import ValidationError
 
 from bemserver.database import SlabDB, SiteDB
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import Slab, SurfaceInfo
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -36,7 +36,6 @@ class TestSlabDB(TestCoreDatabaseOntology):
         assert list(result) == []
 
         # create an item
-
         slab = Slab('Slab #0', floor_ids[:1], SurfaceInfo(32.3, 23, 0.9),
                     building_ids[1], kind='Roof')
         new_slab_id = slab_db.create(slab)

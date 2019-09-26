@@ -2,14 +2,15 @@
 
 from abc import ABC, abstractmethod
 
-from ..tools.custom_enum import HierarchyEnum
+# from ..tools.custom_enum import HierarchyEnum
 from .thing import Thing
 
 
 # class HVACSystemSpec():
 #     """HVAC system attributes"""
-#
-#     def __init__(self, heating=False, cooling=False, indoor_air_quality=False):
+
+#     def __init__(self, heating=False, cooling=False,
+#                  indoor_air_quality=False):
 #         self.heating = heating
 #         self.cooling = cooling
 #         self.indoor_air_quality = indoor_air_quality
@@ -51,14 +52,16 @@ from .thing import Thing
 #         'Humidifier', 'hvac', HVACSystemSpec(indoor_air_quality=True))
 #     hvac_evaporator = (
 #         'Evaporator', 'hvac', HVACSystemSpec(indoor_air_quality=True))
-#     hvac_vibration_isolator = ('Vibration isolator', 'hvac', HVACSystemSpec())
+#     hvac_vibration_isolator = (
+#         'Vibration isolator', 'hvac', HVACSystemSpec())
 #     hvac_chilled_beams = (
 #         'Chilled beams', 'hvac', HVACSystemSpec(cooling=True))
 #     hvac_fan_coil_unit = (
 #         'Fan coil unit', 'hvac', HVACSystemSpec(heating=True, cooling=True))
 #     hvac_heat_pump = (
 #         'Heat pump', 'hvac', HVACSystemSpec(heating=True, cooling=True))
-#     hvac_cooling_tower = ('Cooling tower', 'hvac', HVACSystemSpec(cooling=True))
+#     hvac_cooling_tower = (
+#         'Cooling tower', 'hvac', HVACSystemSpec(cooling=True))
 #     hvac_plant = ('Plant', 'hvac', HVACSystemSpec())
 #     hvac_fire_suppression_terminal = (
 #         'Fire suppression terminal', 'hvac', HVACSystemSpec())
@@ -86,7 +89,8 @@ from .thing import Thing
 #     # electrical
 #     electrical = ('Electrical')
 #     electrical_electric_flow_storage = (
-#         'Electric flow storage', 'electrical', ElectricalSystemSpec(store=True))
+#         'Electric flow storage', 'electrical',
+#         ElectricalSystemSpec(store=True))
 #     # audivisual appliance
 #     electrical_audiovisual_appliance = (
 #         'Audiovisual appliance', 'electrical',
@@ -138,7 +142,8 @@ from .thing import Thing
 #         'Scanner', 'electrical_communication_appliance')
 #     # electric appliance
 #     electrical_electric_appliance = (
-#         'Electric appliance', 'electrical', ElectricalSystemSpec(consumer=True))
+#         'Electric appliance', 'electrical',
+#         ElectricalSystemSpec(consumer=True))
 #     electrical_electric_appliance_dishwater = (
 #         'Dishwater', 'electrical_electric_appliance')
 #     electrical_electric_appliance_boiler = (
@@ -225,6 +230,7 @@ from .thing import Thing
 #             cur_item = cur_item.parent
 #         return cur_item._properties
 
+
 class Localization():
     """Localization class - associated to a system"""
 
@@ -236,6 +242,7 @@ class Localization():
         self.building_id = building_id
         self.floor_id = floor_id
         self.space_id = space_id
+
 
 class System(Thing, ABC):
     """Abstract class for systems"""

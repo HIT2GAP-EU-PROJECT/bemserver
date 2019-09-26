@@ -54,7 +54,7 @@ class ZoneSchema(ObjectSchema):
 
 
 ##########
-# Schemas for API query parameters or request body
+# Schemas for API query parameters or request body
 
 class ZoneQueryArgsSchema(ma.Schema):
     """Query parameters schema"""
@@ -98,7 +98,7 @@ class ZoneHateoasSchema(ma_hateoas.Schema):
             endpoint='buildings.BuildingsById', building_id='<building_id>'),
     }, description='HATEOAS resource links')
 
-    # TODO: see what is possible here
+    # TODO: see what is possible here
     # _embedded = ma_hateoas.Hyperlinks(schema={
     #     'spaces': {
     #         '_links': {

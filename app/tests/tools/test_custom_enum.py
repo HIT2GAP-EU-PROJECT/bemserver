@@ -2,9 +2,9 @@
 
 from collections import OrderedDict
 
-from tests import TestCoreTools
-
 from bemserver.tools.custom_enum import HierarchyEnum
+
+from tests import TestCoreTools
 
 
 class TestToolsHierarchyEnum(TestCoreTools):
@@ -36,9 +36,7 @@ class TestToolsHierarchyEnum(TestCoreTools):
             lvl_2 = ('Level #2', 'lvl_1')
             lvl_3 = ('Level #3', 'lvl_2')
 
-
         self.SampleHierarchyEnum = SampleHierarchyEnum
-
 
     def test_tools_hierarchy_enum_ancestors(self):
         """Test ancestor features (parent, grand_parent, ...)"""
@@ -48,14 +46,14 @@ class TestToolsHierarchyEnum(TestCoreTools):
         # 'root' item has no parent...
         assert not item.has_parent
         assert item.parent is None
-        # ...nor grand parent
+        # ...nor grand parent
         assert item.grand_parent is None
         # 'root' item is first level of hierarchy
         assert item.level == 0
         assert item.get_ancestor_level(0) is item
-        # ancestor #0 is itself
+        # ancestor #0 is itself
         assert item.get_ancestor(0) is item
-        # no further ancestor exists
+        # no further ancestor exists
         assert item.get_ancestor(1) is None  # parent
         assert item.get_ancestor(42) is None
 
@@ -67,16 +65,16 @@ class TestToolsHierarchyEnum(TestCoreTools):
         assert item.parent is self.SampleHierarchyEnum.family
         assert item.parent_name == item.parent.name
         assert item.parent is not self.SampleHierarchyEnum.vehicle
-        # no grand parent
+        # no grand parent
         assert item.grand_parent is None
         # as expected item level is 1
         assert item.level == 1
         assert item.get_ancestor_level(1) is item
-        # ancestor #0 is itself
+        # ancestor #0 is itself
         assert item.get_ancestor(0) is item
-        # ancestor #1 is its parent
+        # ancestor #1 is its parent
         assert item.get_ancestor(1) is item.parent
-        # no further ancestor exists
+        # no further ancestor exists
         assert item.get_ancestor(2) is None  # grand parent
         assert item.get_ancestor(42) is None
 
@@ -91,13 +89,13 @@ class TestToolsHierarchyEnum(TestCoreTools):
         # as expected item level is 2
         assert item.level == 2
         assert item.get_ancestor_level(2) is item
-        # ancestor #0 is itself
+        # ancestor #0 is itself
         assert item.get_ancestor(0) is item
-        # ancestor #1 is its parent
+        # ancestor #1 is its parent
         assert item.get_ancestor(1) is item.parent
-        # ancestor #2 is its grand parent
+        # ancestor #2 is its grand parent
         assert item.get_ancestor(2) is item.grand_parent
-        # no further ancestor exists
+        # no further ancestor exists
         assert item.get_ancestor(3) is None  # grand grand parent
         assert item.get_ancestor(42) is None
         # ancestor level 1 is item parent
@@ -110,7 +108,7 @@ class TestToolsHierarchyEnum(TestCoreTools):
 
         # pick a 'root' (level 0) item from hierarchy
         item = self.SampleHierarchyEnum.family
-        # item has sons
+        # item has sons
         assert item.has_sons
         # get item direct sons
         item_direct_sons = item.get_sons()
@@ -127,7 +125,7 @@ class TestToolsHierarchyEnum(TestCoreTools):
 
         # pick a level 1 item from hierarchy
         item = self.SampleHierarchyEnum.family_cat
-        # item do not have sons
+        # item do not have sons
         assert not item.has_sons
         # get item sons
         item_sons = item.get_sons()
@@ -137,7 +135,7 @@ class TestToolsHierarchyEnum(TestCoreTools):
 
         # pick a level 2 item from hierarchy
         item = self.SampleHierarchyEnum.vehicle_spaceship_ufo
-        # item do not have sons
+        # item do not have sons
         assert not item.has_sons
 
         # with an item level 0, that have children level 1 and 2
@@ -167,27 +165,27 @@ class TestToolsHierarchyEnum(TestCoreTools):
 
         # pick a 'root' (level 0) item from hierarchy
         item = self.SampleHierarchyEnum.family
-        # expected item label is 'Family'
+        # expected item label is 'Family'
         assert item.label == 'Family'
         assert item.label_breadcrumb == 'Family'
         assert item.get_label_breadcrumb() == 'Family'
 
         # pick a level 1 item from hierarchy
         item = self.SampleHierarchyEnum.family_cat
-        # expected item label is 'Cat'
+        # expected item label is 'Cat'
         assert item.label == 'Cat'
-        # expected item label breadcrumb is 'Family - Cat'
+        # expected item label breadcrumb is 'Family - Cat'
         assert item.label_breadcrumb == 'Family - Cat'
-        # or 'Family/Cat'
+        # or 'Family/Cat'
         assert item.get_label_breadcrumb('/') == 'Family/Cat'
 
         # pick a level 2 item from hierarchy
         item = self.SampleHierarchyEnum.vehicle_spaceship_ufo
-        # expected item label is 'UFO'
+        # expected item label is 'UFO'
         assert item.label == 'UFO'
-        # expected item label breadcrumb is 'Vehicle - Spaceship - UFO'
+        # expected item label breadcrumb is 'Vehicle - Spaceship - UFO'
         assert item.label_breadcrumb == 'Vehicle - Spaceship - UFO'
-        # or 'Vehicle.Spaceship.UFO'
+        # or 'Vehicle.Spaceship.UFO'
         assert item.get_label_breadcrumb('.') == 'Vehicle.Spaceship.UFO'
 
     def test_tools_hierarchy_enum_build_tree(self):

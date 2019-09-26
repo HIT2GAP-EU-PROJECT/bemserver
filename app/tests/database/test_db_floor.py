@@ -1,11 +1,12 @@
 """Tests the interface Floor/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
 
 from bemserver.database import FloorDB
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import Floor
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -39,7 +40,7 @@ class TestFloorDB(TestCoreDatabaseOntology):
         assert new_floor_id is not None
         assert new_floor_id == floor.id
 
-        # check that database is not empty now
+        # check that database is not empty now
         result = floor_db.get_all()
         floors = list(result)
         assert len(floors) == 1
@@ -55,7 +56,7 @@ class TestFloorDB(TestCoreDatabaseOntology):
         floor_ids = init_floors
         floor_db = FloorDB()
 
-        # get all items
+        # get all items
         result = floor_db.get_all()
         floors = list(result)
         assert len(floors) == 2
@@ -72,7 +73,7 @@ class TestFloorDB(TestCoreDatabaseOntology):
         floor.level = new_level
         floor_db.update(floor.id, floor)
 
-        # check that item has really been updated in database
+        # check that item has really been updated in database
         updated_floor = floor_db.get_by_id(floor.id)
         assert updated_floor.id == floor.id
         assert updated_floor.name == floor.name

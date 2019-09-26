@@ -165,8 +165,8 @@ class SlabDB(StructuralElementDB):
         return self._build_remove(uri, self.FIELD_TO_RELATION.values())
 
     def update(self, identifier, new_element):
-        """Update the element identified by its ID - replace it with the element
-        new_element
+        """Update the element identified by its ID - replace it with the
+        element new_element
 
         :param identifier identifier: a unique identifier for the element to
             be updated

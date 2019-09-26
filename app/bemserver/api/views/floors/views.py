@@ -22,9 +22,11 @@ class FloorTypes(MethodView):
     """Floor types endpoint"""
 
     @auth_required(roles=['building_manager', 'module_data_processor'])
-    @api.doc(summary='List floor types',
-        description='''Floor types is an arborescent structure: a floor of
-            a type A1 is also of type A, for A1 a subtype of A.''')
+    @api.doc(
+        summary='List floor types',
+        description=(
+            'Floor types is an arborescent structure: a floor of '
+            'a type A1 is also of type A, for A1 a subtype of A.'))
     @api.response(TreeSchemaView)
     def get(self):
         """Return floor type list"""

@@ -1,11 +1,9 @@
 """Tests for api anonymous occupant users views."""
 
 import pytest
+
 from tests import TestCoreApi
 from tests.api.views.conftest import TestingConfig
-
-
-# TODO: all tests must be improved when a real database will be available...
 
 
 class TestingConfigAuthJWTEnabled(TestingConfig):

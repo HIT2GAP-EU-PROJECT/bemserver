@@ -24,7 +24,8 @@ class SpaceTypes(MethodView):
     """Space types endpoint"""
 
     @auth_required(roles=['building_manager', 'module_data_processor'])
-    @api.doc(summary='List space types',
+    @api.doc(
+        summary='List space types',
         description='''Space types is an arborescent structure: a space of
             a type A1 is also of type A, for A1 a subtype of A.''')
     @api.response(TreeSchemaView)

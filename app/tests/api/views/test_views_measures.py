@@ -1,11 +1,12 @@
 """Tests for api measure views"""
 
 import pytest
-from tests import TestCoreApi, TestCoreApiAuthCert
-from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 from bemserver.api.extensions.database import db_accessor as dba
 from bemserver.models import Measure
+
+from tests import TestCoreApi, TestCoreApiAuthCert
+from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 
 @pytest.mark.usefixtures('init_app')
@@ -77,13 +78,13 @@ class TestApiViewsMeasures(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 0
 
-
     @pytest.mark.xfail
+    @pytest.mark.usefixtures('init_db_data')
     @pytest.mark.parametrize(
         'init_db_data',
         [{'gen_buildings': True, 'gen_sensors': True, 'gen_measures': True}],
         indirect=True)
-    def test_views_measures_get_list_sort(self, init_db_data):
+    def test_views_measures_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
         # Get measures list:
@@ -96,7 +97,7 @@ class TestApiViewsMeasures(TestCoreApi):
         assert response.json[2]['name'] == 'measure_B'
         assert response.json[3]['name'] == 'measure_A'
 
-        #sorting by name ascending
+        # sorting by name ascending
         response = self.get_items(sort='name')
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -139,7 +140,7 @@ class TestApiViewsMeasures(TestCoreApi):
         assert response.json['value_properties']['vmin'] == -50
         assert response.json['value_properties']['vmax'] == 50
         location_ids = list(map(
-            lambda x:x['id'], response.json['associated_locations']))
+            lambda x: x['id'], response.json['associated_locations']))
         assert building_id1 in location_ids
         assert building_id2 in location_ids
 
@@ -147,7 +148,7 @@ class TestApiViewsMeasures(TestCoreApi):
             sensor_id=sensor_id,
             # observation_type='Temperature', medium='Air',
             unit='DegreeCelsius', external_id='id2',
-            value_properties={'vmin':-50, 'vmax':50})
+            value_properties={'vmin': -50, 'vmax': 50})
         assert response.status_code == 201
         measure_id = response.json['id']
 
@@ -159,7 +160,7 @@ class TestApiViewsMeasures(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 2
 
-        #Get and test filters
+        # Get and test filters
         response = self.get_items(medium='Heat')
         assert response.status_code == 200
         assert len(response.json) == 1
@@ -219,7 +220,7 @@ class TestApiViewsMeasures(TestCoreApi):
             value_properties={'vmin': 0, 'vmax': 0}, medium='Air',
             unit='DegreeFahrenheit', observation_type='Temperature',
             method='OnChange', outdoor=True, on_index=True, set_point=True,
-            associated_locations = [building_id],
+            associated_locations=[building_id],
             headers={'If-Match': etag_value})
         # ...update done
         assert response.status_code == 200
@@ -235,11 +236,11 @@ class TestApiViewsMeasures(TestCoreApi):
         assert response.json['on_index']
         assert response.json['set_point']
         assert building_id in map(
-            lambda x:x['id'], response.json['associated_locations'])
+            lambda x: x['id'], response.json['associated_locations'])
 
     @pytest.mark.parametrize(
         'init_db_data',
-        [{'gen_buildings':True, 'gen_sensors': True, 'gen_measures':True}],
+        [{'gen_buildings': True, 'gen_sensors': True, 'gen_measures': True}],
         indirect=True)
     def test_views_measures_delete(self, init_db_data):
         """Test delete api endpoint"""
@@ -330,7 +331,7 @@ class TestApiViewsMeasuresPermissions(TestCoreApiAuthCert):
         assert response.status_code == 200
         assert len(response.json) == 3
         measure_data = response.json[0]
-        # verify that parent site IDs are in allowed site IDs
+        # verify that parent site IDs are in allowed site IDs
         for measure in response.json:
             site_id = dba.get_parent(Measure, measure['id'])
             assert uacc.verify_scope(sites=[site_id])
@@ -356,14 +357,14 @@ class TestApiViewsMeasuresPermissions(TestCoreApiAuthCert):
         response = self.post_item(
             headers=auth_header,
             name='New measure', observation_type='Temperature', medium='Air',
-            unit='DegreeCelsius', value_properties={'vmin':-50, 'vmax':50},
+            unit='DegreeCelsius', value_properties={'vmin': -50, 'vmax': 50},
             sensor_id=allowed_sensor_id)
         assert response.status_code == 201
         # not allowed
         response = self.post_item(
             headers=auth_header,
             name='New sensor 2', observation_type='Temperature', medium='Air',
-            unit='DegreeCelsius', value_properties={'vmin':-50, 'vmax':50},
+            unit='DegreeCelsius', value_properties={'vmin': -50, 'vmax': 50},
             sensor_id=not_allowed_sensor_id)
         assert response.status_code == 403
 
@@ -393,14 +394,15 @@ class TestApiViewsMeasuresPermissions(TestCoreApiAuthCert):
         assert response.status_code == 403
 
         # DELETE:
-        # XXX: refresh etag value, update != get_item_by_id response... weird...
+        # XXX: refresh etag value, update != get_item_by_id response...weird...
         response = self.get_item_by_id(
             headers=auth_header, item_id=allowed_measure_id)
         assert response.status_code == 200
         etag_value = response.headers.get('etag', None)
         headers.update({'If-Match': etag_value})
         # allowed measure (in fact parent site)
-        response = self.delete_item(headers=headers, item_id=allowed_measure_id)
+        response = self.delete_item(
+            headers=headers, item_id=allowed_measure_id)
         assert response.status_code == 204
         # not allowed measure (in fact parent site)
         response = self.delete_item(

@@ -1,10 +1,10 @@
 """Tests for API views schema base class"""
 
-from tests import TestCoreApi
-
 import marshmallow as ma
 
 from bemserver.api.extensions.rest_api.schemas import ObjectSchema
+
+from tests import TestCoreApi
 
 
 class TestApiExtensionsSchemas(TestCoreApi):

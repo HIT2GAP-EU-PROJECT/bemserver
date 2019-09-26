@@ -117,7 +117,7 @@ class IfcConverter():
         return Building(
             name=ifc_building.name,
             description=ifc_building.description,
-            # TODO 'Building'; types are not informed in IFC
+            # TODO: 'Building' types are not informed in IFC
             kind=None,
             area=area, site_id=site_id)
 
@@ -139,7 +139,7 @@ class IfcConverter():
 
         return Floor(
             name=ifc_building_storey.name,
-            # TODO Kinds cannot be obtained
+            # TODO: Kinds cannot be obtained
             kind=None,
             level=level, spatial_info=spatial_info,
             description=ifc_building_storey.description,
@@ -175,7 +175,7 @@ class IfcConverter():
         return Space(
             name=ifc_space.info['LongName'] or ifc_space.name,
             description=ifc_space.description,
-            kind=None,  # TODO: how to get this data
+            kind=None,  # TODO: how to get this data?
             occupancy=occupancy,
             spatial_info=spatial_info,
             floor_id=floor_id)
@@ -218,8 +218,8 @@ class IfcConverter():
         """Converts IfcWall into H2G Facade"""
         cls._check_multiple(ifc_wall, ('IfcWall', 'IfcWallStandardCase'))
 
-        # TODO get a clearer understanding of the different areas informed in
-        # IFC - For now: get the first available area associated...
+        # TODO: get a clearer understanding of the different areas informed in\
+        # TODO: IFC - For now: get the first available area associated...
         area = cls._get_quantity(
             ifc_wall, 'IfcQuantityArea', names=[], default=True) or\
             cls._get_property(
@@ -286,8 +286,8 @@ class IfcConverter():
         ifc_opening =\
             reader.get_object(rels_opening[0].RelatingOpeningElement) \
             if rels_opening else None
-        # TODO add Slab and Roof in model: some of the windows may be
-        # integrated in such elements
+        # TODO: add Slab and Roof in model: some of the windows may be\
+        # TODO: integrated in such elements
         if not ifc_opening:
             raise IfcConvertorError()
         parent_id = map_id(ifc_opening.parent)

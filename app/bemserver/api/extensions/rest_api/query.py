@@ -1,7 +1,5 @@
 """Custom query parameters"""
 
-# pylint: disable=too-few-public-methods
-
 import marshmallow as ma
 
 from bemserver.database import SORT_ASCENDING, SORT_DESCENDING

@@ -12,6 +12,6 @@ bp = Blueprint('spaces', __name__, url_prefix='/spaces',
 def init_app(app):
     """Initialize application with module"""
 
-    from . import views  # pylint: disable=unused-variable
+    from . import views
 
     rest_api.register_blueprint(bp)

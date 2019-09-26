@@ -5,12 +5,14 @@ from .thing import Thing
 
 
 class MeasureValueProperties():
-    """Properties of measures - properties specific to the values of measures"""
+    """Properties of measures - properties specific to the values of measures
+    """
 
     def __init__(self, vmax=None, vmin=None, frequency=None):
         self.vmax = vmax
         self.vmin = vmin
         self.frequency = frequency
+
 
 class MeasureMaterialProperties():
     """Properties specific to the material used"""
@@ -21,6 +23,7 @@ class MeasureMaterialProperties():
         self.accuracy = accuracy
         self.precision = precision
         self.sensitivity = sensitivity
+
 
 class Location:
     """Location. Use in Measure to refer to some location in a site"""

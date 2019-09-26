@@ -54,7 +54,7 @@ class IFCFiles(MethodView):
     def post(self, new_data):
         """Upload a new IFC file"""
         # TODO: on any error, rollback actions
-        # process fileinfo
+        # process fileinfo
         fileinfo = new_data.pop('fileinfo', None)
         if fileinfo is not None:
             filename = fileinfo.filename
@@ -76,7 +76,7 @@ class IFCFiles(MethodView):
             data_stream = fileinfo.stream._file
         fs_mgr = fsio.get_filestorage_manager()
         fs_entry = fs_mgr.add(item.id, item.file_name, data_stream)
-        # a compressed archive can only contain one IFC file
+        # a compressed archive can only contain one IFC file
         if fs_entry.is_compressed():
             extracted_file_paths = fs_entry.extract()
             if len(extracted_file_paths) != 1:
@@ -150,14 +150,14 @@ class IFCFilesByIdImport(MethodView):
             abort(404, exc=exc)
 
         file_path = fs_entry.file_path
-        # a compressed archive can only contain one IFC file
+        # a compressed archive can only contain one IFC file
         if fs_entry.is_compressed():
             # archive should already be extracted
             file_path = fs_entry.extracted_file_paths[0]
 
         # import ifc file content in DB
         try:
-            # TODO: as it takes time, importation may be an asynchronous task...
+            # TODO: as it takes time, this should be an asynchronous task...
             ifc_import = IfcImport(str(file_path))
             ifc_import.execute()
         except TypeError as exc:

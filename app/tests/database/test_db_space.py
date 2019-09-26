@@ -1,12 +1,12 @@
 """Tests the interface Space/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
 
 from bemserver.database import SpaceDB, SiteDB
 from bemserver.database.exceptions import ItemNotFoundError
-from bemserver.models import Space, SpaceOccupancy, SpatialInfo
+from bemserver.models import Space, SpaceOccupancy
 
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -41,7 +41,7 @@ class TestSpaceDB(TestCoreDatabaseOntology):
         assert new_space_id is not None
         assert new_space_id == space.id
 
-        # check that database is not empty now
+        # check that database is not empty now
         result = space_db.get_all()
         spaces = list(result)
         assert len(spaces) == 1
@@ -53,9 +53,10 @@ class TestSpaceDB(TestCoreDatabaseOntology):
         assert spaces[0].occupancy.nb_permanents == space_occ.nb_permanents
         assert spaces[0].floor_id == space.floor_id == floor_ids[0]
 
-        #ensure we can access the parent site
+        # ensure we can access the parent site
         sites = SiteDB().get_all()
-        assert space_db.get_parent(space.id) in [str(site.id) for site in sites]
+        assert space_db.get_parent(space.id) in [
+            str(site.id) for site in sites]
 
     def test_db_space_update(self, init_spaces):
 
@@ -79,7 +80,7 @@ class TestSpaceDB(TestCoreDatabaseOntology):
         space.occupancy.nb_max = new_occ_max
         space_db.update(space.id, space)
 
-        # check that item has really been updated in database
+        # check that item has really been updated in database
         updated_space = space_db.get_by_id(space.id)
         assert updated_space.id == space.id
         assert updated_space.name == space.name

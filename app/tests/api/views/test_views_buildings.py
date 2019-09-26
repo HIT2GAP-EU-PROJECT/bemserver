@@ -1,6 +1,7 @@
 """Tests for api building views"""
 
 import pytest
+
 from tests import TestCoreApi, TestCoreApiAuthCert
 from tests.utils import uuid_gen
 from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
@@ -15,19 +16,20 @@ class TestApiViewsBuildings(TestCoreApi):
     def test_views_buildings_get_list_empty(self):
         """Test get_list api endpoint"""
 
-        # Get building list: no buildings
+        # Get building list: no buildings
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 0
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize(
         'init_db_data',
         [{'gen_sites': True, 'gen_buildings': True}],
         indirect=True)
-    def test_views_buildings_get_list_filter(self, init_db_data):
+    def test_views_buildings_get_list_filter(self):
         """Test get_list (with filter) api endpoint"""
 
-        # Get building list: 4 buildings found
+        # Get building list: 4 buildings found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -37,16 +39,17 @@ class TestApiViewsBuildings(TestCoreApi):
         response = self.get_items(headers={'If-None-Match': etag_value})
         assert response.status_code == 304
 
-        # Get building list with a filter: 1 found
+        # Get building list with a filter: 1 found
         response = self.get_items(kind='House')
         assert response.status_code == 200
         assert len(response.json) == 1
 
     @pytest.mark.xfail
-    def test_views_buildings_get_list_sort(self, init_db_data):
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
+    def test_views_buildings_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
-        # Get building list:
+        # Get building list:
         # sorting by area descending
         response = self.get_items(sort='-area')
         assert response.status_code == 200
@@ -56,7 +59,7 @@ class TestApiViewsBuildings(TestCoreApi):
         assert response.json[2]['name'] == 'building_A'
         assert response.json[3]['name'] == 'building_C'
 
-        # sorting by area ascending
+        # sorting by area ascending
         response = self.get_items(sort='area')
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -65,7 +68,7 @@ class TestApiViewsBuildings(TestCoreApi):
         assert response.json[2]['name'] == 'building_B'
         assert response.json[3]['name'] == 'building_D'
 
-        # sorting by name descending, area ascending
+        # sorting by name descending, area ascending
         response = self.get_items(sort='-name,+area')
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -109,7 +112,7 @@ class TestApiViewsBuildings(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 0
 
-        # Post a new building
+        # Post a new building
         response = self.post_item(
             name='Cartman\'s house', area=9999, kind='House', site_id=site_id)
         assert response.status_code == 201
@@ -119,7 +122,7 @@ class TestApiViewsBuildings(TestCoreApi):
         assert response.json['kind'] == 'House'
         assert response.json['site_id'] == site_id
 
-        # Get building list: 1 building found
+        # Get building list: 1 building found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 1
@@ -134,12 +137,12 @@ class TestApiViewsBuildings(TestCoreApi):
         response = self.post_item(name='missing_area', site_id=str(uuid_gen()))
         assert response.status_code == 422
 
-        # Remarks:
-        # id is 'read only'
+        # Remarks:
+        # id is 'read only'
         new_id = str(uuid_gen())
         response = self.post_item(
             id=new_id, name='id_is_read_only', area=0, kind='Cinema',
-            site_id=site_id)#site_id=str(uuid_gen()))
+            site_id=site_id)  # site_id=str(uuid_gen()))
         assert response.status_code == 201
         assert response.json['id'] != new_id
 
@@ -205,7 +208,7 @@ class TestApiViewsBuildings(TestCoreApi):
         assert response.status_code == 200
         etag_value = response.headers.get('etag', None)
 
-        # Delete a building...
+        # Delete a building...
         response = self.delete_item(
             item_id=building_id,
             headers={'If-Match': etag_value})
@@ -257,7 +260,7 @@ class TestApiViewsBuildingsPermissions(TestCoreApiAuthCert):
         assert response.status_code == 200
         assert len(response.json) == 3
         building_data = response.json[0]
-        # verify that parent site IDs are in allowed site IDs
+        # verify that parent site IDs are in allowed site IDs
         assert uacc.verify_scope(sites=[
             building['site_id'] for building in response.json])
 

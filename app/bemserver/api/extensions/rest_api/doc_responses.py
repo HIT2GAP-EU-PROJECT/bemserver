@@ -31,11 +31,11 @@ def build_responses(status_codes, *, schemas=None):
         Example: {200: ResponseSchema, 401: CustomSchema}
     :return dict: Status code responses for APISpec documentation.
     """
-    # set default statuses if None defined
+    # set default statuses if None defined
     if status_codes is None or not isinstance(status_codes, (list, tuple,)):
         status_codes = [200, 500]
 
-    # get responses information for status_codes
+    # get responses information for status_codes
     responses = {}
     for status_code in status_codes:
         try:

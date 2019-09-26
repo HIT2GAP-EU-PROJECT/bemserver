@@ -15,8 +15,8 @@ class SpaceOccupancy(Thing):
 class Space(Thing):
     """Space model class"""
 
-    def __init__(self, name, floor_id, kind=None, occupancy=None, spatial_info=None,
-                 description=None, *, id=None):
+    def __init__(self, name, floor_id, kind=None, occupancy=None,
+                 spatial_info=None, description=None, *, id=None):
         super().__init__(id=id)
         self.name = name
         self.kind = kind

@@ -2,9 +2,9 @@
 
 import datetime as dt
 
-from tests import TestCoreTools
-
 from bemserver.tools.common import check_list_instances
+
+from tests import TestCoreTools
 
 
 class TestToolsCommon(TestCoreTools):

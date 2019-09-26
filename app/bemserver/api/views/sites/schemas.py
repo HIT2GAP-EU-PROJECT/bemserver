@@ -1,7 +1,5 @@
 """Api sites module schemas"""
 
-# pylint: disable=too-few-public-methods
-
 import marshmallow as ma
 
 from ...extensions.rest_api import rest_api
@@ -22,7 +20,7 @@ class SiteSchema(ObjectSchema):
         """Schema Meta properties"""
         strict = True
 
-    id = ma.fields.UUID(  # pylint: disable=invalid-name
+    id = ma.fields.UUID(
         required=True,
         dump_only=True,
         description='The unique identifier (UUID) associated to the site'

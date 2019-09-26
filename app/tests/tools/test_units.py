@@ -1,11 +1,11 @@
 """Test pint custom units"""
 
-import numpy as np
 from math import isclose
-
-from tests import TestCoreTools
+import numpy as np
 
 from bemserver.tools import units
+
+from tests import TestCoreTools
 
 
 class TestToolsUnits(TestCoreTools):

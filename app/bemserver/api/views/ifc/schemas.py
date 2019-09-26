@@ -50,7 +50,7 @@ class IFCFileSchema(ma.Schema):
 
 
 ##########
-# Schemas for API query parameters or request body/form
+# Schemas for API query parameters or request body/form
 
 class IFCFileQueryArgsSchema(SortQueryArgsSchema):
     """IFCFile get query parameters schema"""

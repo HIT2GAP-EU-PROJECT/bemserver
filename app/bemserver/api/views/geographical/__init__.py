@@ -1,7 +1,5 @@
 """Api geographical information initialization"""
 
-# pylint: disable=unused-variable, unused-argument, invalid-name
-
 from ...extensions.rest_api import rest_api, Blueprint
 
 

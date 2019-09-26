@@ -1,11 +1,11 @@
 """Tests the interface Zone/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
-
 from bemserver.database import ZoneDB
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import Zone
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -16,7 +16,7 @@ class TestZoneDB(TestCoreDatabaseOntology):
 
         zone_db = ZoneDB()
 
-        # get all items
+        # get all items
         result = zone_db.get_all()
         assert list(result) == []
 
@@ -40,7 +40,7 @@ class TestZoneDB(TestCoreDatabaseOntology):
         assert new_zone_id is not None
         assert new_zone_id == zone.id
 
-        # check that database is not empty now
+        # check that database is not empty now
         result = zone_db.get_all()
         zones = list(result)
         assert len(zones) == 1
@@ -51,7 +51,7 @@ class TestZoneDB(TestCoreDatabaseOntology):
             assert space_id in zone.spaces
         for space_id in zone.spaces:
             assert space_id in zones[0].spaces
-        #TODO test should be similar than for spaces
+        # TODO: test should be similar than for spaces
         assert zones[0].zones == zone.zones
         assert zones[0].building_id == zone.building_id
 
@@ -75,7 +75,7 @@ class TestZoneDB(TestCoreDatabaseOntology):
         zone.description = new_description
         zone_db.update(zone.id, zone)
 
-        # check that item has really been updated in database
+        # check that item has really been updated in database
         updated_zone = zone_db.get_by_id(zone.id)
         assert updated_zone.id == zone.id
         assert updated_zone.name == zone.name

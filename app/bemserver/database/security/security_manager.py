@@ -138,7 +138,7 @@ class UserAccount():
             raise ValueError(
                 'Invalid roles required: {}. Available are: {}'.format(
                     roles_required, SecurityManager.AVAILABLE_ROLES))
-        # verify that user roles exactly match with required
+        # verify that user roles exactly match with required
         if strict:
             return self.roles == roles_required
         # a root (Chuck Norris) can do anything
@@ -285,7 +285,7 @@ class SecurityManager():
         :return UserAccount: The instance of user account created.
         :raise UserAccountAlreadyExistError: When uid already exist.
         """
-        # uid already exists?
+        # uid already exists?
         if self.get(uid, raise_error=False) is not None:
             raise UserAccountAlreadyExistError(
                 '"{}" user already exist!'.format(uid))
@@ -321,7 +321,7 @@ class SecurityManager():
             while self._get_occ_user_account(new_uid) is not None:
                 # regenerate a new uid until it is unique...
                 new_uid = generate_login_id()
-        # now get a random password
+        # now get a random password
         new_pwd = pwd or generate_pwd()
         # then create and save the new account, and also return clear password
         return self.add_account(
@@ -407,7 +407,7 @@ class SecurityManager():
             (uid as the key and UserAccount instance as value)
         """
         file_path = Path(file_path)
-        # Write user accounts data
+        # Write user accounts data
         with locked_store(str(file_path), mode='w') as csvfile:
             writer = csv.DictWriter(
                 csvfile, delimiter=';', fieldnames=[

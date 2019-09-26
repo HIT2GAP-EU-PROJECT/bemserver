@@ -1,6 +1,7 @@
 """Tests for api service views"""
 
 import pytest
+
 from tests import TestCoreApi, TestCoreApiAuthCert
 from tests.utils import uuid_gen
 from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
@@ -20,9 +21,10 @@ class TestApiViewsServices(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 0
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize(
         'init_db_data', [{'gen_services': True}], indirect=True)
-    def test_views_services_get_list_filter(self, init_db_data):
+    def test_views_services_get_list_filter(self):
         """Test get_list (with filter) api endpoint"""
 
         # Get service list: 4 services found
@@ -143,7 +145,7 @@ class TestApiViewsServices(TestCoreApi):
         response = self.get_item_by_id(item_id=service_id)
         assert response.status_code == 404
 
-    # TODO
+    # TODO: test_views_services_types
 #     def test_views_services_types(self):
 #         """Test get_list service types api endpoint"""
 #
@@ -187,7 +189,7 @@ class TestApiViewsServicesPermissions(TestCoreApiAuthCert):
         assert response.status_code == 200
         assert len(response.json) == 2
         service_data = response.json[0]
-        # verify that parent site IDs are in allowed site IDs
+        # verify that parent site IDs are in allowed site IDs
         for service in response.json:
             assert len(set(uacc.sites).intersection(
                 set(str(site_id) for site_id in service['site_ids']))) > 0
