@@ -134,7 +134,7 @@ py.test --cov=bemserver --cov-report term-missing
 ## Running the application
 
 
-### Settings environment variables
+### Settings environment variables
 
 ```bash
 FLASK_ENV=development  # development or production
@@ -181,7 +181,7 @@ carefully, as Alembic (use internally by Flask-Migrate) has shortcomings.
 For instance, it has issues with custom types such as UUID.
 
 
-### Create or upgrade an existing database
+### Create or upgrade an existing database
 
 SQLALCHEMY_DATABASE_URI points to the DB file. The directory should be writable by www-data.
 

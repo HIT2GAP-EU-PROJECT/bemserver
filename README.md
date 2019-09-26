@@ -1,6 +1,6 @@
 
 
-<p style="text-align:center;"><img src="docs/BEM%20SERVER-Color-rgb-logo.png" alt="BEMServer" width="300"/></p>
+<p align="center"><img src="docs/BEM%20SERVER-Color-rgb-logo.png" alt="BEMServer" width="300"/></p>
 
 
 **Table of Contents**
