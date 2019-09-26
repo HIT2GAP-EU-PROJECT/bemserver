@@ -48,8 +48,8 @@ setup(
         '': ['database/timeseries/*.csv'],
     },
     install_requires=[
-        'Werkzeug<0.15',
-        'flask<1.1',
+        'Werkzeug>=0.16.0,<0.17.0',
+        'flask>=1.1.0,<1.2.0',
         'flask_marshmallow>=0.7.0',
         'flask-rest-api>=0.10.0,<0.11.0',
         'webargs>=5.1.3,<6.0',

@@ -2,6 +2,7 @@
 
 import json
 from urllib.parse import urljoin
+from copy import deepcopy
 
 from bemserver.database.db_mock import DatabaseMock
 # from bemserver.database.ontology.manager import (
@@ -134,29 +135,40 @@ class TestCoreApi(TestCore):
             return json.dumps(kwargs)
         return kwargs
 
-    def _init_request(self):
-        # to prevent from keeping cookie from a test to another
+    def _init_request(self, headers=None):
+        # to prevent from keeping an old cookie from a test to another
+        #  (this should not happen but...)
         self.client.delete_cookie(
             'localhost.local', self.app.session_cookie_name)
+        # set the new cookie value in session
+        if headers is not None:
+            cookie_data = deepcopy(headers).pop('cookie', None)
+            if cookie_data is not None:
+                cookie_values = cookie_data.split('=')
+                if (len(cookie_values) == 2 and
+                        cookie_values[0] == self.app.session_cookie_name):
+                    self.client.set_cookie(
+                        'localhost.local', self.app.session_cookie_name,
+                        cookie_values[1])
 
     def get_items(self, *, uri=None, extra_uri=None, **kwargs):
         """GET api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         uri = self._build_uri(uri=uri, extra_uri=extra_uri)
         return self.client.get(uri, query_string=kwargs, headers=headers)
 
     def get_item_by_id(self, item_id, *, uri=None, extra_uri=None, **kwargs):
         """GET api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         uri = urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), item_id)
         return self.client.get(uri, query_string=kwargs, headers=headers)
 
     def post_item(self, *, uri=None, extra_uri=None, **kwargs):
         """POST api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         content_type = kwargs.pop('content_type', 'application/json')
         uri = self._build_uri(uri=uri, extra_uri=extra_uri)
         return self.client.post(
@@ -165,8 +177,8 @@ class TestCoreApi(TestCore):
 
     def put_item(self, item_id, *, uri=None, extra_uri=None, **kwargs):
         """PUT api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         content_type = kwargs.pop('content_type', 'application/json')
         uri = urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), item_id)
         return self.client.put(
@@ -175,8 +187,8 @@ class TestCoreApi(TestCore):
 
     def patch_item(self, item_id, *, uri=None, extra_uri=None, **kwargs):
         """PATCH api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         content_type = kwargs.pop('content_type', 'application/json')
         uri = urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), item_id)
         return self.client.patch(
@@ -185,23 +197,23 @@ class TestCoreApi(TestCore):
 
     def delete_item(self, item_id, *, uri=None, extra_uri=None, **kwargs):
         """DELETE api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         uri = urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), item_id)
         return self.client.delete(uri, query_string=kwargs, headers=headers)
 
     def search_items(self, *, uri=None, extra_uri=None, **kwargs):
         """GET api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         uri = urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), 'search')
         return self.client.get(uri, query_string=kwargs, headers=headers)
 
     def get_subitems(self, item_id, subitem_params, *, uri=None,
                      extra_uri=None, **kwargs):
         """GET api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         uri = '{}{}'.format(
             urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), item_id),
             self._build_subitem_uri(subitem_params))
@@ -210,8 +222,8 @@ class TestCoreApi(TestCore):
     def get_subitem_by_id(self, item_id, subitem_params, *, uri=None,
                           extra_uri=None, **kwargs):
         """GET api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         uri = '{}{}'.format(
             urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), item_id),
             self._build_subitem_uri(subitem_params))
@@ -220,8 +232,8 @@ class TestCoreApi(TestCore):
     def post_subitem(self, item_id, subitem_params, *, uri=None,
                      extra_uri=None, **kwargs):
         """POST api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         content_type = kwargs.pop('content_type', 'application/json')
         uri = '{}{}'.format(
             urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), item_id),
@@ -234,8 +246,8 @@ class TestCoreApi(TestCore):
     def put_subitem(self, item_id, subitem_params, *, uri=None,
                     extra_uri=None, **kwargs):
         """PUT api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         content_type = kwargs.pop('content_type', 'application/json')
         uri = '{}{}'.format(
             urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), item_id),
@@ -248,8 +260,8 @@ class TestCoreApi(TestCore):
     def patch_subitem(self, item_id, subitem_params, *, uri=None,
                       extra_uri=None, **kwargs):
         """PATCH api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         content_type = kwargs.pop('content_type', 'application/json')
         uri = '{}{}'.format(
             urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), item_id),
@@ -262,8 +274,8 @@ class TestCoreApi(TestCore):
     def delete_subitem(self, item_id, subitem_params, *, uri=None,
                        extra_uri=None, **kwargs):
         """DELETE api call"""
-        self._init_request()
         headers = kwargs.pop('headers', None)
+        self._init_request(headers)
         uri = '{}{}'.format(
             urljoin(self._build_uri(uri=uri, extra_uri=extra_uri), item_id),
             self._build_subitem_uri(subitem_params))
@@ -279,7 +291,7 @@ class TestCoreApiAuthCert(TestCoreApi):
         assert response.status_code == 200
         # return authentication cookie header
         for set_cookie_part in response.headers['set-cookie'].split(';'):
-            if 'session=' in set_cookie_part:
+            if '{}='.format(self.app.session_cookie_name) in set_cookie_part:
                 return {'cookie': set_cookie_part.strip()}
         return {}
 

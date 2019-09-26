@@ -37,7 +37,7 @@ class TestApiViewsAuthDemo(TestCoreApi):
 
     def _extract_cookie_session(self, set_cookie):
         for set_cookie_part in set_cookie.split(';'):
-            if 'session=' in set_cookie_part:
+            if '{}='.format(self.app.session_cookie_name) in set_cookie_part:
                 return set_cookie_part.strip()
         return None
 

@@ -1,6 +1,6 @@
 """Tests for api building views"""
 
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 
 import pytest
 from tests import TestCoreApi

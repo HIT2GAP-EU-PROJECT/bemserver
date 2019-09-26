@@ -4,7 +4,7 @@ import tempfile
 
 from flask import send_from_directory
 from flask.views import MethodView
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 
 from . import bp as api
 from .schemas import (
