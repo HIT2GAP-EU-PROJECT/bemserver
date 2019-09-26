@@ -1,5 +1,5 @@
-Installation
-============
+## Installation
+
 
 BEMServer is built upon different tools and use various libraries. The main dependencies are:
 
@@ -14,7 +14,8 @@ Additionally, one may need to secure the APIs. Three modes have been used and te
 
 Finally, an IFC extractor has been developed so as to populate the data model from an IFC file. This tool uses the IfcOpenShell library.
 
-## Install core
+
+### Install core
 
 ```bash
 # In application folder
@@ -42,7 +43,8 @@ pip install -r requirements.txt
 
 ```
 
-## Install IfcOpenShell
+
+### Install IfcOpenShell
 
 IfcOpenShell has to be installed manually. The IfcOpenShell-python archive can be found in the [official website](http://ifcopenshell.org/python.html).
 
@@ -63,7 +65,8 @@ unzip ifcopenshell-python35-master-9ad68db-linux64.zip
 mv ifcopenshell $YOUR_VIRTUALENV_DIR/bemserver/lib/python3.5/site-packages/
 ```
 
-## Install Apache Jena Fuseki
+
+### Install Apache Jena Fuseki
 
 Apache Jena Fuseki is required to store the BEMOnt model. A preconfigured docker image is distributed to ease Apache Jena Fuseki configuration with Bemserver:  https://hub.docker.com/r/nbkinef4/bemserver-fuseki
 
@@ -104,9 +107,8 @@ You can manage ontology browsing: http://localhost:3030/
 
 
 
+## Development
 
-Development
-===========
 
 ### Tests
 
@@ -129,9 +131,8 @@ py.test --cov=bemserver --cov-report term-missing
 
 
 
+## Running the application
 
-Running the application
-=======================
 
 ### Settings environment variables
 
@@ -145,7 +146,6 @@ Since bemserver uses python-dotenv, you may store them in an .env file at the ro
 
 ### Launch core api server
 
-
 From the activated BEMServer virtual environment, once the environment variables are set.
 
 ```bash
@@ -155,9 +155,8 @@ flask run --host=0.0.0.0 --port=8080
 
 
 
+## Managing the SQL database
 
-Managing the SQL database
-=========================
 
 The database is versionned with Flask-Migrate (http://flask-migrate.readthedocs.io/).
 
@@ -165,6 +164,7 @@ While developing, when the model changes, Flask-Migrate can help creating
 migration scripts by comparing the model in the code to a database in a state
 corresponding to the former revision. It can also apply thoses scripts to
 another database instance.
+
 
 ### Creating a migration script
 
@@ -179,6 +179,7 @@ flask db migrate --message 'Useful message' --rev-id optional_rev_id
 The sripts are written in the "migrations" directory. They should be reviewed
 carefully, as Alembic (use internally by Flask-Migrate) has shortcomings.
 For instance, it has issues with custom types such as UUID.
+
 
 ### Create or upgrade an existing database
 
@@ -205,9 +206,8 @@ flask db upgrade
 
 
 
+## Managing API authentication
 
-Managing API authentication
-===========================
 
 API authentication can be activated by setting AUTHENTICATION_ENABLED flask config variable to True.
 3 authentication methods are available:
@@ -217,6 +217,7 @@ API authentication can be activated by setting AUTHENTICATION_ENABLED flask conf
 
 Each authentication method has its specific endpoint and parameters.
 More information is available in API documentation.
+
 
 ### Certificate authentication
 

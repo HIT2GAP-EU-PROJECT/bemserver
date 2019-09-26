@@ -1,9 +1,7 @@
-# Docker
+## Docker
 
 
 ### Installation
-
-
 
 Docker images and `docker-compose.yml` file are provided to simplify installation process. 
 
@@ -19,7 +17,6 @@ docker-compose up -d
 ```
 
 **Beware, the provided images / configuration should be modified when deploying the solution in production environment to ensure safer access to data.**
-
 
 
 ### More info
