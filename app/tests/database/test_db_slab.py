@@ -25,10 +25,9 @@ class TestSlabDB(TestCoreDatabaseOntology):
         with pytest.raises(ItemNotFoundError):
             slab_db.get_by_id('not_existing')
 
-    def test_db_slab_create(self, init_floors, get_created_building_ids):
+    def test_db_slab_create(self, init_floors):
 
-        floor_ids = init_floors
-        building_ids = get_created_building_ids
+        floor_ids, building_ids, _ = init_floors
         slab_db = SlabDB()
 
         # check that database is empty
@@ -61,9 +60,9 @@ class TestSlabDB(TestCoreDatabaseOntology):
         assert slab_db.get_parent(slab.id) in\
             [str(site.id) for site in sites]
 
-    def test_db_slab_get_filter(self, init_floors, get_created_building_ids):
-        floor_ids = init_floors
-        building_id = get_created_building_ids[0]
+    def test_db_slab_get_filter(self, init_floors):
+        floor_ids, building_ids, _ = init_floors
+        building_id = building_ids[0]
         slab_db = SlabDB()
 
         # check that database is empty
@@ -87,10 +86,11 @@ class TestSlabDB(TestCoreDatabaseOntology):
         result = slab_db.get_all(floor_id=floor_ids[1])
         assert len(list(result)) == 1
 
-    def test_db_slab_update(self, init_slabs, get_created_building_ids):
+    def test_db_slab_update(self, init_slabs):
 
-        slab_ids = init_slabs
+        slab_ids, _, building_ids, _ = init_slabs
         slab_db = SlabDB()
+        building_id = building_ids[0]
 
         # get all items
         result = slab_db.get_all()
@@ -122,8 +122,7 @@ class TestSlabDB(TestCoreDatabaseOntology):
         assert updated_slab.surface_info.width == new_width
         assert updated_slab.kind == new_kind
         assert set(updated_slab.floors) == set(slab.floors)
-        assert updated_slab.building_id == slab.building_id ==\
-            get_created_building_ids[0]
+        assert updated_slab.building_id == slab.building_id == building_id
 
         # delete an item by its ID
         slab_db.remove(slab.id)

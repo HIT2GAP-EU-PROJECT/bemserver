@@ -24,10 +24,9 @@ class TestZoneDB(TestCoreDatabaseOntology):
         with pytest.raises(ItemNotFoundError):
             zone_db.get_by_id('not_existing')
 
-    def test_db_zone_create(self, init_spaces, get_created_building_ids):
+    def test_db_zone_create(self, init_spaces):
 
-        space_ids = init_spaces
-        building_ids = get_created_building_ids
+        space_ids, _, building_ids, _ = init_spaces
         zone_db = ZoneDB()
 
         # check that database is empty
@@ -57,7 +56,7 @@ class TestZoneDB(TestCoreDatabaseOntology):
 
     def test_db_zone_update_delete(self, init_zones):
 
-        zone_ids = init_zones
+        zone_ids, _, _, _, _ = init_zones
         zone_db = ZoneDB()
 
         # get all items

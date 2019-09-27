@@ -27,7 +27,7 @@ class TestSpaceDB(TestCoreDatabaseOntology):
 
     def test_db_space_create(self, init_floors):
 
-        floor_ids = init_floors
+        floor_ids, _, _ = init_floors
         space_db = SpaceDB()
 
         # check that database is empty
@@ -60,7 +60,7 @@ class TestSpaceDB(TestCoreDatabaseOntology):
 
     def test_db_space_update(self, init_spaces):
 
-        space_ids = init_spaces
+        space_ids, _, _, _ = init_spaces
         space_db = SpaceDB()
 
         # get all items

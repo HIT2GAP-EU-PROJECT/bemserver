@@ -38,7 +38,7 @@ class TestSensorDB(TestCoreDatabaseOntology):
 
     def test_db_sensor_create(self, init_spaces):
 
-        space_ids = init_spaces
+        space_ids, _, _, _ = init_spaces
         sensor_db = SensorDB()
 
         # check that database is empty
@@ -72,13 +72,12 @@ class TestSensorDB(TestCoreDatabaseOntology):
         assert sensor_db.get_parent(sensor.id) in [
             str(site.id) for site in sites]
 
-    def test_db_sensor_filter(self, init_spaces, get_created_building_ids):
-        space_ids = init_spaces
-        building_id = get_created_building_ids[0]
+    def test_db_sensor_filter(self, init_spaces):
+        space_ids, _, building_ids, _ = init_spaces
         sensor_db = SensorDB()
 
         # check that database is empty
-        result = sensor_db.get_all(building_id=building_id)
+        result = sensor_db.get_all(building_id=building_ids[0])
         assert list(result) == []
         result = sensor_db.get_all(space_id=space_ids[0])
         assert list(result) == []
@@ -104,10 +103,9 @@ class TestSensorDB(TestCoreDatabaseOntology):
             sensors[0].localization.floor_id and \
             sensors[0].localization.space_id
 
-    def test_db_sensor_update(self, init_sensors, get_created_building_ids):
+    def test_db_sensor_update(self, init_sensors):
 
-        sensor_ids = init_sensors
-        building_ids = get_created_building_ids
+        sensor_ids, _, _, building_ids, _ = init_sensors
         sensor_db = SensorDB()
 
         # get all items

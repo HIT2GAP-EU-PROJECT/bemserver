@@ -1,7 +1,5 @@
 """Tests for api measure views"""
 
-import os
-import os.path
 import datetime as dt
 import random
 import statistics
@@ -26,10 +24,6 @@ class TestApiTimeseries(TestCore):
     """Tests not specific to any database implementation"""
 
     def test_get_timeries_manager(self, tmpdir):
-
-        tmpdir_ro = os.path.join(str(tmpdir), 'test_ro')
-        os.mkdir(tmpdir_ro)
-        os.chmod(tmpdir_ro, 0)
 
         class InvalidBackendConfig():
             TIMESERIES_BACKEND = 'dummy'

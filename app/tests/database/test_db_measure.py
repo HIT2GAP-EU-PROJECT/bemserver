@@ -25,8 +25,10 @@ class TestMeasureDB(TestCoreDatabaseOntology):
         with pytest.raises(ItemNotFoundError):
             measure_db.get_by_id('not_existing')
 
-    def test_db_measure_create(self, init_sensors, init_spaces):
+    def test_db_measure_create(self, init_sensors):
 
+        sensor_ids, space_ids, _, _, _ = init_sensors
+        sensor_id = sensor_ids[0]
         measure_db = MeasureDB()
 
         # check that database is empty
@@ -35,13 +37,12 @@ class TestMeasureDB(TestCoreDatabaseOntology):
 
         # create an item
         measure = Measure(
-            init_sensors[0], 'DegreeCelsius', 'Air', 'Temperature',
+            sensor_id, 'DegreeCelsius', 'Air', 'Temperature',
             description='A sample measure', outdoor=True, set_point=True,
-            ambient=True, associated_locations=init_spaces)
+            ambient=True, associated_locations=space_ids)
         new_measure_id = measure_db.create(measure)
         assert new_measure_id is not None
         assert new_measure_id == measure.id
-        print(new_measure_id)
 
         # check that database is not empty now
         result = measure_db.get_all()
@@ -57,10 +58,10 @@ class TestMeasureDB(TestCoreDatabaseOntology):
         assert measures[0].set_point
         assert measures[0].outdoor
         assert measures[0].ambient
-        assert measures[0].sensor_id == init_sensors[0]
+        assert measures[0].sensor_id == sensor_id
         assert {loc.type for loc in measures[0].associated_locations} ==\
             {'space', 'floor', 'building', 'site'}
-        assert set(init_spaces) ==\
+        assert set(space_ids) ==\
             {loc.id for loc in measures[0].associated_locations if
              loc.type == 'space'}
         for loc_type in ['floor', 'building', 'site']:
@@ -69,16 +70,14 @@ class TestMeasureDB(TestCoreDatabaseOntology):
 
         # check the link from sensor to measure is created
         sensor_db = SensorDB()
-        sensor = sensor_db.get_by_id(init_sensors[0])
+        sensor = sensor_db.get_by_id(sensor_id)
         assert new_measure_id in sensor.measures
 
         # assert set(measures[0].measures) == set(measure.measures)
 
-    def test_db_measure_filter(
-            self, init_spaces, init_sensors, get_created_building_ids):
-        space_ids = init_spaces
-        sensor_ids = init_sensors
-        building_id = get_created_building_ids[0]
+    def test_db_measure_filter(self, init_sensors):
+        sensor_ids, space_ids, _, building_ids, _ = init_sensors
+        building_id = building_ids[0]
         measure_db = MeasureDB()
 
         # check that database is empty
@@ -109,10 +108,9 @@ class TestMeasureDB(TestCoreDatabaseOntology):
             location_id=space_db.get_parent(str(space_ids[0])))
         assert len(list(result)) == 2
 
-    def test_db_measure_update(self, init_measures, get_created_building_ids):
+    def test_db_measure_update(self, init_measures):
 
-        measure_ids = init_measures
-        building_ids = get_created_building_ids
+        measure_ids, _, _, _, building_ids, _ = init_measures
         measure_db = MeasureDB()
 
         # get all items

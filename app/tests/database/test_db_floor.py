@@ -27,7 +27,7 @@ class TestFloorDB(TestCoreDatabaseOntology):
 
     def test_db_floor_create(self, init_buildings):
 
-        building_ids = init_buildings
+        building_ids, _ = init_buildings
         floor_db = FloorDB()
 
         # check that database is empty
@@ -53,7 +53,8 @@ class TestFloorDB(TestCoreDatabaseOntology):
 
     def test_db_floor_update_delete(self, init_floors):
 
-        floor_ids = init_floors
+        floor_ids, building_ids, _ = init_floors
+        building_id = building_ids[0]
         floor_db = FloorDB()
 
         # get all items
@@ -80,7 +81,7 @@ class TestFloorDB(TestCoreDatabaseOntology):
         assert updated_floor.description == new_description
         assert updated_floor.level == new_level
         assert updated_floor.kind == floor.kind
-        assert updated_floor.building_id == floor.building_id
+        assert updated_floor.building_id == floor.building_id == building_id
 
         # delete an item by its ID
         floor_db.remove(floor.id)

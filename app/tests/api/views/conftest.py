@@ -34,7 +34,8 @@ from bemserver.database.security.security_manager import (
 
 from tests.api.utils import JSONResponse, build_file_obj
 from tests.database.filestorage.conftest import (
-    ifc_file_data_stream, ifc_zip_file_data, ifc_multi_zip_file_data)
+    ifc_file_data, ifc_file_data_stream, ifc_zip_file_data,
+    ifc_multi_zip_file_data)
 
 
 class TestingConfigAuthCertificateEnabled(TestingConfig):
@@ -416,7 +417,7 @@ def _create_ifc_files(request):
 
     fs_mgr = FileStorageMgr(request.cls.config.FILE_STORAGE_DIR)
     for ifc_file_id in ifc_files:
-        _, data_stream = ifc_file_data_stream(request)
+        _, data_stream = ifc_file_data_stream()
         fs_mgr.add(ifc_file_id, ifc_files[ifc_file_id], data_stream)
 
     return ifc_files
@@ -547,25 +548,40 @@ def init_db_data(request, drop_db):
     return db_data
 
 
-@pytest.fixture
-def ifc_file_obj(request):
+def ifc_file_obj():
     """Return a sample IFC file object"""
-    file_name, file_content = ifc_file_data_stream(request)
-    return build_file_obj(file_name, file_content)
+    file_name, file_content = ifc_file_data()
+    return file_name, file_content, build_file_obj(file_name, file_content)
 
 
-@pytest.fixture(params=['.zip'])
-def ifc_zip_file_obj(request):
+@pytest.fixture(name='ifc_file_obj')
+def ifc_file_obj_fixture():
+    """Fixture to return a sample IFC file object"""
+    return ifc_file_obj()
+
+
+def ifc_zip_file_obj(file_ext):
     """Return a sample IFC zipped file object"""
-    zip_file_name, zip_file_data = ifc_zip_file_data(request)
+    zip_file_name, zip_file_data = ifc_zip_file_data(file_ext)
     return zip_file_name, build_file_obj(zip_file_name, zip_file_data)
 
 
-@pytest.fixture(params=['.zip'])
-def ifc_multi_zip_file_obj(request):
+@pytest.fixture(name='ifc_zip_file_obj', params=['.zip'])
+def ifc_zip_file_obj_fixture(request):
+    """Fixture to return a sample IFC zipped file object"""
+    return ifc_zip_file_obj(request.param)
+
+
+def ifc_multi_zip_file_obj(file_ext):
     """Return many IFC samples zipped in one file object"""
-    zip_file_name, zip_file_data = ifc_multi_zip_file_data(request)
+    zip_file_name, zip_file_data = ifc_multi_zip_file_data(file_ext)
     return zip_file_name, build_file_obj(zip_file_name, zip_file_data)
+
+
+@pytest.fixture(name='ifc_multi_zip_file_obj', params=['.zip'])
+def ifc_multi_zip_file_obj_fixture(request):
+    """Fixture to return many IFC samples zipped in one file object"""
+    return ifc_multi_zip_file_obj(request.param)
 
 
 def generate_certificate_data(cn_data='bemsvrapp-cleaning-timeseries'):

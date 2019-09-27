@@ -82,7 +82,7 @@ class TestBuildingDB(TestCoreDatabaseOntology):
 
     def test_db_building_update_delete(self, init_buildings):
 
-        building_ids = init_buildings
+        building_ids, _ = init_buildings
         building_db = BuildingDB()
 
         # get all items

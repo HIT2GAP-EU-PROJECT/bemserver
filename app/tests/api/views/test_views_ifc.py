@@ -9,7 +9,6 @@ from bemserver.database.exceptions import ItemSaveError
 from tests import TestCoreApi
 from tests.utils import uuid_gen
 from tests.api.utils import build_file_obj
-from tests.database.filestorage.conftest import ifc_file_data
 
 
 @pytest.mark.usefixtures('init_app')
@@ -98,14 +97,13 @@ class TestApiViewsIFC(TestCoreApi):
     @pytest.mark.parametrize(
         'ifc_zip_file_obj', ['.zip', '.ifczip'], indirect=True)
     def test_views_ifc_post(
-            self, ifc_file_data, ifc_file_obj, ifc_zip_file_obj,
-            ifc_multi_zip_file_obj):
+            self, ifc_file_obj, ifc_zip_file_obj, ifc_multi_zip_file_obj):
         """Test post api endpoint"""
 
         # retrieve ifc file informations
-        file_name, file_content = ifc_file_data
+        file_name = ifc_file_obj[0]
         zip_file_name, zip_file_obj = ifc_zip_file_obj
-        _, zip_multi_file_obj = ifc_multi_zip_file_obj
+        zip_multi_file_obj = ifc_multi_zip_file_obj[1]
 
         # Get ifc file list: no items
         response = self.get_items()
@@ -114,7 +112,7 @@ class TestApiViewsIFC(TestCoreApi):
 
         # Post an ifc file
         response = self.post_item(
-            description='A description of the file...', file=ifc_file_obj,
+            description='A description of the file...', file=ifc_file_obj[2],
             content_type='multipart/form-data')
         assert response.status_code == 201
         assert response.json['id'] is not None
@@ -153,7 +151,7 @@ class TestApiViewsIFC(TestCoreApi):
         # XXX: update this test when database is not mocked anymore
         with pytest.raises(ItemSaveError):
             self.post_item(
-                file=build_file_obj('save_error.ifc', file_content),
+                file=build_file_obj('save_error.ifc', 'test'),
                 content_type='multipart/form-data')
 
         # Remarks:
@@ -161,7 +159,7 @@ class TestApiViewsIFC(TestCoreApi):
         new_id = str(uuid_gen())
         ifc_file_name = 'id_is_read_only.ifc'
         response = self.post_item(
-            id=new_id, file=build_file_obj(ifc_file_name, file_content),
+            id=new_id, file=build_file_obj(ifc_file_name, 'test'),
             content_type='multipart/form-data')
         assert response.status_code == 201
         assert response.json['id'] != new_id
@@ -192,14 +190,14 @@ class TestApiViewsIFC(TestCoreApi):
 
     @pytest.mark.parametrize('init_db_data', [
         {'gen_buildings': False, 'gen_ifc_files': True}], indirect=True)
-    def test_views_ifc_download(self, init_db_data, ifc_file_data):
+    def test_views_ifc_download(self, init_db_data, ifc_file_obj):
         """Test download api endpoint"""
 
         # retrieve database informations
         ifc_file_id = next(iter(init_db_data['ifc_files']))
 
         # retrieve ifc file informations
-        _, file_content = ifc_file_data
+        file_content = ifc_file_obj[1]
 
         # Download file
         response = self.get_subitem_by_id(

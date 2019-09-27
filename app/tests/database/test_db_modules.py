@@ -212,8 +212,8 @@ class TestModelDB(TestCoreDatabaseOntology):
         result = model_db.get_all(service_id=services[1])
         assert len(list(result)) == 0
 
-    def test_db_model_update(self, init_services, init_models):
-        model_ids = init_models
+    def test_db_model_update(self, init_models):
+        model_ids, _ = init_models
         model_db = ModelDB()
 
         # get all items
@@ -272,7 +272,8 @@ class TestOutputDB(TestCoreDatabaseOntology):
         with pytest.raises(ItemNotFoundError):
             output_db.get_by_id('not_existing')
 
-    def test_db_output_create(self, init_models, init_sites, init_buildings):
+    def test_db_output_create(self, init_models, init_buildings):
+        building_ids, _ = init_buildings
         output_db = OutputDB()
         # check that database is empty
         result = output_db.get_all()
@@ -296,7 +297,7 @@ class TestOutputDB(TestCoreDatabaseOntology):
 
         # test with time series
         output = OutputTimeSeries(
-            service_id, model_id, init_buildings[0],
+            service_id, model_id, building_ids[0],
             ValuesDescription('Temperature', 'DegreeCelsius', 20),
             id=str(gen_uuid()))
         new_output_id_ts = output_db.create(output)
@@ -320,7 +321,8 @@ class TestOutputDB(TestCoreDatabaseOntology):
         assert set(model.event_output_ids) == {new_output_id_evt}
         assert set(model.timeseries_output_ids) == {new_output_id_ts}
 
-    def test_db_output_filter(self, init_models, init_sites, init_buildings):
+    def test_db_output_filter(self, init_models, init_buildings):
+        building_ids, _ = init_buildings
         output_db = OutputDB()
 
         # get service and model id
@@ -337,7 +339,7 @@ class TestOutputDB(TestCoreDatabaseOntology):
         output_db.create(OutputEvent(service_id, model_id))
         output_db.create(
             OutputTimeSeries(
-                service_id, model_id, init_buildings[0],
+                service_id, model_id, building_ids[0],
                 ValuesDescription('Temperature', 'DegreeCelsius', 20)))
 
         outputs = list(output_db.get_all())
@@ -345,19 +347,21 @@ class TestOutputDB(TestCoreDatabaseOntology):
         result = output_db.get_all(module_id=service_id)
         assert len(list(result)) == 2
 
-        result = output_db.get_all(localization=init_buildings[0])
+        result = output_db.get_all(localization=building_ids[0])
         assert len(list(result)) == 1
 
         result = output_db.get_all(value_type='Temperature')
         assert len(list(result)) == 1
 
-    def test_db_output_update(self, init_models, init_sites, init_buildings):
+    def test_db_output_update(self, init_models, init_buildings):
+        building_ids, _ = init_buildings
+
         models = list(ModelDB().get_all())
         model_id, service_id = models[0].id, models[0].service_id
 
         output_db = OutputDB()
         output = OutputTimeSeries(
-            service_id, model_id, init_buildings[0],
+            service_id, model_id, building_ids[0],
             ValuesDescription('Temperature', 'DegreeCelsius', 20),
             id=str(gen_uuid()))
         new_output_id_ts = output_db.create(output)

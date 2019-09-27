@@ -28,7 +28,7 @@ class TestWindowDB(TestCoreDatabaseOntology):
 
     def test_db_window_create(self, init_facades):
 
-        facade_ids = init_facades
+        facade_ids, _, _, _, _ = init_facades
         window_db = WindowDB()
 
         # check that database is empty
@@ -80,7 +80,7 @@ class TestWindowDB(TestCoreDatabaseOntology):
 
     def test_db_window_update(self, init_windows):
 
-        window_ids = init_windows
+        window_ids, _, _, _, _, _ = init_windows
         window_db = WindowDB()
 
         # get all items
