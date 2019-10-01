@@ -70,6 +70,7 @@ setup(
         'sqlalchemy-utils>=0.32.21,<0.35.0',
         'flask-sqlalchemy>=2.3.2,<2.5.0',
         'flask-migrate>=2.1.1,<2.6.0',
-        'python-dotenv>=0.8.2,<0.11.0'
+        'python-dotenv>=0.8.2,<0.11.0',
+        'pytz==2019.2',
     ],
 )
