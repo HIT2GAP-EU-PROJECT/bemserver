@@ -1,7 +1,6 @@
 """File storage manager."""
 
 from pathlib import Path
-from io import IOBase
 import shutil
 import zipfile
 
@@ -35,7 +34,7 @@ class FileStorageMgr():
 
         :param UUID file_id: File storage entry's ID (entry folder name).
         :param str file_name: File's name (as saved on disk).
-        :param IOBase data_stream: Data stream to write in file.
+        :param file-like object data_stream: Data stream to write in file.
         :returns FileStorageEntry: The file storage entry created.
         """
         fs_entry = FileStorageEntry(self.dir_path, file_id)
@@ -213,14 +212,12 @@ class FileStorageEntry():
         (data stream will be closed after use).
 
         :param str file_name: File's name (as saved on disk).
-        :param IOBase data_stream: Data stream to write in file.
+        :param file-like object data_stream: Data stream to write in file.
         :returns Path: The storage path of saved file.
         :raises ValueError: Invalid input data stream.
         :raises FileExistsError: File already exists in storage folder.
         :raises FileStorageSaveError: Error while saving data stream to a file.
         """
-        if not isinstance(data_stream, IOBase):
-            raise ValueError('Invalid file stream: {}'.format(data_stream))
         if self.file_name == file_name:
             raise FileExistsError(file_name)
         try:

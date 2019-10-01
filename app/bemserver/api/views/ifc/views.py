@@ -1,7 +1,5 @@
 """Api IFC module views"""
 
-import tempfile
-
 from flask import send_from_directory
 from flask.views import MethodView
 from werkzeug.utils import secure_filename
@@ -63,19 +61,11 @@ class IFCFiles(MethodView):
 
         # Save and return new item in DB
         item = IFCFile(**new_data)
-        # XXX: tricky case while mocking database
-        kwargs = {}
-        if 'save_error' in item.file_name:
-            kwargs['save_error'] = True
-        db_accessor.create(item, **kwargs)
+        db_accessor.create(item)
 
         # save file data stream on disk
-        data_stream = fileinfo.stream
-        # XXX: added to pass API views tests...
-        if isinstance(fileinfo.stream, tempfile.SpooledTemporaryFile):
-            data_stream = fileinfo.stream._file
         fs_mgr = fsio.get_filestorage_manager()
-        fs_entry = fs_mgr.add(item.id, item.file_name, data_stream)
+        fs_entry = fs_mgr.add(item.id, item.file_name, fileinfo.stream)
         # a compressed archive can only contain one IFC file
         if fs_entry.is_compressed():
             extracted_file_paths = fs_entry.extract()
@@ -122,11 +112,7 @@ class IFCFilesById(MethodView):
             fs_mgr.delete(item.id)
         except FileNotFoundError as exc:
             abort(404, exc=exc)
-        # XXX: tricky case while mocking database
-        kwargs = {}
-        if 'delete_error' in item.file_name:
-            kwargs['delete_error'] = True
-        db_accessor.delete(item, **kwargs)
+        db_accessor.delete(item)
 
 
 @api.route('/<uuid:file_id>/import')

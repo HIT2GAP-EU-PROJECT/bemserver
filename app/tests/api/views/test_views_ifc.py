@@ -4,7 +4,6 @@ from werkzeug.utils import secure_filename
 import pytest
 
 from bemserver.api.views.ifc.exceptions import IFCFileBadArchiveError
-from bemserver.database.exceptions import ItemSaveError
 
 from tests import TestCoreApi
 from tests.utils import uuid_gen
@@ -143,16 +142,14 @@ class TestApiViewsIFC(TestCoreApi):
             file=build_file_obj('wrong_format.pdf', 'just a test'),
             content_type='multipart/form-data')
         assert response.status_code == 422
+        # wrong file object (422)
+        response = self.post_item(
+            file='wrong_object.ifc', content_type='multipart/form-data')
+        assert response.status_code == 422
         # more than ONE file in zipped archive (500)
         with pytest.raises(IFCFileBadArchiveError):
             self.post_item(
                 file=zip_multi_file_obj, content_type='multipart/form-data')
-        # save error (500)
-        # XXX: update this test when database is not mocked anymore
-        with pytest.raises(ItemSaveError):
-            self.post_item(
-                file=build_file_obj('save_error.ifc', 'test'),
-                content_type='multipart/form-data')
 
         # Remarks:
         # id is 'read only'
