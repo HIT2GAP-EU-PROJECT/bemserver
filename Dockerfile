@@ -31,7 +31,7 @@ RUN python3 -m venv ${VIRTUAL_ENV} \
 # Copy dependencies / application / config
 COPY --from=0 ifcopenshell ${VIRTUAL_ENV}/lib/python3.5/site-packages/ifcopenshell/
 COPY app ./
-COPY config/* ${_CONFIG_PATH}/
+COPY settings/* ${_CONFIG_PATH}/
 
 ENV ONTOLOGY_MODELS_PATH=/app/models
 COPY --from=0 \
@@ -49,7 +49,7 @@ ENV LC_ALL=C.UTF-8 LANG=C.UTF-8 \
     FLASK_SETTINGS_FILE=${_CONFIG_PATH}/settings.cfg
 
 # Copy entrypoint for container
-COPY deployment/scripts /scripts/
+COPY docker/scripts /scripts/
 RUN chmod +x /scripts/*
 
 ENTRYPOINT ["/scripts/docker-entrypoint.sh"]
