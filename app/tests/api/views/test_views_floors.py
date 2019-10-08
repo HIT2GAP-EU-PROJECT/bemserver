@@ -1,12 +1,13 @@
 """Tests for api floors views"""
 
 import pytest
-from tests import TestCoreApi, TestCoreApiAuthCert
-from tests.utils import uuid_gen, get_dictionary_no_none
-from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 from bemserver.api.extensions.database import db_accessor as dba
 from bemserver.models import Floor
+
+from tests import TestCoreApi, TestCoreApiAuthCert
+from tests.utils import uuid_gen, get_dictionary_no_none
+from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 
 @pytest.mark.usefixtures('init_app')
@@ -18,17 +19,18 @@ class TestApiViewsFloors(TestCoreApi):
     def test_views_floors_get_list_empty(self):
         """Test get_list api endpoint"""
 
-        # Get list: no items
+        # Get list: no items
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 0
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize('init_db_data', [
         {'gen_floors': True}], indirect=True)
-    def test_views_floors_get_list_filter(self, init_db_data):
+    def test_views_floors_get_list_filter(self):
         """Test get_list (with filter) api endpoint"""
 
-        # Get list: 4 found
+        # Get list: 4 found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -38,18 +40,19 @@ class TestApiViewsFloors(TestCoreApi):
         response = self.get_items(headers={'If-None-Match': etag_value})
         assert response.status_code == 304
 
-        # Get list with a filter: 2 found
+        # Get list with a filter: 2 found
         response = self.get_items(kind='Ground')
         assert response.status_code == 200
         assert len(response.json) == 2
 
     @pytest.mark.xfail
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize('init_db_data', [
         {'gen_floors': True}], indirect=True)
-    def test_views_floors_get_list_sort(self, init_db_data):
+    def test_views_floors_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
-        # Get list:
+        # Get list:
         # sorting by name descending
         response = self.get_items(sort='-name')
         assert response.status_code == 200
@@ -59,7 +62,7 @@ class TestApiViewsFloors(TestCoreApi):
         assert response.json[2]['name'] == 'floor_B'
         assert response.json[3]['name'] == 'floor_A'
 
-        # sorting by name ascending
+        # sorting by name ascending
         response = self.get_items(sort='name')
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -103,7 +106,7 @@ class TestApiViewsFloors(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 0
 
-        # Post a new item
+        # Post a new item
         response = self.post_item(
             name='A floor', kind='Floor', level=69,
             spatial_info={'area': 42, 'max_height': 2.4},
@@ -118,7 +121,7 @@ class TestApiViewsFloors(TestCoreApi):
         assert response.json['description'] == 'A top level floor !'
         assert response.json['building_id'] == building_id
 
-        # Get list: 1 found
+        # Get list: 1 found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 1
@@ -132,13 +135,12 @@ class TestApiViewsFloors(TestCoreApi):
         assert response.status_code == 422
         assert 'kind' in response.json['errors']
 
-        # Remarks:
-        # id is 'read only'
+        # Remarks:
+        # id is 'read only'
         new_id = str(uuid_gen())
         response = self.post_item(
             id=new_id, name='id_is_read_only', kind='Floor', level=0,
             spatial_info={'area': 0, 'max_height': 0},
-            #building_id=str(uuid_gen()))
             building_id=building_id)
         assert response.status_code == 201
         assert response.json['id'] != new_id
@@ -163,9 +165,10 @@ class TestApiViewsFloors(TestCoreApi):
         # Update...
         f_name_updated = 'An updated floor name'
         response = self.put_item(
-            item_id=floor_id, name=f_name_updated, kind=floor_json.json['kind'],
-            level=floor_json.json['level'], building_id=building_id,
-            spatial_info=spatial_info, headers={'If-Match': etag_value})
+            item_id=floor_id, name=f_name_updated,
+            kind=floor_json.json['kind'], level=floor_json.json['level'],
+            building_id=building_id, spatial_info=spatial_info,
+            headers={'If-Match': etag_value})
         # ...update done
         assert response.status_code == 200
         assert response.json['name'] == f_name_updated
@@ -188,7 +191,7 @@ class TestApiViewsFloors(TestCoreApi):
         assert response.status_code == 200
         etag_value = response.headers.get('etag', None)
 
-        # Delete...
+        # Delete...
         response = self.delete_item(
             item_id=floor_id,
             headers={'If-Match': etag_value})
@@ -242,7 +245,7 @@ class TestApiViewsFloorsPermissions(TestCoreApiAuthCert):
         assert response.status_code == 200
         assert len(response.json) == 3
         floor_data = response.json[0]
-        # verify that parent site IDs are in allowed site IDs
+        # verify that parent site IDs are in allowed site IDs
         for floor in response.json:
             site_id = dba.get_parent(Floor, floor['id'])
             assert uacc.verify_scope(sites=[site_id])

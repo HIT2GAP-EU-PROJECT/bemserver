@@ -1,12 +1,13 @@
 """Tests for api slabs views"""
 
 import pytest
-from tests import TestCoreApi, TestCoreApiAuthCert
-from tests.utils import uuid_gen, get_dictionary_no_none
-from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 from bemserver.api.extensions.database import db_accessor as dba
 from bemserver.models import Building
+
+from tests import TestCoreApi, TestCoreApiAuthCert
+from tests.utils import uuid_gen, get_dictionary_no_none
+from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 
 @pytest.mark.usefixtures('init_app')
@@ -23,10 +24,11 @@ class TestApiViewsSlabs(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 0
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize(
         'init_db_data', [{'gen_floors': True, 'gen_slabs': True}],
         indirect=True)
-    def test_views_slabs_get_list_filter(self, init_db_data):
+    def test_views_slabs_get_list_filter(self):
         """Test get_list (with filter) api endpoint"""
 
         # Get list: 4 found
@@ -212,7 +214,7 @@ class TestApiViewsSlabsPermissions(TestCoreApiAuthCert):
         assert response.status_code == 200
         assert len(response.json) == 3
         slab_data = response.json[0]
-        # verify that parent site IDs are in allowed site IDs
+        # verify that parent site IDs are in allowed site IDs
         for slab in response.json:
             site_id = dba.get_parent(Building, slab['building_id'])
             assert uacc.verify_scope(sites=[site_id])

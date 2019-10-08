@@ -95,8 +95,8 @@ class SensorDB(ThingDB):
     def _get_filters_ref(self):
         return {
             k: '?URI {rel} {prefix}:{{id}}\n'.format(
-                rel=self.LINKS['localization']\
-                    if k in self.FIELD_LOCALIZATION else self.LINKS[k],
+                rel=(self.LINKS['localization']
+                     if k in self.FIELD_LOCALIZATION else self.LINKS[k]),
                 prefix=PREFIX.ROOT.alias) for k in self.REFERENCES}
 
     def _str_select(self, field, optional=False, dict_=None):
@@ -156,8 +156,8 @@ class SensorDB(ThingDB):
     def _pre_load_binding(self, binding):
         # uri = PREFIX.ROOT.alias_uri(binding['id'])
         # Get localization
-        binding['localization'] = {k: binding.pop(k, None)\
-            for k in self.FIELD_LOCALIZATION}
+        binding['localization'] = {
+            k: binding.pop(k, None) for k in self.FIELD_LOCALIZATION}
         # get measures
         # parse multiple references
         binding['measures'] = list(map(
@@ -199,13 +199,14 @@ class SensorDB(ThingDB):
         sensor and an external element.
 
         :param object_ Object: the object on which the value is to be obtained
-        :param attr_name String: the attibute name on object_. Provides the reference
-        :param key_ref String: the entry in the LINKS map, to obtain the correct
-            relation to create
+        :param attr_name String:
+            the attibute name on object_. Provides the reference
+        :param key_ref String: the entry in the LINKS map, to obtain the
+            correct relation to create
         :param optional Boolean: True if no error needs to be raised when no
             reference was found
-        :param multiple Boolean: True if the attribute is an iterable of multiple
-            references
+        :param multiple Boolean: True if the attribute is an iterable of
+            multiple references
         :returns String: the line to be used in the SPARQL query'''
         elt_id = getattr(object_, attr_name, None)
         if not multiple:
@@ -218,7 +219,6 @@ class SensorDB(ThingDB):
              for _id in elt_id])
         return str_
 
-
     # def create(self, element):
     #     _id = super().create(element)
     #     my_uri = PREFIX.ROOT.alias_uri(_id)
@@ -230,13 +230,14 @@ class SensorDB(ThingDB):
     #     # # Add links with measures
     #     # for measure in element.measures:
     #     #     self._create_relation_to(
-    #     #         my_uri, self.LINKS['measures'], PREFIX.ROOT.alias_uri(measure))
+    #     #         my_uri, self.LINKS['measures'],
+    #     #         PREFIX.ROOT.alias_uri(measure))
     #     return _id
 
     def _str_insert(self, obj, attr, optional=False, final=False):
         """Build up the line corresponding to an object attribute, into
-        a SPARQL insert method, in the form "relation value". Value is extracted
-        from obj.attr, the relation is extracted from a dictionary.
+        a SPARQL insert method, in the form "relation value". Value is
+        extracted from obj.attr, the relation is extracted from a dictionary.
 
         :subj String: the subject of the triple to be created
         :obj Object: an object
@@ -259,12 +260,12 @@ class SensorDB(ThingDB):
         return self._build_remove(uri, to_remove)
 
     # def update(self, identifier, new_element):
-    #     """Update the element identified by its ID - replace it with the element
-    #     new_element
+    #     """Update the element identified by its ID - replace it with the
+    #     element new_element
     #
-    #     :param identifier identifier: a unique identifier for the element to be updated
-    #     :param new_element Thing: the new elements that should replace the one
-    #         identified by identifier
+    #     :param identifier identifier: a unique id for element to be updated
+    #     :param new_element Thing: the new elements that should replace the
+    #         one identified by identifier
     #     """
     #     super().update(identifier, new_element)
     #     my_uri = PREFIX.ROOT.alias_uri(identifier)

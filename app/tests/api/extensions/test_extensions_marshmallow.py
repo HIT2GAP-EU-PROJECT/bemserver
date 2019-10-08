@@ -1,12 +1,11 @@
 """Tests for marshmallow extensions"""
 
-from tests import TestCore
-
 import pytest
-
 import marshmallow as ma
 
 from bemserver.api.extensions.marshmallow.fields import StringList
+
+from tests import TestCore
 
 
 class StrList:

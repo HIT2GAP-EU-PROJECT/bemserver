@@ -1,7 +1,6 @@
 """Test API specification"""
 
 import pytest
-
 from apispec.utils import validate_spec
 
 from tests import TestCoreApi

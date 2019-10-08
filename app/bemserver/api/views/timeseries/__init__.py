@@ -41,7 +41,6 @@ bp = Blueprint('timeseries', __name__, url_prefix='/timeseries',
 
 
 def init_app(app):
-    # pylint: disable=unused-variable
     """Initialize application with module"""
 
     from . import views  # noqa

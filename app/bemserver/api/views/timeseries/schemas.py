@@ -17,8 +17,10 @@ class TimeseriesUnitConversionQueryArgsSchema(ma.Schema):
 
     unit = ma.fields.String(
         description='''Unit of the timeseries values.
-        The list is taken from the [Pint library](https://github.com/hgrecco/pint/blob/master/pint/default_en.txt).
-        For convenience, we added the `'percent'`, `'permille'` and `'ppm'` units.''',
+        The list is taken from the [Pint library](
+        https://github.com/hgrecco/pint/blob/master/pint/default_en.txt).
+        For convenience, we added `'percent'`, `'permille'` and `'ppm'` units.
+        ''',
         example='degC',
     )
 

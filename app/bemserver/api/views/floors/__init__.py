@@ -10,7 +10,6 @@ bp = Blueprint('floors', __name__, url_prefix='/floors',
 
 
 def init_app(app):
-    # pylint: disable=unused-variable
     """Initialize application with module"""
 
     from . import views

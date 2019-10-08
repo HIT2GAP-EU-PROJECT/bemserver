@@ -1,20 +1,14 @@
 """Tests for api measure views"""
 
-import os
-import os.path
 import datetime as dt
 import random
 import statistics
 from math import isclose
 from dateutil.tz import tzutc
-
 import flask
 import numpy as np
 import pandas as pd
-
 import pytest
-from tests import TestCore, TestCoreApi
-from tests.utils import celsius_to_fahrenheit
 
 from bemserver.models import Timeseries
 from bemserver.api.views.timeseries.tsio import (
@@ -22,15 +16,14 @@ from bemserver.api.views.timeseries.tsio import (
 from bemserver.api.views.timeseries.exceptions import (
     TimeseriesConfigError)
 
+from tests import TestCore, TestCoreApi
+from tests.utils import celsius_to_fahrenheit
+
 
 class TestApiTimeseries(TestCore):
     """Tests not specific to any database implementation"""
 
     def test_get_timeries_manager(self, tmpdir):
-
-        tmpdir_ro = os.path.join(str(tmpdir), 'test_ro')
-        os.mkdir(tmpdir_ro)
-        os.chmod(tmpdir_ro, 0)
 
         class InvalidBackendConfig():
             TIMESERIES_BACKEND = 'dummy'
@@ -70,7 +63,7 @@ class TestApiTimeseries(TestCore):
         data_list = []
         ts_df = tsload(data_list).dataframe
         assert isinstance(ts_df, pd.DataFrame)
-        assert not len(ts_df)
+        assert len(ts_df) == 0
         assert ts_df.index.name == 'index'
         assert set(ts_df.columns.tolist()) == {'data', 'quality', 'update_ts'}
         assert ts_df.equals(Timeseries.empty_dataframe())
@@ -402,9 +395,10 @@ class TestApiViewsTimeseries(TestCoreApi):
                 'start_time': t_start, 'end_time': t_h1_dt.isoformat(), })
         assert response.status_code == 422
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize('init_db_data', [
         {'gen_sensors': True, 'gen_measures': True}], indirect=True)
-    def test_views_timeseries_stats(self, init_db_data):
+    def test_views_timeseries_stats(self):
         """Check timeseries stats view"""
 
         ts_id = 'Test_1'
@@ -468,17 +462,21 @@ class TestApiViewsTimeseries(TestCoreApi):
                 db_data = init_db_data
                 measure_id = str(db_data['measures'][num])
 
-                response = self.get_item_by_id(uri='/measures/', item_id=measure_id)
+                response = self.get_item_by_id(
+                    uri='/measures/', item_id=measure_id)
                 assert response.status_code == 200
                 ts_metadata = response.json
                 ts_id = ts_metadata['external_id']
 
                 # Generate index
-                timestamp_l = pd.date_range(t_start, t_end, freq='10T', closed='left')
+                timestamp_l = pd.date_range(
+                    t_start, t_end, freq='10T', closed='left')
                 # Generate data
                 if rng:
-                    value_l = map(float, np.random.rand(len(timestamp_l)) * 100)
-                    quality_l = map(float, np.random.randint(2, size=len(timestamp_l)))
+                    value_l = map(float, np.random.rand(
+                        len(timestamp_l)) * 100)
+                    quality_l = map(float, np.random.randint(
+                        2, size=len(timestamp_l)))
                 else:
                     value_l = range(len(timestamp_l))
                     quality_l = [i % 2 for i in range(len(timestamp_l))]
@@ -504,7 +502,8 @@ class TestApiViewsTimeseries(TestCoreApi):
         freq_delta = 6
         values = np.nansum(np.array([
             [
-                np.nansum([item['value'] for item in ts_data[i: i + freq_delta]])
+                np.nansum(
+                    [item['value'] for item in ts_data[i: i + freq_delta]])
                 for i in range(len(ts_data))
                 if (i % freq_delta) == 0
             ]
@@ -513,7 +512,9 @@ class TestApiViewsTimeseries(TestCoreApi):
 
         qualities = np.nansum(np.array([
             [
-                np.nansum([item['quality'] for item in ts_data[i: i + freq_delta]]) / freq_delta
+                np.nansum([
+                    item['quality']
+                    for item in ts_data[i: i + freq_delta]]) / freq_delta
                 for i in range(len(ts_data))
                 if (i % freq_delta) == 0
             ]
@@ -531,7 +532,8 @@ class TestApiViewsTimeseries(TestCoreApi):
         assert response.status_code == 200
         resp_data = response.json['data']
         assert resp_data[0]['timestamp'] == t_start_iso
-        # Take random sample in response and compare to calculated values and qualities
+        # Take random sample in response and compare to calculated values
+        #  and qualities
         idxs = random.sample(range(len(resp_data)), int(len(resp_data) / 10))
         for idx in idxs:
             assert isclose(resp_data[idx]['value'], values[idx])
@@ -606,9 +608,10 @@ class TestApiViewsTimeseries(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json['data']) == 14
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize('init_db_data', [
         {'gen_sensors': True, 'gen_measures': True}], indirect=True)
-    def test_timeseries_tsload_duplicate_indexes(self, init_db_data):
+    def test_timeseries_tsload_duplicate_indexes(self):
         """Check timeseries handling of duplicate indexes"""
         ts_id = 'Test_1'
         timestamp_l = [
@@ -676,12 +679,10 @@ class TestApiViewsTimeseries(TestCoreApi):
         assert not ts_list
 
     @pytest.mark.parametrize('init_db_data', [{
-            'gen_services': True, 'gen_outputs': True,
-            'gen_sensors': True, 'gen_measures': True,
-        }],
-        indirect=True)
+        'gen_services': True, 'gen_outputs': True, 'gen_sensors': True,
+        'gen_measures': True,
+        }], indirect=True)
     def test_timeseries_id_from_ontology(self, init_db_data):
-        """ """
         db_data = init_db_data
         output_id = str(db_data['outputs'][-1])
         measure_id = str(db_data['measures'][0])

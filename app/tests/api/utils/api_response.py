@@ -7,7 +7,6 @@ from flask import Response
 
 
 class JSONResponse(Response):
-    # pylint: disable=too-many-ancestors
     """
     A Response class with extra useful helpers, i.e. ``.json`` property.
 
@@ -15,5 +14,5 @@ class JSONResponse(Response):
     """
 
     @cached_property
-    def json(self):  # pylint: disable=missing-docstring
+    def json(self):
         return json.loads(self.get_data(as_text=True))

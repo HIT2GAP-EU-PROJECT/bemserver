@@ -310,15 +310,15 @@ class MeasureDB(ThingDB):
         #     self.OPT_LINKS.values(), self.FIELD_VALUE_PTIES.values(),
         #
         #     self.LINKS['system']])
-        return self._build_remove(uri)#, to_remove)
+        return self._build_remove(uri)  # , to_remove)
 
     # def update(self, identifier, new_element):
-    #     """Update the element identified by its ID - replace it with the element
-    #     new_element
+    #     """Update the element identified by its ID - replace it with the
+    #     element new_element
     #
-    #     :param identifier identifier: a unique identifier for the element to be updated
-    #     :param new_element Thing: the new elements that should replace the one
-    #         identified by identifier
+    #     :param identifier identifier: a unique id for element to be updated
+    #     :param new_element Thing: the new elements that should replace the
+    #         one identified by identifier
     #     """
     #     super().update(identifier, new_element)
     #     my_uri = PREFIX.ROOT.alias_uri(identifier)

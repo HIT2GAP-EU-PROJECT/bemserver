@@ -28,7 +28,8 @@ class DatabaseMock():
 
     def _get_collection_data(self, item):
         collection_name = (
-            item.__name__ if inspect.isclass(item) else item.__class__.__name__)
+            item.__name__
+            if inspect.isclass(item) else item.__class__.__name__)
         if collection_name not in self.items:
             self.items[collection_name] = []
         return self.items[collection_name]
@@ -45,7 +46,7 @@ class DatabaseMock():
         """Retrieve a list of 'item_cls' items, filtered and sorted"""
         items = self._get_collection_data(item_cls)
 
-        # apply the filter
+        # apply the filter
         if sieve is not None and len(items) > 0:
             for f_name, f_val in sieve.items():
                 items = [

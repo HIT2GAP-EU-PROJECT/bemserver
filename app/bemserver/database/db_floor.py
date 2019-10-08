@@ -57,7 +57,8 @@ class FloorDB(StructuralElementDB):
     def _build_select_query(self, identifier=None, **filters):
         """A method to build the select query
         :return string: a string for the SPARQL query"""
-        _select = ["SELECT ?URI ?kind"] + list(self.FIELD_TO_RELATION.keys()) + \
+        _select = ["SELECT ?URI ?kind"] + \
+            list(self.FIELD_TO_RELATION.keys()) + \
             list(self.FIELD_TO_REL_CPLX.keys())
         select = ' ?'.join(_select)
         query = """{sel} WHERE {{
@@ -77,7 +78,7 @@ class FloorDB(StructuralElementDB):
         query += self._str_select("level")
         query += self._str_select("description", optional=True)
         query += self.FIELD_TO_REL_CPLX['building_id']
-        #handle filter
+        # handle filter
         query += self._build_filters(**filters)
         query += "}"
         return query
@@ -119,7 +120,8 @@ class FloorDB(StructuralElementDB):
         self._create_relation_to(parent_uri, self.LINKS['parent'], my_uri)
         # Create quantities
         if element.spatial_info:
-            self.create_quantities(element.spatial_info.get_quantities(), my_uri)
+            self.create_quantities(
+                element.spatial_info.get_quantities(), my_uri)
         return _id
 
     def _str_insert(self, obj, attr, optional=False, final=False):

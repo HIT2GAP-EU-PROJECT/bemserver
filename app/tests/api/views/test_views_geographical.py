@@ -1,6 +1,7 @@
 """Tests for api geographical information views."""
 
 import pytest
+
 from tests import TestCoreApi
 
 
@@ -20,7 +21,7 @@ class TestApiViewsGeographical(TestCoreApi):
         assert len(response.json) > 0
 
         etag_value = response.headers.get('etag', None)
-        # Get geographical orientation types with etag value: not modified (304)
+        # Get geographical orientations with etag value: not modified (304)
         response = self.get_items(
             headers={'If-None-Match': etag_value}, **kwargs)
         assert response.status_code == 304

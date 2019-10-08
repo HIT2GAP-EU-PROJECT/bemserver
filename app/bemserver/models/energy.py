@@ -6,15 +6,15 @@ from ..tools.custom_enum import HierarchyEnum
 class EnergyCategory(HierarchyEnum):
     """Renewable energy categories (based on OntoMG ontology)"""
 
-    # solar
+    # solar
     solar = ('Solar', None, True)
     solar_thermal = ('Solar thermal', 'solar', True)
     solar_photovoltaic = ('Photovoltaic', 'solar', True)
 
-    # wind
+    # wind
     wind = ('Wind', None, True)
 
-    # hydropower
+    # hydropower
     hydropower = ('Hydropower', None, True)
     hydropower_potential = ('Potential', 'hydropower', True)
     hydropower_wave_power = ('Wave power', 'hydropower', True)
@@ -31,21 +31,21 @@ class EnergyCategory(HierarchyEnum):
     biomass_biogas = ('Biogas', 'biomass', True)
     biomass_biofuel = ('Biofuel', 'biomass', True)
 
-    # oil
+    # oil
     oil = ('Oil', None, False)
     oil_gasoline = ('Gasoline', 'oil', False)
     oil_diesel = ('Diesel', 'oil', False)
     oil_heating_oil = ('Heating oil', 'oil', False)
 
-    # gas
+    # gas
     gas = ('Gas', None, False)
     gas_hydrocarbon_gas = ('Hydrocarbon gas', 'gas', False)
     gas_natural_gas = ('Natural gas', 'gas', False)
 
-    # coal
+    # coal
     coal = ('Coal', None, False)
 
-    # nuclear
+    # nuclear
     nuclear = ('Nuclear', None, False)
 
     # grid

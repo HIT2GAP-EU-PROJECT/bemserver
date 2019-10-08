@@ -1,15 +1,15 @@
 """Tests the interface Modules/DB"""
 
 from uuid import uuid4 as gen_uuid
-
 import pytest
-from tests import TestCoreDatabaseOntology
 
 from bemserver.database import ServiceDB, ModelDB, OutputDB
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import (
     Service, Model, OutputEvent, OutputTimeSeries, ValuesDescription,
     Parameter)
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -62,7 +62,8 @@ class TestServiceDB(TestCoreDatabaseOntology):
         # check that database is empty
         result = service_db.get_all(name='Service#0')
         assert list(result) == []
-        result = service_db.get_all(url="http://hit2gap.eu/services/forecasting")
+        result = service_db.get_all(
+            url="http://hit2gap.eu/services/forecasting")
         assert list(result) == []
 
         # create an item
@@ -111,13 +112,12 @@ class TestServiceDB(TestCoreDatabaseOntology):
         new_name = 'New Name'
         new_url = 'http://sibex.nobatek.inef4.fr/forecasting'
 
-
         service.description = new_description
         service.name = new_name
         service.url = new_url
         service_db.update(service.id, service)
 
-        # check that item has really been updated in database
+        # check that item has really been updated in database
         updated_service = service_db.get_by_id(service.id)
         assert updated_service.id == service.id
         assert updated_service.name == new_name
@@ -160,13 +160,14 @@ class TestModelDB(TestCoreDatabaseOntology):
         assert list(result) == []
 
         # create an item
-        model = Model('ARIMA#0', init_services[0], description='A sample model',
+        model = Model('ARIMA#0', init_services[0],
+                      description='A sample model',
                       parameters=[Parameter('ar', 5)])
         new_model_id = model_db.create(model)
         assert new_model_id is not None
         assert new_model_id == model    .id
 
-        # check that database is not empty now
+        # check that database is not empty now
         result = model_db.get_all()
         models = list(result)
         assert len(models) == 1
@@ -174,9 +175,10 @@ class TestModelDB(TestCoreDatabaseOntology):
         assert models[0].name == model.name
         assert models[0].service_id == model.service_id
         assert models[0].description == model.description
-        assert models[0].get_set_of_parameters() == model.get_set_of_parameters()
+        assert models[0].get_set_of_parameters() == (
+            model.get_set_of_parameters())
 
-        #test relation between service and model
+        # test relation between service and model
         service = ServiceDB().get_by_id(model.service_id)
         assert service.model_ids == [model.id]
 
@@ -195,7 +197,8 @@ class TestModelDB(TestCoreDatabaseOntology):
             Model('Model #0', services[0], description='New sample FDD model',
                   parameters=[Parameter('param1', 1)]))
         model_db.create(
-            Model('Model #1', services[0], description='RENew sample FDD model',
+            Model('Model #1', services[0],
+                  description='RENew sample FDD model',
                   parameters=[Parameter('param1', 1), Parameter('param2', 2)]))
 
         models = list(model_db.get_all())
@@ -209,8 +212,8 @@ class TestModelDB(TestCoreDatabaseOntology):
         result = model_db.get_all(service_id=services[1])
         assert len(list(result)) == 0
 
-    def test_db_model_update(self, init_services, init_models):
-        model_ids = init_models
+    def test_db_model_update(self, init_models):
+        model_ids, _ = init_models
         model_db = ModelDB()
 
         # get all items
@@ -233,7 +236,7 @@ class TestModelDB(TestCoreDatabaseOntology):
         model.parameters = new_parameters
         model_db.update(model.id, model)
 
-        # check that item has really been updated in database
+        # check that item has really been updated in database
         updated_model = model_db.get_by_id(model.id)
         assert updated_model.id == model.id
         assert updated_model.name == new_name
@@ -269,13 +272,14 @@ class TestOutputDB(TestCoreDatabaseOntology):
         with pytest.raises(ItemNotFoundError):
             output_db.get_by_id('not_existing')
 
-    def test_db_output_create(self, init_models, init_sites, init_buildings):
+    def test_db_output_create(self, init_models, init_buildings):
+        building_ids, _ = init_buildings
         output_db = OutputDB()
         # check that database is empty
         result = output_db.get_all()
         assert list(result) == []
 
-        #get service and model id
+        # get service and model id
         models = list(ModelDB().get_all())
         model_id, service_id = models[0].id, models[0].service_id
 
@@ -284,16 +288,16 @@ class TestOutputDB(TestCoreDatabaseOntology):
         new_output_id_evt = output_db.create(output)
         assert new_output_id_evt is not None
 
-        # check that database is not empty now
+        # check that database is not empty now
         result = output_db.get_all()
         outputs = list(result)
         assert len(outputs) == 1
         assert outputs[0].module_id == service_id
         assert outputs[0].model_id == model_id
 
-        #test with time series
+        # test with time series
         output = OutputTimeSeries(
-            service_id, model_id, init_buildings[0],
+            service_id, model_id, building_ids[0],
             ValuesDescription('Temperature', 'DegreeCelsius', 20),
             id=str(gen_uuid()))
         new_output_id_ts = output_db.create(output)
@@ -302,7 +306,9 @@ class TestOutputDB(TestCoreDatabaseOntology):
         result = output_db.get_all()
         outputs = list(result)
         assert len(outputs) == 2
-        output_event = outputs[0] if isinstance(outputs[0], OutputTimeSeries) else outputs[1]
+        output_event = (
+            outputs[0]
+            if isinstance(outputs[0], OutputTimeSeries) else outputs[1])
         assert output_event.module_id == service_id
         assert output_event.model_id == model_id
         assert output_event.localization == output.localization
@@ -310,15 +316,16 @@ class TestOutputDB(TestCoreDatabaseOntology):
         assert output_event.values_desc.kind == output.values_desc.kind
         assert output_event.values_desc.sampling == output.values_desc.sampling
 
-        #test relation between service and output
+        # test relation between service and output
         model = ModelDB().get_by_id(model_id)
         assert set(model.event_output_ids) == {new_output_id_evt}
         assert set(model.timeseries_output_ids) == {new_output_id_ts}
 
-    def test_db_output_filter(self, init_models, init_sites, init_buildings):
+    def test_db_output_filter(self, init_models, init_buildings):
+        building_ids, _ = init_buildings
         output_db = OutputDB()
 
-        #get service and model id
+        # get service and model id
         models = list(ModelDB().get_all())
         model_id, service_id = models[0].id, models[0].service_id
 
@@ -332,7 +339,7 @@ class TestOutputDB(TestCoreDatabaseOntology):
         output_db.create(OutputEvent(service_id, model_id))
         output_db.create(
             OutputTimeSeries(
-                service_id, model_id, init_buildings[0],
+                service_id, model_id, building_ids[0],
                 ValuesDescription('Temperature', 'DegreeCelsius', 20)))
 
         outputs = list(output_db.get_all())
@@ -340,19 +347,21 @@ class TestOutputDB(TestCoreDatabaseOntology):
         result = output_db.get_all(module_id=service_id)
         assert len(list(result)) == 2
 
-        result = output_db.get_all(localization=init_buildings[0])
+        result = output_db.get_all(localization=building_ids[0])
         assert len(list(result)) == 1
 
         result = output_db.get_all(value_type='Temperature')
         assert len(list(result)) == 1
 
-    def test_db_output_update(self, init_models, init_sites, init_buildings):
+    def test_db_output_update(self, init_models, init_buildings):
+        building_ids, _ = init_buildings
+
         models = list(ModelDB().get_all())
         model_id, service_id = models[0].id, models[0].service_id
 
         output_db = OutputDB()
         output = OutputTimeSeries(
-            service_id, model_id, init_buildings[0],
+            service_id, model_id, building_ids[0],
             ValuesDescription('Temperature', 'DegreeCelsius', 20),
             id=str(gen_uuid()))
         new_output_id_ts = output_db.create(output)
@@ -378,7 +387,7 @@ class TestOutputDB(TestCoreDatabaseOntology):
         output.values_desc.unit = new_unit
         output_db.update(output.id, output)
 
-        # check that item has really been updated in database
+        # check that item has really been updated in database
         updated_output = output_db.get_by_id(output.id)
         assert updated_output.id == output.id
         assert updated_output.model_id == new_model_id
@@ -386,7 +395,8 @@ class TestOutputDB(TestCoreDatabaseOntology):
         assert updated_output.localization == output.localization
         assert updated_output.values_desc.unit == new_unit
         assert updated_output.values_desc.kind == new_kind
-        assert updated_output.values_desc.sampling == output.values_desc.sampling
+        assert updated_output.values_desc.sampling == (
+            output.values_desc.sampling)
 
         # delete an item by its ID
         output_db.remove(output.id)

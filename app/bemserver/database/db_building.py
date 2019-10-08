@@ -1,5 +1,4 @@
 """Serialize/deserialize Building into the data storage solution"""
-# pylint: disable=no-member
 
 from .ontology.generic import StructuralElementDB
 from .ontology.manager import PREFIX

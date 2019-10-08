@@ -1,16 +1,15 @@
 """Fixtures for api extensions tests"""
 
 import pytest
-from tests.api.utils import JSONResponse
-
 import marshmallow as ma
-
 from flask import Flask
 from flask.views import MethodView
 
 from flask_rest_api import Api, Blueprint, Page
 
 from bemserver.api.extensions.rest_api.hateoas import ma_hateoas
+
+from tests.api.utils import JSONResponse
 
 
 class AppConfig():
@@ -46,7 +45,6 @@ def create_app_mock(config_cls=None):
             }
         })
 
-
     blp_albums = Blueprint('albums', __name__, url_prefix='/albums')
 
     @blp_albums.route('/')
@@ -75,7 +73,6 @@ def create_app_mock(config_cls=None):
             """Create and return a resource"""
             return new_item
 
-
     @blp_albums.route('/<int:album_id>')
     class AlbumResourceById(MethodView):
         """Album resource endpoints"""
@@ -88,7 +85,6 @@ def create_app_mock(config_cls=None):
                 'name': 'Freak Out!'
             }
             return album_data
-
 
     class SongSchema(ma.Schema):
         """Song resource schema"""
@@ -107,7 +103,6 @@ def create_app_mock(config_cls=None):
             'parent': ma_hateoas.UrlFor(
                 endpoint='albums.AlbumResourceById', album_id='<album_id>')
         })
-
 
     blp_songs = Blueprint('songs', __name__, url_prefix='/songs')
 
@@ -139,7 +134,6 @@ def create_app_mock(config_cls=None):
             """Create and return a resource"""
             return new_item
 
-
     @blp_songs.route('/<int:song_id>')
     class SongResourceById(MethodView):
         """Song resource endpoints"""
@@ -153,7 +147,6 @@ def create_app_mock(config_cls=None):
                 'album_id': 0
             }
             return song_data
-
 
     app = Flask('API Test')
     app.response_class = JSONResponse

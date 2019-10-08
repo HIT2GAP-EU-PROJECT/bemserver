@@ -2,10 +2,9 @@
 
 import datetime as dt
 import time
-
 from flask_jwt_simple import decode_jwt
-
 import pytest
+
 from tests import TestCoreApi
 from tests.api.views.conftest import TestingConfig
 
@@ -66,7 +65,7 @@ class TestApiViewsAuthJWT(TestCoreApi):
             assert token[claim]['roles'] == ['anonymous_occupant']
             assert token[claim]['type'] == 'user'
 
-        # verify authentication cookie
+        # verify authentication cookie
         assert 'set-cookie' in response.headers
         set_cookie = response.headers['set-cookie']
         assert set_cookie is not None

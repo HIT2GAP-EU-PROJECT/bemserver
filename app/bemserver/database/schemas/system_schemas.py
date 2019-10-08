@@ -26,12 +26,13 @@ class LocalizationSchema(BaseSchema):
         description='Space identifier',
     )
 
+
 class SystemSchema(BaseSchema):
     """Schema to validate system's extraction from the ontology
     Must not be instantiated by inherited by other schemas"""
     _OBJ_CLS = System
 
-    id = ma.fields.UUID(  # pylint: disable=invalid-name
+    id = ma.fields.UUID(
         required=True,
         description='System ID'
     )
@@ -48,6 +49,7 @@ class SystemSchema(BaseSchema):
         required=True,
         description='Localization of the system'
     )
+
 
 class SensorSchema(SystemSchema):
     """Schema to validate sensor's extraction from the ontology"""
@@ -68,6 +70,7 @@ class SensorSchema(SystemSchema):
         description='A list of measures ID associated to the sensor',
     )
 
+
 class MeasureValuePropertiesSchema(BaseSchema):
     """Schema to validate MeasureValueProperties"""
     _OBJ_CLS = MeasureValueProperties
@@ -82,6 +85,7 @@ class MeasureValuePropertiesSchema(BaseSchema):
         description='The frequency of observation capture in ms.',
         validate=ma.validate.Range(min=0)
     )
+
 
 class MeasureMaterialPropertiesSchema(BaseSchema):
     """Schema to validate MeasureValueProperties"""
@@ -104,10 +108,11 @@ class MeasureMaterialPropertiesSchema(BaseSchema):
         validate=ma.validate.Range(min=0, max=1)
     )
     sensitivity = ma.fields.Float(
-        description='''Sensitivity is the quotient of the change in a result
-            of sensor and the corresponding change in a value of a quality being
-             observed.''',
+        description='''Sensitivity is the quotient of the change in a result of
+            sensor and the corresponding change in a value of a quality being
+            observed.''',
     )
+
 
 class MeasureLocationSchema(BaseSchema):
     """Schema to validate location on measures"""
@@ -122,6 +127,7 @@ class MeasureLocationSchema(BaseSchema):
         required=True,
     )
 
+
 class MeasureSchema(BaseSchema):
     """Schema to validate sensor's extraction from the ontology"""
     _OBJ_CLS = Measure
@@ -132,17 +138,20 @@ class MeasureSchema(BaseSchema):
     )
     sensor_id = ma.fields.UUID(
         required=True,
-        description='The unique ID of the sensor that performs the observation',
+        description=(
+            'The unique ID of the sensor that performs the observation'),
     )
     description = ma.fields.String(
         validate=ma.validate.Length(max=250),
         description='Window description'
     )
     medium = ma.fields.String(
-        description='The physical medium that is observed (Air, Water, Gaz...)',
+        description=(
+            'The physical medium that is observed (Air, Water, Gaz...)'),
     )
     observation_type = ma.fields.String(
-        description='The physical property that is observed (Temperature, Speed...)',
+        description=(
+            'The physical property that is observed (Temperature, Speed...)'),
     )
     unit = ma.fields.String(
         description='The unit used in this observation',
@@ -160,8 +169,8 @@ class MeasureSchema(BaseSchema):
             HDF5 instance''',
     )
     method = ma.fields.String(
-        description="""Method for observation capture. Can be of two types: on a
-        certain frequency (Frequency) or on value change (OnChange)""",
+        description="""Method for observation capture. Can be of two types: on
+        a certain frequency (Frequency) or on value change (OnChange)""",
     )
     associated_locations = ma.fields.List(
         ma.fields.Nested(MeasureLocationSchema),

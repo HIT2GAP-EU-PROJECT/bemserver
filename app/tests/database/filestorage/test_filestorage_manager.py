@@ -1,11 +1,12 @@
 """Tests on 'database' file storage manager."""
 
 import pytest
-from tests import TestCoreDatabase
-from tests.utils import uuid_gen
 
 from bemserver.database.filestorage.filestore import (
     FileStorageMgr, FileStorageEntry)
+
+from tests import TestCoreDatabase
+from tests.utils import uuid_gen
 
 
 class TestFileStorageManager(TestCoreDatabase):

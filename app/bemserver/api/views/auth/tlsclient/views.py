@@ -24,7 +24,7 @@ from .....database.exceptions import ItemNotFoundError
 @api.response(IdentitySchemaView, disable_etag=True)
 def auth_cert_login():
     """Endpoint to authenticate a user through a certificate."""
-    # extract user unique name from certificate
+    # extract user unique name from certificate
     uid = auth_cert_get_uid()
 
     # get security manager...

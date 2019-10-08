@@ -105,7 +105,7 @@ class LocationSchema(ObjectSchema):
     class Meta:
         """Schema Meta properties"""
         strict = True
-    #TODO: should be replaced with the URL of location, at least include it.
+    # TODO: should be replaced with the URL of location, at least include it.
     type = ma.fields.String(
         description='''Type of location. Should be Site, Building, Floor,
         Space or Zone''',
@@ -264,7 +264,7 @@ class MeasureRequestBodySchema(MeasureSchema):
 
 
 ###########
-#Schema for API responses
+# Schema for API responses
 
 class MeasureHateoasSchema(ma_hateoas.Schema):
     """Measure hateoas part schema for api views"""
@@ -300,7 +300,7 @@ class MeasureSchemaView(MeasureSchema, MeasureHateoasSchema):
 
 
 #############
-#Schema for API etag feature
+# Schema for API etag feature
 
 class MeasureEtagSchema(MeasureSchema):
     """Measure schema used by etag feature"""

@@ -1,12 +1,13 @@
 """Tests for api window views"""
 
 import pytest
+
+from bemserver.api.extensions.database import db_accessor as dba
+from bemserver.models import Facade
+
 from tests import TestCoreApi, TestCoreApiAuthCert
 from tests.utils import uuid_gen, get_dictionary_no_none
 from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
-
-from bemserver.api.extensions.database import db_accessor as dba
-from bemserver.models import Facade, Window
 
 
 @pytest.mark.usefixtures('init_app')
@@ -58,10 +59,11 @@ class TestApiViewsWindows(TestCoreApi):
         assert len(response.json) == 0
 
     @pytest.mark.xfail
+    @pytest.mark.usefixtures('init_db_data')
     @pytest.mark.parametrize('init_db_data', [{
         'gen_floors': True, 'gen_spaces': True, 'gen_facades': True,
         'gen_windows': True}], indirect=True)
-    def test_views_windows_get_list_sort(self, init_db_data):
+    def test_views_windows_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
         # Get list:
@@ -264,7 +266,7 @@ class TestApiViewsWindowsPermissions(TestCoreApiAuthCert):
         assert response.status_code == 200
         assert len(response.json) == 3
         window_data = response.json[0]
-        # verify that parent site IDs are in allowed site IDs
+        # verify that parent site IDs are in allowed site IDs
         for window in response.json:
             site_id = dba.get_parent(Facade, window['facade_id'])
             assert uacc.verify_scope(sites=[site_id])

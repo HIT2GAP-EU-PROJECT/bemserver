@@ -30,7 +30,7 @@ class ModelSchema(ObjectSchema):
 
     _OBJ_CLS = Model
 
-    id = ma.fields.UUID(  # pylint: disable=invalid-name
+    id = ma.fields.UUID(
         dump_only=True,
         description='Model ID'
     )

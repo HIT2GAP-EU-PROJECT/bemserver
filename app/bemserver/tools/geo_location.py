@@ -1,5 +1,6 @@
 """Geo location tools"""
 
+
 def _parse_dms_args(*args):
     """args expected values are:
         a tuple or a list: (degrees, minutes, seconds, [frac_seconds])
@@ -26,7 +27,8 @@ def _check_dms_consistency(degrees, minutes, seconds, frac_seconds):
     Raises ValueError if this is not respected.
     """
     if ((degrees < 0 and (minutes > 0 or seconds > 0 or frac_seconds > 0)) or
-            (degrees > 0 and (minutes < 0 or seconds < 0 or frac_seconds < 0))):
+            (degrees > 0 and (minutes < 0 or seconds < 0 or frac_seconds < 0))
+       ):
         raise ValueError(
             'Invalid coordinates values, positive/negative inconsistency.')
 

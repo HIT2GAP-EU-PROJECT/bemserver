@@ -86,7 +86,7 @@ class Node():
         for child in self._children:
             sons.append(child)
             if indirect:
-                # get grandchildrens too and propagate indirect
+                # get grandchildrens too and propagate indirect
                 sons.extend(child.get_sons(indirect=indirect))
         return sons
 
@@ -99,7 +99,7 @@ class Node():
         for child in self._children:
             son_names.append(child.name)
             if indirect:
-                # get grandchildrens too and propagate indirect
+                # get grandchildrens too and propagate indirect
                 son_names.extend(child.get_son_names(indirect=indirect))
         return son_names
 

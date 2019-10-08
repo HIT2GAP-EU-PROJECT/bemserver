@@ -156,7 +156,7 @@ class HierarchyEnum(Enum):
             if cur_item.parent is self:
                 sons.append(cur_item)
                 if indirect:
-                    # get grandchildren too and propagate indirect
+                    # get grandchildren too and propagate indirect
                     sons.extend(cur_item.get_sons(indirect=indirect))
         return sons
 

@@ -23,7 +23,6 @@ In BEMServer, a site is characterized by:
 
 
 def init_app(app):
-    # pylint: disable=unused-variable
     """Initialize application with module"""
 
     from . import views

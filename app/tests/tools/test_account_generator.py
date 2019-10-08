@@ -1,10 +1,10 @@
 """Tests for account login ids and passwords generation tools"""
 
 import pytest
-from tests import TestCoreTools
-
 from bemserver.tools.account_generator import (
     _gen_random_str, generate_login_id, generate_pwd)
+
+from tests import TestCoreTools
 
 
 class TestToolsAccountGenerator(TestCoreTools):
@@ -21,16 +21,13 @@ class TestToolsAccountGenerator(TestCoreTools):
         res = _gen_random_str(7, available_chars='azerty987')
         assert len(res) == 7
         # assume that unwanted chars are not present
-        # ('b' was not in available chars list)
+        # ('b' was not in available chars list)
         assert 'b' not in res
 
         # assume that generator is random enough
         assert _gen_random_str(4) != _gen_random_str(4)
 
         # Errors:
-        # no string length specified
-        with pytest.raises(TypeError):
-            _gen_random_str()
         # string length is greater than available_chars length
         with pytest.raises(ValueError):
             _gen_random_str(7, available_chars='azerty')

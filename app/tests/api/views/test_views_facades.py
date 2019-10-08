@@ -1,12 +1,13 @@
 """Tests for api facades views"""
 
 import pytest
-from tests import TestCoreApi, TestCoreApiAuthCert
-from tests.utils import uuid_gen, get_dictionary_no_none
-from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 from bemserver.api.extensions.database import db_accessor as dba
 from bemserver.models import Building
+
+from tests import TestCoreApi, TestCoreApiAuthCert
+from tests.utils import uuid_gen, get_dictionary_no_none
+from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 
 @pytest.mark.usefixtures('init_app')
@@ -18,18 +19,19 @@ class TestApiViewsFacades(TestCoreApi):
     def test_views_facades_get_list_empty(self):
         """Test get_list api endpoint"""
 
-        # Get list: no items
+        # Get list: no items
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 0
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize('init_db_data', [
         {'gen_floors': True, 'gen_spaces': True, 'gen_facades': True}
         ], indirect=True)
-    def test_views_facades_get_list_filter(self, init_db_data):
+    def test_views_facades_get_list_filter(self):
         """Test get_list (with filter) api endpoint"""
 
-        # Get list: 4 found
+        # Get list: 4 found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -39,19 +41,20 @@ class TestApiViewsFacades(TestCoreApi):
         response = self.get_items(headers={'If-None-Match': etag_value})
         assert response.status_code == 304
 
-        # Get list with a filter: 1 found
+        # Get list with a filter: 1 found
         response = self.get_items(name='facade_C')
         assert response.status_code == 200
         assert len(response.json) == 1
 
     @pytest.mark.xfail
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize('init_db_data', [
         {'gen_floors': True, 'gen_spaces': True, 'gen_facades': True}
         ], indirect=True)
-    def test_views_facades_get_list_sort(self, init_db_data):
+    def test_views_facades_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
-        # Get list:
+        # Get list:
         # sorting by name descending
         response = self.get_items(sort='-name')
         assert response.status_code == 200
@@ -61,7 +64,7 @@ class TestApiViewsFacades(TestCoreApi):
         assert response.json[2]['name'] == 'facade_B'
         assert response.json[3]['name'] == 'facade_A'
 
-        # sorting by name ascending
+        # sorting by name ascending
         response = self.get_items(sort='name')
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -109,7 +112,7 @@ class TestApiViewsFacades(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 0
 
-        # Post a new item
+        # Post a new item
         f_spaces = [str(init_db_data['spaces'][0]),
                     str(init_db_data['spaces'][1]),
                     str(init_db_data['spaces'][3])]
@@ -128,7 +131,7 @@ class TestApiViewsFacades(TestCoreApi):
         assert response.json['description'] == 'It can disappear...'
         assert response.json['building_id'] == building_id
 
-        # Get list: 1 found
+        # Get list: 1 found
         facade_json = self.get_items()
         assert facade_json.status_code == 200
         assert len(facade_json.json) == 1
@@ -144,17 +147,19 @@ class TestApiViewsFacades(TestCoreApi):
         response = self.post_item(
             name='wrong_windows_wall_ratio', spaces=[str(uuid_gen())],
             surface_info={'area': 0}, orientation='North',
-            windows_wall_ratio=42, building_id=str(init_db_data['buildings'][3]))
+            windows_wall_ratio=42,
+            building_id=str(init_db_data['buildings'][3]))
         assert response.status_code == 422
 
-        # Remarks:
-        # id is 'read only'
+        # Remarks:
+        # id is 'read only'
         new_id = str(uuid_gen())
         response = self.post_item(
             id=new_id, name='id_is_read_only',
             spaces=[str(init_db_data['spaces'][0])],
             surface_info={'area': 0}, orientation='North',
-            windows_wall_ratio=0, building_id=str(init_db_data['buildings'][0]))
+            windows_wall_ratio=0,
+            building_id=str(init_db_data['buildings'][0]))
         assert response.status_code == 201
         assert response.json['id'] != new_id
 
@@ -191,8 +196,10 @@ class TestApiViewsFacades(TestCoreApi):
         assert (response.json['windows_wall_ratio'] ==
                 facade_json.json['windows_wall_ratio'])
         assert 'description' not in response.json
-        assert response.json['surface_info'] == facade_json.json['surface_info']
-        assert response.json['building_id'] == str(facade_json.json['building_id'])
+        assert response.json['surface_info'] == (
+            facade_json.json['surface_info'])
+        assert response.json['building_id'] == str(
+            facade_json.json['building_id'])
 
     @pytest.mark.parametrize('init_db_data', [
         {'gen_floors': True, 'gen_spaces': True, 'gen_facades': True}
@@ -208,7 +215,7 @@ class TestApiViewsFacades(TestCoreApi):
         assert response.status_code == 200
         etag_value = response.headers.get('etag', None)
 
-        # Delete...
+        # Delete...
         response = self.delete_item(
             item_id=facade_id,
             headers={'If-Match': etag_value})
@@ -248,7 +255,7 @@ class TestApiViewsFacadesPermissions(TestCoreApiAuthCert):
         assert response.status_code == 200
         assert len(response.json) == 3
         facade_data = response.json[0]
-        # verify that parent site IDs are in allowed site IDs
+        # verify that parent site IDs are in allowed site IDs
         for facade in response.json:
             site_id = dba.get_parent(Building, facade['building_id'])
             assert uacc.verify_scope(sites=[site_id])

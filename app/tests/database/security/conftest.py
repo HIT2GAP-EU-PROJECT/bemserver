@@ -1,7 +1,6 @@
 """Fixtures for database security manager tests"""
 
 import os
-
 import pytest
 
 from bemserver.database.security.security_manager import (
@@ -29,7 +28,7 @@ def gen_user_accounts(tmpdir):
         uacc._password = u_data['pwd']
         module_uaccs[uacc.uid] = uacc
 
-    # init security storage folder
+    # init security storage folder
     security_dir = tmpdir / 'security'
     if not security_dir.exists():
         os.mkdir(str(security_dir))

@@ -99,7 +99,7 @@ class SiteSchema(BaseSchema):
 
     _OBJ_CLS = Site
 
-    id = ma.fields.UUID(  # pylint: disable=invalid-name
+    id = ma.fields.UUID(
         required=True,
         description='Site ID'
     )
@@ -255,7 +255,7 @@ class ZoneSchema(BaseSchema):
 
     _OBJ_CLS = Zone
 
-    id = ma.fields.UUID(  # pylint: disable=invalid-name
+    id = ma.fields.UUID(
         required=True,
         description='Zone ID'
     )
@@ -307,7 +307,7 @@ class FacadeSchema(BaseSchema):
 
     _OBJ_CLS = Facade
 
-    id = ma.fields.UUID(  # pylint: disable=invalid-name
+    id = ma.fields.UUID(
         required=True,
         description='Facade ID'
     )
@@ -359,7 +359,7 @@ class SlabSchema(BaseSchema):
 
     _OBJ_CLS = Slab
 
-    id = ma.fields.UUID(  # pylint: disable=invalid-name
+    id = ma.fields.UUID(
         required=True,
         description='Facade ID'
     )
@@ -403,7 +403,7 @@ class WindowSchema(BaseSchema):
 
     _OBJ_CLS = Window
 
-    id = ma.fields.UUID(  # pylint: disable=invalid-name
+    id = ma.fields.UUID(
         required=True,
         description='Window ID'
     )

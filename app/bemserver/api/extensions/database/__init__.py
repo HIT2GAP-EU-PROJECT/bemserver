@@ -1,7 +1,7 @@
 """Database extension"""
 
-from .accessor import DBAccessor
 from bemserver.database import init_handlers
+from .accessor import DBAccessor
 
 
 db_accessor = DBAccessor()

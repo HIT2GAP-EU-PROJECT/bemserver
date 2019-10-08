@@ -25,11 +25,11 @@ def init_app(app):
     if jwt_auth:
         jwt.init_app(app)
 
-    # initialize certificate authentication
+    # initialize certificate authentication
     if cert_auth:
         tlsclient.init_app(app)
 
-    # initialize SAML authentication
+    # initialize SAML authentication
     if saml_auth:
         saml.init_app(app)
 
@@ -118,7 +118,7 @@ def auth_required(*, roles=None, with_perm=True):
                 # get identity
                 identity = jwt.auth_jwt_get_identity()
 
-            # it seems that authentication could not be done
+            # it seems that authentication could not be done
             if identity is None:
                 # /!\ at this point, the jwt 401 case is already processed
                 headers = {}
@@ -142,7 +142,7 @@ def get_identity():
     # get identity from session cookie
     identity = session.get('identity')
 
-    # when authentication identity is not cookie style...
+    # when authentication identity is not cookie style...
     if (identity is None and has_app_context() and
             current_app.config['AUTH_JWT_ENABLED']):
         identity = jwt.auth_jwt_get_identity()
@@ -189,8 +189,8 @@ def is_auth_enabled(func_name=None):
     return (
         (current_app.config['AUTHENTICATION_ENABLED'] or (
             # auth demo case
-            current_app.config['AUTHENTICATION_DEMO_ENABLED'] and is_url_demo)
-        ) and (
+            current_app.config['AUTHENTICATION_DEMO_ENABLED'] and is_url_demo))
+        and (
             # is at least one authentication mode active?
             current_app.config['AUTH_JWT_ENABLED'] or
             current_app.config['AUTH_CERTIFICATE_ENABLED'] or

@@ -7,9 +7,6 @@ from tests import TestCoreApi
 from tests.utils import uuid_gen
 
 
-# TODO: all tests must be improved when a real database will be available...
-
-
 @pytest.mark.usefixtures('init_app')
 class TestApiViewsComforts(TestCoreApi):
     """Comfort api views tests"""
@@ -24,9 +21,10 @@ class TestApiViewsComforts(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 0
 
+    @pytest.mark.usefixtures('init_db_data')
     @pytest.mark.parametrize('init_db_data', [{
         'gen_occupants': True, 'gen_comforts': True}], indirect=True)
-    def test_views_comforts_get_list_filter(self, init_db_data):
+    def test_views_comforts_get_list_filter(self):
         """Test get_list (with filter) api endpoint"""
 
         # Get list: 4 items found
@@ -39,9 +37,10 @@ class TestApiViewsComforts(TestCoreApi):
         response = self.get_items(headers={'If-None-Match': etag_value})
         assert response.status_code == 304
 
+    @pytest.mark.usefixtures('init_db_data')
     @pytest.mark.parametrize('init_db_data', [{
         'gen_occupants': True, 'gen_comforts': True}], indirect=True)
-    def test_views_comforts_get_list_sort(self, init_db_data):
+    def test_views_comforts_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
         # Get comfort list:

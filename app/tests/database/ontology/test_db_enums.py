@@ -2,9 +2,9 @@
 
 import pytest
 
-from tests import TestCoreDatabaseOntology
-
 from bemserver.database.db_enums import DBEnumHandler
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -22,7 +22,7 @@ class TestDBEnum(TestCoreDatabaseOntology):
         educational = result.get_son('EducationalBuilding')
         assert educational is not None
         assert len(educational.children) == 3
-        # floor types
+        # floor types
         floor = enum_dbhandler.get_floor_types()
         assert floor.name == 'Floor'
         assert floor.label == 'Floor'
@@ -59,7 +59,7 @@ class TestDBEnum(TestCoreDatabaseOntology):
         assert result.name == 'Hemisphere'
         assert result.label == 'Hemisphere'
         assert len(result.children) == 2
-        # climate types
+        # climate types
         result = enum_dbhandler.get_climate_types()
         assert result.name == 'Climate'
         assert result.label == 'Climate'

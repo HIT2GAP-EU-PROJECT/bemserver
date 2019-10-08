@@ -2,18 +2,18 @@
 
 import marshmallow as ma
 
-from tests import TestCoreApi
-
 from bemserver.api.extensions.rest_api.doc_responses import (
     build_responses)
 from bemserver.api.extensions.rest_api.schemas import ErrorSchema
+
+from tests import TestCoreApi
 
 
 class TestApiExtensionsDocResponses(TestCoreApi):
 
     def test_extensions_restapi_doc_responses_build(self):
 
-        # when statuses are None or not a list|tuple
+        # when statuses are None or not a list|tuple
         #  200 and 500 statuses are defaults
         for status_codes in [None, 'bad']:
             doc_rsps = build_responses(status_codes)

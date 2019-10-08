@@ -1,7 +1,6 @@
 """Tests for api building views"""
 
 from pathlib import Path
-
 import pytest
 
 from bemserver.api import create_app

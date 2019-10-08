@@ -1,13 +1,14 @@
 """Tests on database security manager (stub)."""
 
 import pytest
-from tests import TestCoreDatabase
 
 from bemserver.database.security.security_manager import (
     SecurityManager, UserAccount)
 from bemserver.database.security.exceptions import (
     UserAccountAlreadyExistError)
 from bemserver.database.exceptions import ItemNotFoundError
+
+from tests import TestCoreDatabase
 
 
 class TestDatabaseSecurityManager(TestCoreDatabase):
@@ -21,7 +22,7 @@ class TestDatabaseSecurityManager(TestCoreDatabase):
         assert uacc.sites == ['*']
         assert uacc.enabled
         assert uacc.has_roles(['chuck'])
-        # a root (Chuck Norris) can do anything
+        # a root (Chuck Norris) can do anything
         assert uacc.has_roles(['module_data_provider'])
         assert uacc.has_roles(['building_manager', 'module_data_processor'])
         assert uacc.get_identity() == {
@@ -116,14 +117,14 @@ class TestDatabaseSecurityManager(TestCoreDatabase):
         uacc = security_mgr.get('leguman')
         assert not uacc.enabled
 
-        # errors
+        # errors
         # get not found
         with pytest.raises(ItemNotFoundError):
             security_mgr.get('unknown')
-        # create while uid already exists
+        # create while uid already exists
         with pytest.raises(UserAccountAlreadyExistError):
             security_mgr.add_account('leguman', ['building_manager'])
-        # create with bad roles
+        # create with bad roles
         with pytest.raises(ValueError):
             security_mgr.add_account('professor_chaos', ['bad'])
         # disable an account that does not exist

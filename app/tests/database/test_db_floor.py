@@ -1,11 +1,12 @@
 """Tests the interface Floor/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
 
 from bemserver.database import FloorDB
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import Floor
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -26,7 +27,7 @@ class TestFloorDB(TestCoreDatabaseOntology):
 
     def test_db_floor_create(self, init_buildings):
 
-        building_ids = init_buildings
+        building_ids, _ = init_buildings
         floor_db = FloorDB()
 
         # check that database is empty
@@ -39,7 +40,7 @@ class TestFloorDB(TestCoreDatabaseOntology):
         assert new_floor_id is not None
         assert new_floor_id == floor.id
 
-        # check that database is not empty now
+        # check that database is not empty now
         result = floor_db.get_all()
         floors = list(result)
         assert len(floors) == 1
@@ -52,10 +53,11 @@ class TestFloorDB(TestCoreDatabaseOntology):
 
     def test_db_floor_update_delete(self, init_floors):
 
-        floor_ids = init_floors
+        floor_ids, building_ids, _ = init_floors
+        building_id = building_ids[0]
         floor_db = FloorDB()
 
-        # get all items
+        # get all items
         result = floor_db.get_all()
         floors = list(result)
         assert len(floors) == 2
@@ -72,14 +74,14 @@ class TestFloorDB(TestCoreDatabaseOntology):
         floor.level = new_level
         floor_db.update(floor.id, floor)
 
-        # check that item has really been updated in database
+        # check that item has really been updated in database
         updated_floor = floor_db.get_by_id(floor.id)
         assert updated_floor.id == floor.id
         assert updated_floor.name == floor.name
         assert updated_floor.description == new_description
         assert updated_floor.level == new_level
         assert updated_floor.kind == floor.kind
-        assert updated_floor.building_id == floor.building_id
+        assert updated_floor.building_id == floor.building_id == building_id
 
         # delete an item by its ID
         floor_db.remove(floor.id)

@@ -21,10 +21,11 @@ class Events(MethodView):
     @auth_required(roles=['building_manager', 'module_data_processor'])
     @api.doc(
         summary='List events',
-        description='''This endpoint allows one to retrieve events by any service
-plugged to the BEMServer running instance.
+        description='''This endpoint allows one to retrieve events by any
+service plugged to the BEMServer running instance.
 
-Because the set of generated events can be big, the use of filters is recommended. Typical filters can be:
+Because the set of generated events can be big, the use of filters is
+recommended. Typical filters can be:
 
 + localization: through the use of site_id, building_id, floor_id.
 + criticity level.
@@ -111,7 +112,7 @@ class EventsById(MethodView):
     @auth_required(roles=['module_data_processor'])
     @api.doc(
         summary='Update existing event',
-        description='Update an event from its ID and return the updated event.',
+        description='Update an event from its ID and return updated event.',
         responses=build_responses([200, 404, 422, 500])
     )
     @api.arguments(EventSchema)

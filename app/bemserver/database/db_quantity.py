@@ -107,8 +107,8 @@ class QuantityDB(QuantityDAO):
                 """.format(_url,
                            PREFIX.PROPERTY.alias_uri(quantity.kind))
         query += str_insert(self.QUANTITY, quantity, "value")
-        query += str_insert(self.QUANTITY, quantity, "unit", prefix=PREFIX.UNIT,
-                            optional=True)
+        query += str_insert(
+            self.QUANTITY, quantity, "unit", prefix=PREFIX.UNIT, optional=True)
         query += "}"
         self.onto_mgr.perform(SPARQLOP.INSERT, query)
         return _id
@@ -147,9 +147,10 @@ class QuantityDB(QuantityDAO):
         :new_quantity Quantity: the new quantity that should replace the one
             identified by URL
         """
-        #TODO should be a DELETE... INSERT...?
+        # TODO: should be a DELETE... INSERT...?
         self.remove(url)
-        return self.create(new_quantity, url)
+        # return self.create(new_quantity, url)
+        return self.create(new_quantity)
 
     def get_all_for(self, url, relation=None, kind=None):
         """Get all quantity/quantityValue accordng associated to the url. If

@@ -2,8 +2,8 @@
 
 import datetime as dt
 import time
-
 import pytest
+
 from tests import TestCoreApi
 from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
@@ -42,9 +42,10 @@ class TestApiViewsAuthCertificate(TestCoreApi):
                 return set_cookie_part.strip()
         return None
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize(
         'init_app', [TestingConfigAuthCertificateEnabled], indirect=True)
-    def test_views_auth_cert_login(self, certificate_data, init_db_data):
+    def test_views_auth_cert_login(self, certificate_data):
         """Test certificate login api endpoint"""
         # try to sign in
         response = self._auth_cert_login(certificate_data)
@@ -53,7 +54,7 @@ class TestApiViewsAuthCertificate(TestCoreApi):
             'uid': 'bemsvrapp-cleaning-timeseries', 'type': 'machine',
             'roles': ['module_data_processor']}
 
-        # verify authentication cookie
+        # verify authentication cookie
         assert 'set-cookie' in response.headers
         set_cookie = response.headers['set-cookie']
         assert set_cookie is not None
@@ -72,14 +73,14 @@ class TestApiViewsAuthCertificate(TestCoreApi):
         response = self._auth_cert_login('CN=unknown')
         assert response.status_code == 404
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize(
         'init_app', [TestingConfigAuthCertificateEnabled], indirect=True)
     @pytest.mark.parametrize('init_db_data', [
         {'gen_sensors': True, 'gen_measures': True}], indirect=True)
-    def test_views_auth_cert_protected_resources(
-            self, certificate_data, init_db_data):
+    def test_views_auth_cert_protected_resources(self, certificate_data):
         """Test protected resources access with a certificate."""
-        # Get some protected data while not authenticated
+        # Get some protected data while not authenticated
         response = self._get_protected_resources()
         assert response.status_code == 401
 
@@ -101,11 +102,12 @@ class TestApiViewsAuthCertificate(TestCoreApi):
         assert 'WWW-Authenticate' in response.headers
 
     @pytest.mark.slow
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize(
         'init_app', [TestingConfigAuthCertExp], indirect=True)
     @pytest.mark.parametrize('init_db_data', [
         {'gen_sensors': True, 'gen_measures': True}], indirect=True)
-    def test_views_auth_cert_expiration(self, certificate_data, init_db_data):
+    def test_views_auth_cert_expiration(self, certificate_data):
         """Test authentication with an expired cookie"""
         # try to sign in
         response = self._auth_cert_login(certificate_data)

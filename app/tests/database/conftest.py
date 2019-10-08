@@ -22,7 +22,6 @@ def _get_site_ids():
     ]
 
 
-@pytest.fixture()
 def init_sites():
     geo_info = GeographicInfo(44.803652, -0.600954, altitude=20)
     sites = [
@@ -31,35 +30,33 @@ def init_sites():
     return [SiteDB().create(site) for site in sites]
 
 
+@pytest.fixture(name='init_sites')
+def init_sites_fixture():
+    return init_sites()
+
+
 # -------------------------BUILDING--------------------------------
 
-@pytest.fixture()
-def get_building_ids():
+def _get_building_ids():
     return [
         uuid.UUID('b61ce994-083f-11e8-b911-0800278dbbf8'),
         uuid.UUID('b653d2a6-083f-11e8-b911-0800278dbbf8'),
     ]
 
 
-@pytest.fixture()
-def get_created_building_ids():
-    return created_building_ids
-
-
-created_building_ids = []
-
-
-@pytest.fixture()
 def init_buildings():
     site_ids = init_sites()
-    global created_building_ids
     buildings = [
         Building('Building #{}'.format(idx+1), 'BarRestaurant', site_ids[0],
                  id=building_id)
-        for idx, building_id in enumerate(get_building_ids())]
-    result = [BuildingDB().create(building) for building in buildings]
-    created_building_ids = [id_ for id_ in result]
-    return result
+        for idx, building_id in enumerate(_get_building_ids())]
+    building_ids = [BuildingDB().create(building) for building in buildings]
+    return building_ids, site_ids
+
+
+@pytest.fixture(name='init_buildings')
+def init_buildings_fixture():
+    return init_buildings()
 
 
 # -------------------------FLOOR--------------------------------
@@ -71,15 +68,20 @@ def _get_floor_ids():
     ]
 
 
-@pytest.fixture()
 def init_floors():
-    building_ids = init_buildings()
+    building_ids, site_ids = init_buildings()
     floors = [
         Floor(
             'Floor #{}'.format(idx+1), 0, building_ids[0], 'Floor',
             id=floor_id)
         for idx, floor_id in enumerate(_get_floor_ids())]
-    return [FloorDB().create(floor) for floor in floors]
+    floor_ids = [FloorDB().create(floor) for floor in floors]
+    return floor_ids, building_ids, site_ids
+
+
+@pytest.fixture(name='init_floors')
+def init_floors_fixture():
+    return init_floors()
 
 
 # -------------------------SPACE--------------------------------
@@ -91,15 +93,20 @@ def _get_space_ids():
     ]
 
 
-@pytest.fixture()
 def init_spaces():
-    floor_ids = init_floors()
+    floor_ids, building_ids, site_ids = init_floors()
     space_occ = SpaceOccupancy(9, 20)
     spaces = [
         Space('Space #{}'.format(idx+1), floor_ids[0], 'OpenSpace',
               space_occ, id=space_id)
         for idx, space_id in enumerate(_get_space_ids())]
-    return [SpaceDB().create(space) for space in spaces]
+    space_ids = [SpaceDB().create(space) for space in spaces]
+    return space_ids, floor_ids, building_ids, site_ids
+
+
+@pytest.fixture(name='init_spaces')
+def init_spaces_fixture():
+    return init_spaces()
 
 
 # -------------------------ZONE--------------------------------
@@ -111,18 +118,22 @@ def _get_zone_ids():
     ]
 
 
-@pytest.fixture()
 def init_zones():
-    space_ids = init_spaces()
-    building_ids = get_created_building_ids()
+    space_ids, floor_ids, building_ids, site_ids = init_spaces()
     zones = [
         Zone('Zone #{}'.format(idx+1), [], space_ids, building_ids[0],
              'A sample zone', id=zone_id)
         for idx, zone_id in enumerate(_get_zone_ids())]
-    return [ZoneDB().create(zone) for zone in zones]
+    zone_ids = [ZoneDB().create(zone) for zone in zones]
+    return zone_ids, space_ids, floor_ids, building_ids, site_ids
+
+
+@pytest.fixture(name='init_zones')
+def init_zones_fixture():
+    return init_zones()
+
 
 # -------------------------FACADE--------------------------------
-
 
 def _get_facade_ids():
     return [
@@ -131,19 +142,23 @@ def _get_facade_ids():
     ]
 
 
-@pytest.fixture()
 def init_facades():
-    space_ids = init_spaces()
-    building_ids = get_created_building_ids()
+    space_ids, floor_ids, building_ids, site_ids = init_spaces()
     facades = [
         Facade('Facade #{}'.format(idx+1), space_ids,
                SurfaceInfo(25, 3.54, 0.012), building_ids[0], 0.23243,
                description='A sample facade', interior=True, id=facade_id)
         for idx, facade_id in enumerate(_get_facade_ids())]
-    return [FacadeDB().create(facade) for facade in facades]
+    facade_ids = [FacadeDB().create(facade) for facade in facades]
+    return facade_ids, space_ids, floor_ids, building_ids, site_ids
 
-# -------------------------FACADE--------------------------------
 
+@pytest.fixture(name='init_facades')
+def init_facades_fixture():
+    return init_facades()
+
+
+# -------------------------SLABS--------------------------------
 
 def _get_slab_ids():
     return [
@@ -152,19 +167,23 @@ def _get_slab_ids():
     ]
 
 
-@pytest.fixture()
 def init_slabs():
-    floors_ids = init_floors()
-    building_ids = get_created_building_ids()
+    floor_ids, building_ids, site_ids = init_floors()
     slabs = [
-        Slab('Slab #{}'.format(idx+1), [floors_ids[0], floors_ids[1]],
+        Slab('Slab #{}'.format(idx+1), [floor_ids[0], floor_ids[1]],
              SurfaceInfo(25, 3.54, 0.012), building_ids[0],
              description='A sample slab', kind='FloorSlab', id=slab_id)
         for idx, slab_id in enumerate(_get_slab_ids())]
-    return [SlabDB().create(slab) for slab in slabs]
+    slab_ids = [SlabDB().create(slab) for slab in slabs]
+    return slab_ids, floor_ids, building_ids, site_ids
+
+
+@pytest.fixture(name='init_slabs')
+def init_slabs_fixture():
+    return init_slabs()
+
 
 # -------------------------WINDOW--------------------------------
-
 
 def _get_window_ids():
     return [
@@ -173,18 +192,23 @@ def _get_window_ids():
     ]
 
 
-@pytest.fixture()
 def init_windows():
-    facades_ids = init_facades()
+    facade_ids, space_ids, floor_ids, building_ids, site_ids = init_facades()
     windows = [
-        Window('Window #{}'.format(idx+1), facades_ids[1],
+        Window('Window #{}'.format(idx+1), facade_ids[1],
                SurfaceInfo(25, 3.54, 0.012), description='A sample window',
                covering='Blind', glazing='SimpleGlazing', u_value=12.34)
         for idx, _ in enumerate(_get_facade_ids())]
-    return [WindowDB().create(window) for window in windows]
+    window_ids = [WindowDB().create(window) for window in windows]
+    return window_ids, facade_ids, space_ids, floor_ids, building_ids, site_ids
+
+
+@pytest.fixture(name='init_windows')
+def init_windows_fixture():
+    return init_windows()
+
 
 # -------------------------SENSOR--------------------------------
-
 
 def _get_sensor_ids():
     return [
@@ -193,18 +217,23 @@ def _get_sensor_ids():
     ]
 
 
-@pytest.fixture()
 def init_sensors():
-    space_ids = init_spaces()
+    space_ids, floor_ids, building_ids, site_ids = init_spaces()
     sensors = [
         Sensor('Sensor #{}'.format(idx+1),
                localization=Localization(space_id=space_ids[1]),
                description='A sample sensor')
         for idx, _ in enumerate(_get_sensor_ids())]
-    return [SensorDB().create(sensor) for sensor in sensors]
+    sensor_ids = [SensorDB().create(sensor) for sensor in sensors]
+    return sensor_ids, space_ids, floor_ids, building_ids, site_ids
+
+
+@pytest.fixture(name='init_sensors')
+def init_sensors_fixture():
+    return init_sensors()
+
 
 # -------------------------MEASURE--------------------------------
-
 
 def _get_measure_ids():
     return [
@@ -213,19 +242,24 @@ def _get_measure_ids():
     ]
 
 
-@pytest.fixture()
 def init_measures():
-    sensor_ids = init_sensors()
-    space_ids = init_spaces()
+    sensor_ids, space_ids, floor_ids, building_ids, site_ids = init_sensors()
     measures = [
         Measure(str(sensor_ids[idx]), 'DegreeCelsius', 'Air', 'Temperature',
                 description='A sample measure #{}'.format(idx+1),
                 associated_locations=[space_ids[0]])
         for idx, _ in enumerate(_get_measure_ids())]
-    return [MeasureDB().create(measure) for measure in measures]
+    measure_ids = [MeasureDB().create(measure) for measure in measures]
+    return (
+        measure_ids, sensor_ids, space_ids, floor_ids, building_ids, site_ids,)
+
+
+@pytest.fixture(name='init_measures')
+def init_measures_fixture():
+    return init_measures()
+
 
 # -------------------------SERVICES--------------------------------
-
 
 def _get_service_urls():
     return [
@@ -233,7 +267,6 @@ def _get_service_urls():
     ]
 
 
-@pytest.fixture()
 def _get_service_ids():
     return [
         uuid.UUID('15770284-2ab5-4a0c-8dd6-fcc29bc9df8d'),
@@ -241,18 +274,21 @@ def _get_service_ids():
     ]
 
 
-@pytest.fixture()
 def init_services():
     services = [
         Service('ServiceFDD#{}'.format(idx+1),
                 description='A fake fault and detection diagnosis service',
-                url=_get_service_urls()[idx],
-                id=id_)
+                url=_get_service_urls()[idx], id=id_)
         for idx, id_ in enumerate(_get_service_ids())]
     return [ServiceDB().create(service) for service in services]
 
-# -------------------------MODELS--------------------------------
 
+@pytest.fixture(name='init_services')
+def init_services_fixture():
+    return init_services()
+
+
+# -------------------------MODELS--------------------------------
 
 def _get_model_ids():
     return [
@@ -261,14 +297,19 @@ def _get_model_ids():
     ]
 
 
-@pytest.fixture()
 def init_models():
-    service = init_services()[0]
+    service_ids = init_services()
     params = [[Parameter('ar', 1), Parameter('I', 2), Parameter('MA', 0)],
               [Parameter('gamma', 0.543)]]
     models = [
-        Model('ARIMA#1', service, description='A sample model #1',
+        Model('ARIMA#1', service_ids[0], description='A sample model #1',
               parameters=params[0]),
-        Model('SVR #1', service, description='A sample model #2',
+        Model('SVR #1', service_ids[0], description='A sample model #2',
               parameters=params[1])]
-    return [ModelDB().create(model) for model in models]
+    model_ids = [ModelDB().create(model) for model in models]
+    return model_ids, service_ids
+
+
+@pytest.fixture(name='init_models')
+def init_models_fixture():
+    return init_models()

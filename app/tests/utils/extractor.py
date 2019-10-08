@@ -36,7 +36,6 @@ class _DataExtractor(object):
         return self.data
 
 
-
 class DataExtractorPower(_DataExtractor):
     """An extractor of energy consummption data"""
 
@@ -49,7 +48,7 @@ class DataExtractorPower(_DataExtractor):
 
 class DataExtractorTemperature(_DataExtractor):
     """An extractor of temperature data"""
-    
+
     def __init__(self, startdate, enddate, convert=True):
         super().__init__('Date',
                          'data_samples/temperature.csv',

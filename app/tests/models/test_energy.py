@@ -1,9 +1,8 @@
 """Tests for energy data model"""
 
-import pytest
-from tests import TestCoreModel
-
 from bemserver.models.energy import EnergyCategory
+
+from tests import TestCoreModel
 
 
 class TestModelEnergy(TestCoreModel):
@@ -21,11 +20,11 @@ class TestModelEnergy(TestCoreModel):
         assert EnergyCategory.get_renewables() == [
             item for item in EnergyCategory if item.is_renewable]
 
-        # non_renewables
+        # non_renewables
         assert EnergyCategory.get_non_renewables() == [
             item for item in EnergyCategory if not item.is_renewable]
 
-        # hierarchy
+        # hierarchy
         assert not EnergyCategory.solar.has_parent
         assert EnergyCategory.solar_thermal.has_parent
         assert EnergyCategory.solar_thermal.parent == EnergyCategory.solar

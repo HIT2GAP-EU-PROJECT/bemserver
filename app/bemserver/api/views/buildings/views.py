@@ -99,7 +99,7 @@ class BuildingsById(MethodView):
     @auth_required(roles=['building_manager'])
     @api.doc(
         summary='Update an existing building',
-        description='Update an item from its UUIID and return the updated building.')
+        description='Update a building from its UUID and return updated data.')
     @api.arguments(BuildingRequestBodySchema)
     @api.response(BuildingSchemaView, etag_schema=BuildingEtagSchema)
     def put(self, update_data, building_id):

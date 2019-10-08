@@ -14,8 +14,8 @@ class GeographicInfo(Thing):
         :param float longitude: the longitude of the position.
         :param float altitude: the altitude of the position.
         :param str hemisphere: hemisphere (`Northern` or `Southern`).
-        :param str climate:
-            an URI or unique id pointing to a particular instance on data model.
+        :param str climate: an URI or unique id pointing to a particular
+            instance on data model.
         """
         super().__init__()
         self.latitude = latitude

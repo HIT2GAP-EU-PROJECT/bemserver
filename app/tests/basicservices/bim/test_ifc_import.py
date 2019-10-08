@@ -1,11 +1,12 @@
 """Tests for IFC import data"""
 
 import pytest
-from tests import TestCoreBasicServices
 
 from bemserver.basicservices.bim.ifc_import import IfcImport
 from bemserver.models import (
-    Site, Building, Floor, Space, Zone, Facade, Slab, Window)
+    Site, Building, Floor, Space, Zone, Facade, Window)
+
+from tests import TestCoreBasicServices
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')

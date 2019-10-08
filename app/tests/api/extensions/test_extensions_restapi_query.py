@@ -1,30 +1,24 @@
 """Tests for api query extensions"""
 
-import pytest
-from tests import TestCoreApi
-
 import marshmallow as ma
 
 from bemserver.api.extensions.rest_api.query import SortQueryArgsSchema
+
+from tests import TestCoreApi
 
 
 class TestApiExtensionsQuery(TestCoreApi):
     """Rest api query extensions tests"""
 
     def test_api_extensions_query_sort_field(self):
-        # pylint: disable=no-self-use, invalid-name
         """Test rest api query sort field"""
 
         class SampleQueryArgsSchema(SortQueryArgsSchema):
-            # pylint: disable=too-few-public-methods
             """Sample sort query parameters schema"""
-
-            class Meta:  # pylint: disable=missing-docstring
+            class Meta:
                 strict = True
-
             name = ma.fields.String()
             number = ma.fields.Integer()
-
 
         query_params = SampleQueryArgsSchema().load({
             'name': 'test', 'number': 12,

@@ -5,10 +5,7 @@ A file upload is processed with a 'multipart/form-data' POST request and we
 want to retrieve the data of the file sent. FileField do the job!
 """
 
-# pylint: disable=too-few-public-methods
-
-from werkzeug import FileStorage
-
+from werkzeug.datastructures import FileStorage
 import marshmallow as ma
 
 
@@ -28,7 +25,8 @@ class FileValidator(ma.validate.Validator):
         self.error = error or self.default_message
 
     def _repr_args(self):
-        return 'allowed_file_extensions={}'.format(self.allowed_file_extensions)
+        return 'allowed_file_extensions={}'.format(
+            self.allowed_file_extensions)
 
     def _format_error(self, value, allowed_file_extensions):
         return self.error.format(input=value, allowed=allowed_file_extensions)
@@ -55,7 +53,7 @@ class FileField(ma.fields.ValidatedField):
     def __init__(self, allowed_file_extensions=None, **kwargs):
         super(FileField, self).__init__(**kwargs)
         self.allowed_file_extensions = allowed_file_extensions
-        # Insert validation into self.validators, multiple errors can be stored.
+        # Insert validation into self.validators, many errors can be stored.
         self.validators.insert(0, FileValidator(
             allowed_file_extensions=self.allowed_file_extensions,
             error=self.error_messages['invalid']

@@ -27,9 +27,9 @@ class TLSClient():
     @staticmethod
     def _set_default_config_options(app):
         """Sets the default configuration options used by this extension."""
-        # Options for certificate location (SSL_CLIENT_S_DN header)
+        # Options for certificate location (SSL_CLIENT_S_DN header)
         app.config.setdefault('AUTH_CERT_REQUEST_ENV', 'HTTP_SSL_CLIENT_S_DN')
-        # certificate attribute key name to retrieve identity unique name
+        # certificate attribute key name to retrieve identity unique name
         app.config.setdefault('AUTH_CERT_ATTR_NAME', 'CN')
         # www-authenticate header value
         app.config.setdefault('AUTH_CERT_WWW_AUTHENTICATE',
@@ -85,7 +85,7 @@ def auth_cert_get_uid():
         exc = UnprocessableEntity()
         exc.data = _build_exception_data('Invalid certificate!')
         raise exc
-    # Get identity name for certificate attributes
+    # Get identity name for certificate attributes
     try:
         name = cert_attrs[attr_name]
     except KeyError:

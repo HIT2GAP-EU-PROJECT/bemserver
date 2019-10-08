@@ -15,14 +15,14 @@ UUID_RE = re.compile(
 
 # Custom converters
 # https://exploreflask.com/views.html#custom-converters
-# https://github.com/wbolster/flask-uuid/blob/master/flask_uuid.py
+# https://github.com/wbolster/flask-uuid/blob/master/flask_uuid.py
 class UUIDConverter(BaseConverter):
     """
     UUID converter for the Werkzeug routing system.
     """
 
-    def __init__(self, map, strict=True):
-        super(UUIDConverter, self).__init__(map)
+    def __init__(self, map_value, strict=True):
+        super(UUIDConverter, self).__init__(map_value)
         self.strict = strict
 
     def to_python(self, value):

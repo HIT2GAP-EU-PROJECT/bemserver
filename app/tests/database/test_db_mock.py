@@ -2,11 +2,11 @@
 
 import pytest
 
-from tests import TestCoreDatabaseMock
-from tests.utils import uuid_gen
-
 from bemserver.database.exceptions import (
     ItemNotFoundError, ItemSaveError, ItemDeleteError)
+
+from tests import TestCoreDatabaseMock
+from tests.utils import uuid_gen
 
 
 class TestDatabaseMock(TestCoreDatabaseMock):
@@ -109,10 +109,10 @@ class TestDatabaseMock(TestCoreDatabaseMock):
         assert item_found.name == item.name
 
         # not found error
-        # id do not exist
+        # id do not exist
         with pytest.raises(ItemNotFoundError):
             self.db.get_one(self.db_item_class, sieve={'id': uuid_gen()})
-        # multiple area result
+        # multiple area result
         with pytest.raises(ItemNotFoundError):
             self.db.get_one(self.db_item_class, sieve={'area': 666})
 

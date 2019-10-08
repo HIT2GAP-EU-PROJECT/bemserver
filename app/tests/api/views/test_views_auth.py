@@ -1,10 +1,11 @@
 """Tests for api auth views"""
 
 import pytest
-from tests import TestCoreApi
-from tests.api.views.conftest import TestingConfig
 
 from bemserver.api.extensions.auth import is_auth_enabled
+
+from tests import TestCoreApi
+from tests.api.views.conftest import TestingConfig
 
 
 class TestingConfigAuthEnabled(TestingConfig):
@@ -33,9 +34,10 @@ class TestApiViewsAuth(TestCoreApi):
         }
         return self.get_items(uri=uri, headers=headers, **kwargs)
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize('init_db_data', [
         {'gen_sensors': True, 'gen_measures': True}], indirect=True)
-    def test_views_auth_disabled(self, init_db_data):
+    def test_views_auth_disabled(self):
         with self.app.app_context():
             assert not is_auth_enabled()
 
@@ -47,11 +49,12 @@ class TestApiViewsAuth(TestCoreApi):
         response = self._get_protected_resources()
         assert response.status_code == 200
 
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
     @pytest.mark.parametrize(
         'init_app', [TestingConfigAuthEnabled], indirect=True)
     @pytest.mark.parametrize('init_db_data', [
         {'gen_sensors': True, 'gen_measures': True}], indirect=True)
-    def test_views_auth_enabled_no_modes(self, init_db_data):
+    def test_views_auth_enabled_no_modes(self):
         assert not is_auth_enabled()
         with self.app.app_context():
             assert not is_auth_enabled()

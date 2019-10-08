@@ -2,10 +2,10 @@
 
 import pytest
 
-from tests import TestCoreModel
-
 from bemserver.models.tree import Node
 from bemserver.models.exceptions import TreeNodeAlreadyHasParentError
+
+from tests import TestCoreModel
 
 
 class TestModelTree(TestCoreModel):
@@ -92,27 +92,28 @@ class TestModelTree(TestCoreModel):
 
         # pick the 'root' (level 0) node
         root_node = self.vehicle_tree
-        # expected label is 'Vehicle'
+        # expected label is 'Vehicle'
         assert root_node.label == 'Vehicle'
         assert root_node.label_breadcrumb == 'Vehicle'
         assert root_node.get_label_breadcrumb() == 'Vehicle'
 
         # pick a level 1 node (root's son)
         car_node = self.vehicle_tree.get_son('car')
-        # expected label is 'Car'
+        # expected label is 'Car'
         assert car_node.label == 'Car'
-        # expected label breadcrumb is 'Vehicle - Car'
+        # expected label breadcrumb is 'Vehicle - Car'
         assert car_node.label_breadcrumb == 'Vehicle - Car'
-        # or 'Root/2nd child'
+        # or 'Root/2nd child'
         assert car_node.get_label_breadcrumb('/') == 'Vehicle/Car'
 
         # pick a level 2 node (root's grandchildren)
         delorean_node = self.vehicle_tree.get_son('delorean', indirect=True)
-        # expected label is 'Time travelling machine'
+        # expected label is 'Time travelling machine'
         assert delorean_node.label == 'Time travelling machine'
-        # expected label breadcrumb is 'Vehicle - Car - Time travelling machine'
-        assert delorean_node.label_breadcrumb == 'Vehicle - Car - Time travelling machine'
-        # or 'Vehicle.Spaceship.UFO'
+        # expected label breadcrumb: 'Vehicle - Car - Time travelling machine'
+        assert delorean_node.label_breadcrumb == (
+            'Vehicle - Car - Time travelling machine')
+        # or 'Vehicle.Spaceship.UFO'
         assert delorean_node.get_label_breadcrumb(
             ' |> ') == 'Vehicle |> Car |> Time travelling machine'
 

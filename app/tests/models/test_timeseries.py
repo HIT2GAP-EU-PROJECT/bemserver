@@ -3,19 +3,17 @@
 from copy import deepcopy
 import datetime as dt
 from math import isclose
-
 import numpy as np
 import pandas as pd
-
 import pytest
-from tests import TestCoreModel
-from tests.utils import celsius_to_fahrenheit
-
 from bemserver.models import Timeseries
 from bemserver.models.timeseries.exceptions import (
     TimeseriesInvalidIndexTypeError,
     TimeseriesMissingColumnError, TimeseriesInvalidColumnsError,
     TimeseriesUnitConversionError)
+
+from tests import TestCoreModel
+from tests.utils import celsius_to_fahrenheit
 
 
 class TestTimeseries(TestCoreModel):
@@ -52,25 +50,25 @@ class TestTimeseries(TestCoreModel):
         # index column must be a pandas.DatetimeIndex
         with pytest.raises(TimeseriesInvalidIndexTypeError):
             Timeseries(index=range(5), data=range(5))
-        # quality can not be set without data
+        # quality can not be set without data
         with pytest.raises(TimeseriesMissingColumnError):
             Timeseries(index=index, quality=np.random.rand(len(index)))
         # data can not be set without index
         with pytest.raises(TimeseriesMissingColumnError):
             Timeseries(data=range(len(index)))
 
-        # validate dataframe
+        # validate dataframe
         ts = Timeseries(index=index, data=range(len(index)))
-        # no custom column allowed
+        # no custom column allowed
         ts.dataframe['dummy'] = range(len(index))
         with pytest.raises(TimeseriesInvalidColumnsError):
             ts.validate()
         # droping a column unvalidates timeseries
-        ts.dataframe.drop(columns=['dummy', 'data',], inplace=True)
+        ts.dataframe.drop(columns=['dummy', 'data'], inplace=True)
         with pytest.raises(TimeseriesMissingColumnError):
             ts.validate()
 
-        # repr timeseries
+        # repr timeseries
         ts_data = range(len(index))
         ts = Timeseries(index=index, data=ts_data)
         assert repr(ts) == (
@@ -87,10 +85,10 @@ class TestTimeseries(TestCoreModel):
             index=index, data=range(len(index)),
             quality=np.random.rand(len(index)))
         assert pd.isnull(ts.dataframe['update_ts']).all()
-        # update with a pandas.Series
+        # update with a pandas.Series
         ts.set_update_timestamp(index)
         assert ts.dataframe.at[index[0], 'update_ts'] == index.values[0]
-        # update with a datetime
+        # update with a datetime
         t_update = dt.datetime.now()
         ts.set_update_timestamp(t_update)
         assert ts.dataframe.at[index[0], 'update_ts'] == t_update
@@ -103,7 +101,7 @@ class TestTimeseries(TestCoreModel):
         ts.validate()
         assert ts.dataframe.at[index[0], 'update_ts'] == t_update[0]
 
-        # data length must be equal to index length
+        # data length must be equal to index length
         with pytest.raises(ValueError):
             Timeseries(index=index, data=range(len(index)+1))
 
@@ -221,7 +219,6 @@ class TestTimeseries(TestCoreModel):
         ts1 = deepcopy(ts0)
         ts1.resample('sec', operation)
 
-
     def test_timeseries_aggregate(self):
         """Check aggregate function"""
         def generate_ts(number, random=False, nan=False):
@@ -245,7 +242,7 @@ class TestTimeseries(TestCoreModel):
         number = 5
 
         # Test with fixed data, with same length and same values
-        list1 = [ts for ts in generate_ts(number)]
+        list1 = list(generate_ts(number))
         ts_len = len(list1[0].dataframe)
         aggregation = Timeseries.aggregate(list1, 'sum')
         assert isinstance(aggregation, Timeseries)
@@ -253,12 +250,13 @@ class TestTimeseries(TestCoreModel):
         sample = aggregation.dataframe.sample(n=100)
         for index in sample.index.values:
             data_sum = sum([ts.dataframe.data[index] for ts in list1])
-            quality_mean = sum([ts.dataframe.quality[index] for ts in list1]) /  number
+            quality_mean = sum(
+                [ts.dataframe.quality[index] for ts in list1]) / number
             assert isclose(sample.data[index], data_sum)
             assert isclose(sample.quality[index], quality_mean)
 
         # Test with random data
-        list2 = [ts for ts in generate_ts(number, random=True, nan=True)]
+        list2 = list(generate_ts(number, random=True, nan=True))
         aggregation = Timeseries.aggregate(list2, 'max')
         assert isinstance(aggregation, Timeseries)
         sample = aggregation.dataframe.sample(n=100)
@@ -268,9 +266,8 @@ class TestTimeseries(TestCoreModel):
                 for ts in list2
                 if index in ts.dataframe.data.index])
             quality_mean = sum([
-                ts.dataframe.quality[index]
-                for ts in list2
-                if index in ts.dataframe.quality.index]) /  number
+                ts.dataframe.quality[index] for ts in list2
+                if index in ts.dataframe.quality.index]) / number
             assert isclose(sample.data[index], data_max)
             assert isclose(sample.quality[index], quality_mean)
             assert 0 <= sample.data[index] <= 100

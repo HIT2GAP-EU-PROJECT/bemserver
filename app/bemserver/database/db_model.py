@@ -11,14 +11,14 @@ from .db_output import OutputDB
 class ModelDB(ThingDB):
     """A class to handle models in the data storage solution"""
 
-    #Dictionary for direct relations - values
+    # Dictionary for direct relations - values
     FIELD_TO_RELATION = {
         'id': PREFIX.SERVICES.alias_uri('id'),
         'name': PREFIX.SERVICES.alias_uri('name'),
         'description': PREFIX.SERVICES.alias_uri('description'),
     }
 
-    #Dictionaries for attributes that require access to additional concepts/instances
+    # Dicts for attributes that require access to additional concepts/instances
     LINKS = {
         'service_id': PREFIX.SERVICES.alias_uri('partOfService'),
         'event_output_ids': PREFIX.SERVICES.alias_uri('hasOutput'),
@@ -32,13 +32,14 @@ class ModelDB(ThingDB):
         'service_id': PREFIX.SERVICES.alias_uri('Service'),
         'event_output_ids': [PREFIX.SERVICES.alias_uri('Event')],
         'timeseries_output_ids': [PREFIX.SERVICES.alias_uri('TimeSeries')],
-        #'parameters': [PREFIX.SERVICES.alias_uri('Parameter')],
+        # 'parameters': [PREFIX.SERVICES.alias_uri('Parameter')],
     }
 
     FIELD_TO_REL_CPLX = {
         'service_id':
             '''?URI {rel} ?service. ?service {rel_id} ?service_id.\n'''.format(
-                rel=LINKS['service_id'], rel_id=PREFIX.SERVICES.alias_uri('id')),
+                rel=LINKS['service_id'],
+                rel_id=PREFIX.SERVICES.alias_uri('id')),
         'event':
             '''OPTIONAL{{?URI {rel} ?event. ?event a {cls}}}.\n'''.format(
                 rel=LINKS['event_output_ids'],
@@ -64,7 +65,7 @@ class ModelDB(ThingDB):
         '''Build a string to add filtering parameters to a SPARQL query
         :param filters dict: a dictionary of parameter names, values
         :return a string to be inserted in the query'''
-        filters_by_value = {k:filters[k] for k in self.FIELD_TO_RELATION\
+        filters_by_value = {k: filters[k] for k in self.FIELD_TO_RELATION
                             if k in filters}
         if 'service_id' in filters:
             filters_by_value['service_id'] = filters['service_id']
@@ -75,10 +76,11 @@ class ModelDB(ThingDB):
     def _build_select_query(self, identifier=None, **filters):
         """A method to build the select query
         :return string: a string for the SPARQL query"""
-        _select = ["""SELECT ?URI
-                    (GROUP_CONCAT(?event; separator=',') as ?event_output_ids)
-                    (GROUP_CONCAT(?series; separator=',') as ?timeseries_output_ids)
-                    """] +\
+        _select = [
+            """SELECT ?URI
+            (GROUP_CONCAT(?event; separator=',') as ?event_output_ids)
+            (GROUP_CONCAT(?series; separator=',') as ?timeseries_output_ids)
+            """] +\
             list(self.FIELD_TO_RELATION.keys()) + ['service_id']
         select = ' ?'.join(_select)
         query = ["""{sel} WHERE {{
@@ -88,17 +90,17 @@ class ModelDB(ThingDB):
         query.append(self._str_select("id"))
         query.append(self._str_select("description", optional=True))
         query.append(self._str_select("name"))
-        #get references
+        # get references
         for item in self.FIELD_TO_REL_CPLX:
             query.append(self.FIELD_TO_REL_CPLX[item])
-        #add filters
+        # add filters
         query.append(self._build_filter(identifier, **filters))
         query.append("}}\ngroup by ?URI ?{}".format(" ?".join(
             list(self.FIELD_TO_RELATION.keys()) + ['service_id'])))
         return "".join(query)
 
     def _pre_load_binding(self, binding):
-        # outputs
+        # outputs
         for tag in ['event_output_ids', 'timeseries_output_ids']:
             outputs = list(map(
                 PREFIX.get_name,
@@ -126,7 +128,7 @@ class ModelDB(ThingDB):
         result = self.onto_mgr.perform(SPARQLOP.SELECT, query)
         return result.values
 
-#------------INSERTION
+# ------------INSERTION
 
     def _build_create_query(self, _id, element):
         _class = PREFIX.SERVICES.alias_uri('Model')
@@ -180,15 +182,15 @@ class ModelDB(ThingDB):
             clss=PREFIX.SERVICES.alias_uri('Parameter'),
             name=PREFIX.SERVICES.alias_uri('param_name'), v_name=param.name,
             val=PREFIX.SERVICES.alias_uri('param_value'), v_val=param.value,
-            model_id=PREFIX.ROOT.alias_uri(_id), rel=self.LINKS['parameters'])\
-                for param in params]
+            model_id=PREFIX.ROOT.alias_uri(_id), rel=self.LINKS['parameters'])
+                 for param in params]
         self.onto_mgr.perform(
             SPARQLOP.INSERT, "INSERT DATA {{{}}}".format("".join(lcore)))
 
     def _str_insert(self, obj, attr, optional=False, final=False):
         """Build up the line corresponding to an object attribute, into
-        a SPARQL insert method, in the form "relation value". Value is extracted
-        from obj.attr, the relation is extracted from a dictionary.
+        a SPARQL insert method, in the form "relation value". Value is
+        extracted from obj.attr, the relation is extracted from a dictionary.
 
         :subj String: the subject of the triple to be created
         :obj Object: an object
@@ -208,13 +210,14 @@ class ModelDB(ThingDB):
         """
         self._remove_parameter(uri)
         to_remove = list(self.FIELD_TO_RELATION.values())
-        #to_remove.extend([self.LINKS['localization'], self.LINKS['system']])
+        # to_remove.extend([self.LINKS['localization'], self.LINKS['system']])
         return self._build_remove(uri, to_remove)
 
     def _remove_parameter(self, uri):
         """Removes all the parameters associated to a modele"""
-        query = "DELETE {{?s ?p ?v. {model} {rel} ?s.}} WHERE {{{model} {rel} ?s.}}".format(
-            model=uri, rel=self.LINKS['parameters'])
+        query = ("DELETE {{?s ?p ?v. {model} {rel} ?s.}} "
+                 "WHERE {{{model} {rel} ?s.}}").format(
+                     model=uri, rel=self.LINKS['parameters'])
         self.onto_mgr.perform(SPARQLOP.DELETE, query)
 
     def update(self, identifier, new_element):

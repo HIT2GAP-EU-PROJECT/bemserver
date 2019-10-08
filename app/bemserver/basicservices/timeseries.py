@@ -101,7 +101,7 @@ def _get_item_or_404(timeseries_id):
         result['site_id'] = db_accessor.get_parent(Sensor, item.sensor_id)
     else:
         result['unit'] = item.values_desc.unit
-        # TODO replace with BuildingStructuralElement? use inheritance
+        # TODO: replace with BuildingStructuralElement? use inheritance
         result['site_id'] = db_accessor.get_parent_many_classes(
             [Space, Zone, Floor, Building, Site], item.localization
         )

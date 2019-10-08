@@ -1,13 +1,12 @@
 """Tests for api building views"""
 
 from unittest import mock
-
 from flask import Flask
+
+from bemserver.api.extensions.logger import init_app
 
 from tests import TestCoreApi
 from tests.api.views.conftest import TestingConfig
-
-from bemserver.api.extensions.logger import init_app
 
 
 class TestingConfigLoggerTests(TestingConfig):

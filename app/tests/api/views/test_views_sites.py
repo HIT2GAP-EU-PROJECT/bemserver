@@ -1,6 +1,7 @@
 """Tests for api site views"""
 
 import pytest
+
 from tests import TestCoreApi, TestCoreApiAuthCert
 from tests.utils import uuid_gen, get_dictionary_no_none
 from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
@@ -15,15 +16,16 @@ class TestApiViewsSites(TestCoreApi):
     def test_views_sites_get_list_empty(self):
         """Test get_list api endpoint"""
 
-        # Get list: no items
+        # Get list: no items
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 0
 
-    def test_views_sites_get_list_filter(self, init_db_data):
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
+    def test_views_sites_get_list_filter(self):
         """Test get_list (with filter) api endpoint"""
 
-        # Get list: 4 items found
+        # Get list: 4 items found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -33,16 +35,17 @@ class TestApiViewsSites(TestCoreApi):
         response = self.get_items(headers={'If-None-Match': etag_value})
         assert response.status_code == 304
 
-        # Get list with a filter: 1 item found
+        # Get list with a filter: 1 item found
         response = self.get_items(name='site_D')
         assert response.status_code == 200
         assert len(response.json) == 1
 
     @pytest.mark.xfail
-    def test_views_sites_get_list_sort(self, init_db_data):
+    @pytest.mark.usefixtures('init_app', 'init_db_data')
+    def test_views_sites_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
-        # Get list:
+        # Get list:
         # sorting by name descending
         response = self.get_items(sort='-name')
         assert response.status_code == 200
@@ -52,7 +55,7 @@ class TestApiViewsSites(TestCoreApi):
         assert response.json[2]['name'] == 'site_B'
         assert response.json[3]['name'] == 'site_A'
 
-        # sorting by name ascending
+        # sorting by name ascending
         response = self.get_items(sort='name')
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -91,7 +94,7 @@ class TestApiViewsSites(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 0
 
-        # Post a new item
+        # Post a new item
         response = self.post_item(
             name='New site', geographic_info={'latitude': 6, 'longitude': 66})
         assert response.status_code == 201
@@ -101,7 +104,7 @@ class TestApiViewsSites(TestCoreApi):
         assert response.json['geographic_info']['longitude'] == 66
         assert 'description' not in response.json
 
-        # Get list: 1 item found
+        # Get list: 1 item found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 1
@@ -118,8 +121,8 @@ class TestApiViewsSites(TestCoreApi):
         response = self.post_item(name='test_error', geographic_info='wrong')
         assert response.status_code == 422
 
-        # Remarks:
-        # id is 'read only'
+        # Remarks:
+        # id is 'read only'
         new_id = str(uuid_gen())
         response = self.post_item(
             id=new_id, name='id_is_read_only',
@@ -139,7 +142,6 @@ class TestApiViewsSites(TestCoreApi):
         response = self.get_item_by_id(item_id=site_id)
         assert response.status_code == 200
         etag_value = response.headers.get('etag', None)
-
 
         # Update item...
         s_name_updated = 'Updated site'
@@ -163,7 +165,7 @@ class TestApiViewsSites(TestCoreApi):
         assert response.status_code == 200
         etag_value = response.headers.get('etag', None)
 
-        # Delete an item...
+        # Delete an item...
         response = self.delete_item(
             item_id=site_id,
             headers={'If-Match': etag_value})
@@ -199,7 +201,7 @@ class TestApiViewsSitesPermissions(TestCoreApiAuthCert):
         assert response.status_code == 200
         assert len(response.json) == 2
         site_data = response.json[0]
-        # verify allowed site IDs and list site IDs are the same
+        # verify allowed site IDs and list site IDs are the same
         assert uacc.verify_scope(sites=[site['id'] for site in response.json])
 
         allowed_site_id = str(site_data['id'])

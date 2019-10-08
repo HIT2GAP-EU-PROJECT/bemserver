@@ -1,10 +1,8 @@
 """Api IFC module views"""
 
-import tempfile
-
 from flask import send_from_directory
 from flask.views import MethodView
-from werkzeug import secure_filename
+from werkzeug.utils import secure_filename
 
 from . import bp as api
 from .schemas import (
@@ -54,7 +52,7 @@ class IFCFiles(MethodView):
     def post(self, new_data):
         """Upload a new IFC file"""
         # TODO: on any error, rollback actions
-        # process fileinfo
+        # process fileinfo
         fileinfo = new_data.pop('fileinfo', None)
         if fileinfo is not None:
             filename = fileinfo.filename
@@ -63,20 +61,12 @@ class IFCFiles(MethodView):
 
         # Save and return new item in DB
         item = IFCFile(**new_data)
-        # XXX: tricky case while mocking database
-        kwargs = {}
-        if 'save_error' in item.file_name:
-            kwargs['save_error'] = True
-        db_accessor.create(item, **kwargs)
+        db_accessor.create(item)
 
         # save file data stream on disk
-        data_stream = fileinfo.stream
-        # XXX: added to pass API views tests...
-        if isinstance(fileinfo.stream, tempfile.SpooledTemporaryFile):
-            data_stream = fileinfo.stream._file
         fs_mgr = fsio.get_filestorage_manager()
-        fs_entry = fs_mgr.add(item.id, item.file_name, data_stream)
-        # a compressed archive can only contain one IFC file
+        fs_entry = fs_mgr.add(item.id, item.file_name, fileinfo.stream)
+        # a compressed archive can only contain one IFC file
         if fs_entry.is_compressed():
             extracted_file_paths = fs_entry.extract()
             if len(extracted_file_paths) != 1:
@@ -122,11 +112,7 @@ class IFCFilesById(MethodView):
             fs_mgr.delete(item.id)
         except FileNotFoundError as exc:
             abort(404, exc=exc)
-        # XXX: tricky case while mocking database
-        kwargs = {}
-        if 'delete_error' in item.file_name:
-            kwargs['delete_error'] = True
-        db_accessor.delete(item, **kwargs)
+        db_accessor.delete(item)
 
 
 @api.route('/<uuid:file_id>/import')
@@ -150,14 +136,14 @@ class IFCFilesByIdImport(MethodView):
             abort(404, exc=exc)
 
         file_path = fs_entry.file_path
-        # a compressed archive can only contain one IFC file
+        # a compressed archive can only contain one IFC file
         if fs_entry.is_compressed():
             # archive should already be extracted
             file_path = fs_entry.extracted_file_paths[0]
 
         # import ifc file content in DB
         try:
-            # TODO: as it takes time, importation may be an asynchronous task...
+            # TODO: as it takes time, this should be an asynchronous task...
             ifc_import = IfcImport(str(file_path))
             ifc_import.execute()
         except TypeError as exc:

@@ -1,12 +1,13 @@
 """Tests the interface Wall/DB"""
 
 import pytest
-from tests import TestCoreDatabaseOntology
 from marshmallow import ValidationError
 
 from bemserver.database import FacadeDB, SiteDB
 from bemserver.database.exceptions import ItemNotFoundError
 from bemserver.models import Facade, SurfaceInfo
+
+from tests import TestCoreDatabaseOntology
 
 
 @pytest.mark.usefixtures('init_onto_mgr_fact')
@@ -25,10 +26,9 @@ class TestWallDB(TestCoreDatabaseOntology):
         with pytest.raises(ItemNotFoundError):
             facade_db.get_by_id('not_existing')
 
-    def test_db_wall_create(self, init_spaces, get_created_building_ids):
+    def test_db_wall_create(self, init_spaces):
 
-        space_ids = init_spaces
-        building_ids = get_created_building_ids
+        space_ids, _, building_ids, _ = init_spaces
         facade_db = FacadeDB()
 
         # check that database is empty
@@ -36,7 +36,6 @@ class TestWallDB(TestCoreDatabaseOntology):
         assert list(result) == []
 
         # create an item
-
         facade = Facade('Facade #0', space_ids[:1], SurfaceInfo(32.3, 23, 0.9),
                         building_ids[1], 0.323, orientation='South',
                         interior=True)
@@ -65,9 +64,9 @@ class TestWallDB(TestCoreDatabaseOntology):
         assert facade_db.get_parent(facade.id) in\
             [str(site.id) for site in sites]
 
-    def test_db_facade_get_filter(self, init_spaces, get_created_building_ids):
-        space_ids = init_spaces
-        building_id = get_created_building_ids[0]
+    def test_db_facade_get_filter(self, init_spaces):
+        space_ids, _, building_ids, _ = init_spaces
+        building_id = building_ids[0]
         facade_db = FacadeDB()
 
         # check that database is empty
@@ -91,10 +90,11 @@ class TestWallDB(TestCoreDatabaseOntology):
         result = facade_db.get_all(space_id=space_ids[1])
         assert len(list(result)) == 1
 
-    def test_db_facade_update(self, init_facades, get_created_building_ids):
+    def test_db_facade_update(self, init_facades):
 
-        facade_ids = init_facades
+        facade_ids, _, _, building_ids, _ = init_facades
         facade_db = FacadeDB()
+        building_id = building_ids[0]
 
         # get all items
         result = facade_db.get_all()
@@ -102,6 +102,7 @@ class TestWallDB(TestCoreDatabaseOntology):
         assert len(facades) == 2
         for cur_facade in facades:
             assert cur_facade.id in facade_ids
+            assert cur_facade.building_id == building_id
 
         # get an item by its ID
         facade = facade_db.get_by_id(facades[0].id)
@@ -126,8 +127,7 @@ class TestWallDB(TestCoreDatabaseOntology):
         assert updated_facade.surface_info.width == new_width
         assert updated_facade.windows_wall_ratio == new_wwratio
         assert updated_facade.interior == facade.interior
-        assert updated_facade.building_id == facade.building_id ==\
-            get_created_building_ids[0]
+        assert updated_facade.building_id == facade.building_id == building_id
 
         # check something is wrong for wrong orientation
         facade.orientation = 'Wrong'

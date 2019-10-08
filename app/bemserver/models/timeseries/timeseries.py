@@ -124,7 +124,8 @@ class Timeseries():
         dataframe = pd.DataFrame(
             {
                 cls.DATA_COL: pd.Series([], dtype='float64'),
-                cls.UPDATE_TIMESTAMP_COL: pd.Series([], dtype='datetime64[ns]'),
+                cls.UPDATE_TIMESTAMP_COL: pd.Series(
+                    [], dtype='datetime64[ns]'),
                 cls.QUALITY_COL: pd.Series([], dtype='float64'),
                 cls.TIMESTAMPS_COL: pd.Series([], dtype='datetime64[ns]'),
             },
@@ -143,7 +144,6 @@ class Timeseries():
             data=dataframe.get(cls.DATA_COL),
             quality=dataframe.get(cls.QUALITY_COL),
             update_ts=dataframe.get(cls.UPDATE_TIMESTAMP_COL))
-
 
     @classmethod
     def aggregate(cls, timeseries, operation):
@@ -175,7 +175,6 @@ class Timeseries():
             data=concat[cls.DATA_COL].agg(operation, axis=1),
             quality=concat[cls.QUALITY_COL].agg(namean, axis=1),
             update_ts=concat[cls.UPDATE_TIMESTAMP_COL].agg('max', axis=1))
-
 
     def validate(self):
         """Validates timeseries' dataframe structure.

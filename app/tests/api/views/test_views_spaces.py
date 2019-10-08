@@ -1,12 +1,13 @@
 """Tests for api space views"""
 
 import pytest
-from tests import TestCoreApi, TestCoreApiAuthCert
-from tests.utils import uuid_gen, get_dictionary_no_none
-from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 from bemserver.api.extensions.database import db_accessor as dba
 from bemserver.models import Space
+
+from tests import TestCoreApi, TestCoreApiAuthCert
+from tests.utils import uuid_gen, get_dictionary_no_none
+from tests.api.views.conftest import TestingConfigAuthCertificateEnabled
 
 
 @pytest.mark.usefixtures('init_app')
@@ -18,7 +19,7 @@ class TestApiViewsSpaces(TestCoreApi):
     def test_views_spaces_get_list_empty(self):
         """Test get_list api endpoint"""
 
-        # Get list: no items
+        # Get list: no items
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 0
@@ -31,7 +32,7 @@ class TestApiViewsSpaces(TestCoreApi):
         # retrieve database informations
         floor_id = str(init_db_data['floors'][0])
 
-        # Get list: 4 found
+        # Get list: 4 found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -41,23 +42,24 @@ class TestApiViewsSpaces(TestCoreApi):
         response = self.get_items(headers={'If-None-Match': etag_value})
         assert response.status_code == 304
 
-        # Get list with a filter: 2 found
+        # Get list with a filter: 2 found
         response = self.get_items(kind='Toilets')
         assert response.status_code == 200
         assert len(response.json) == 2
 
-        # Get list with a filter: 4 found
+        # Get list with a filter: 4 found
         response = self.get_items(floor_id=floor_id)
         assert response.status_code == 200
         assert len(response.json) == 2
 
     @pytest.mark.xfail
+    @pytest.mark.usefixtures('init_db_data')
     @pytest.mark.parametrize('init_db_data', [
         {'gen_floors': True, 'gen_spaces': True}], indirect=True)
-    def test_views_spaces_get_list_sort(self, init_db_data):
+    def test_views_spaces_get_list_sort(self):
         """Test get_list (with sort) api endpoint"""
 
-        # Get list:
+        # Get list:
         # sorting by name descending
         response = self.get_items(sort='-name')
         assert response.status_code == 200
@@ -67,7 +69,7 @@ class TestApiViewsSpaces(TestCoreApi):
         assert response.json[2]['name'] == 'space_B'
         assert response.json[3]['name'] == 'space_A'
 
-        # sorting by name ascending
+        # sorting by name ascending
         response = self.get_items(sort='name')
         assert response.status_code == 200
         assert len(response.json) == 4
@@ -113,7 +115,7 @@ class TestApiViewsSpaces(TestCoreApi):
         assert response.status_code == 200
         assert len(response.json) == 0
 
-        # Post a new item
+        # Post a new item
         response = self.post_item(
             name='Bryan\'s kitchen', kind='Kitchen', floor_id=floor_id,
             occupancy={'nb_permanents': 6, 'nb_max': 66},
@@ -129,7 +131,7 @@ class TestApiViewsSpaces(TestCoreApi):
         assert response.json['spatial_info']['max_height'] == 2
         assert response.json['floor_id'] == floor_id
 
-        # Get list: 1 space found
+        # Get list: 1 space found
         response = self.get_items()
         assert response.status_code == 200
         assert len(response.json) == 1
@@ -138,7 +140,7 @@ class TestApiViewsSpaces(TestCoreApi):
         # wrong kind (422)
         response = self.post_item(
             name='wrong_kind_choice', kind='wrong', floor_id=floor_id,
-            #occupancy={'nb_permanents': 6, 'nb_max': 66},
+            # occupancy={'nb_permanents': 6, 'nb_max': 66},
             spatial_info={'area': 10, 'max_height': 2})
         assert response.status_code == 422
         # missing kind (201)
@@ -148,8 +150,8 @@ class TestApiViewsSpaces(TestCoreApi):
             spatial_info={'area': 10, 'max_height': 2})
         assert response.status_code == 201
 
-        # Remarks:
-        # id is 'read only'
+        # Remarks:
+        # id is 'read only'
         new_id = str(uuid_gen())
         response = self.post_item(
             id=new_id, name='id_is_read_only', kind='Bathroom',
@@ -178,7 +180,8 @@ class TestApiViewsSpaces(TestCoreApi):
             item_id=space_id, name=s_name_updated, floor_id=floor_id,
             kind=space_json.json['kind'],
             occupancy=get_dictionary_no_none(space_json.json['occupancy']),
-            spatial_info=get_dictionary_no_none(space_json.json['spatial_info']),
+            spatial_info=get_dictionary_no_none(
+                space_json.json['spatial_info']),
             description='awful joke',
             headers={'If-Match': etag_value})
         # ...update done
@@ -204,7 +207,7 @@ class TestApiViewsSpaces(TestCoreApi):
         assert response.status_code == 200
         etag_value = response.headers.get('etag', None)
 
-        # Delete...
+        # Delete...
         response = self.delete_item(
             item_id=space_id,
             headers={'If-Match': etag_value})
@@ -259,7 +262,7 @@ class TestApiViewsSpacesPermissions(TestCoreApiAuthCert):
         assert response.status_code == 200
         assert len(response.json) == 3
         space_data = response.json[0]
-        # verify that parent site IDs are in allowed site IDs
+        # verify that parent site IDs are in allowed site IDs
         for space in response.json:
             site_id = dba.get_parent(Space, space['id'])
             assert uacc.verify_scope([site_id])

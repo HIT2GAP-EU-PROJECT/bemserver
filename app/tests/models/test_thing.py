@@ -3,13 +3,13 @@
 from abc import ABC
 import datetime as dt
 import pytz
-
 import pytest
-from tests import TestCoreModel
-from tests.utils import uuid_gen
 
 from bemserver.models.thing import Thing
 from bemserver.tools.common import check_list_instances
+
+from tests import TestCoreModel
+from tests.utils import uuid_gen
 
 
 class TestModelThing(TestCoreModel):
@@ -29,7 +29,7 @@ class TestModelThing(TestCoreModel):
                 pass
             WrongStuff()
 
-        # define a class with abstract methods implemented
+        # define a class with abstract methods implemented
         class GoodStuff(Thing):
             def __init__(self):
                 super().__init__()
@@ -77,13 +77,16 @@ class TestModelThing(TestCoreModel):
 
         class Restaurant(Thing):
             _tables = []
+
             def __init__(self, name, tables):
                 super().__init__()
                 self.name = name
                 self.tables = tables
+
             @property
             def tables(self):
                 return self._tables
+
             @tables.setter
             def tables(self, value):
                 if check_list_instances(value, Table):
@@ -97,7 +100,7 @@ class TestModelThing(TestCoreModel):
             Restaurant(name='wrong_tables', tables='wrong')
 
         restaurant = Restaurant(
-            name='Chez Pépé', tables=[Table(4), Table(2), Table(8),])
+            name='Chez Pépé', tables=[Table(4), Table(2), Table(8)])
         assert restaurant.name == 'Chez Pépé'
         assert len(restaurant.tables) == 3
 
@@ -134,7 +137,7 @@ class TestModelThing(TestCoreModel):
             'expiration_date': pytz.utc.localize(
                 grain.expiration_date).isoformat()}
 
-        # 'None' values are excluded
+        # 'None' values are excluded
         grain = Grain(cereal='corn', quantity=69)
         assert grain.dump() == {
             'id': str(grain.id), 'cereal': grain.cereal,
@@ -142,7 +145,7 @@ class TestModelThing(TestCoreModel):
         assert grain.dump(exclude=('id',)) == {
             'cereal': grain.cereal, 'quantity': grain.quantity}
 
-        # include 'None' values
+        # include 'None' values
         grain = Grain(cereal='corn', quantity=69)
         assert grain.dump(exclude_none=False) == {
             'id': str(grain.id), 'cereal': grain.cereal,
@@ -162,13 +165,16 @@ class TestModelThing(TestCoreModel):
 
         class House(Thing):
             _floors = []
+
             def __init__(self, address, floors):
                 super().__init__()
                 self.address = address
                 self.floors = floors
+
             @property
             def floors(self):
                 return self._floors
+
             @floors.setter
             def floors(self, value):
                 if check_list_instances(value, Floor):
@@ -182,7 +188,7 @@ class TestModelThing(TestCoreModel):
             House(address='far far away', floors='wrong')
 
         house = House(
-            address='over there', floors=[Floor(-1), Floor(0), Floor(1),])
+            address='over there', floors=[Floor(-1), Floor(0), Floor(1)])
         assert house.address == 'over there'
         assert len(house.floors) == 3
 

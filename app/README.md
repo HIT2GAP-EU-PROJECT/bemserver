@@ -1,7 +1,7 @@
-BEMServer
-=========
 
-<img src="https://github.com/HIT2GAP-EU-PROJECT/bemserver/blob/master/docs/BEM%20SERVER-Color-rgb-logo.png" alt="drawing" width="300"/>
+
+<p style="text-align:center;"><img src="docs/BEM%20SERVER-Color-rgb-logo.png" alt="BEMServer" width="300"/></p>
+
 
 **Table of Contents**
 
@@ -11,6 +11,8 @@ BEMServer
 2. [User guidelines](#user)
 3. [Developer guidelines](#developer)
 4. [Related work](#documentation)
+
+
 
 ## Description <a name="description"></a>
 
@@ -34,7 +36,7 @@ Additionally, its storage system uses 3 different technologies:
 
 ### Installation <a name="installation"></a>
 
-Follow the guideline in [INSTALL.md](https://github.com/HIT2GAP-EU-PROJECT/bemserver/blob/master/INSTALL.md).
+Follow the guideline in [INSTALL.md](INSTALL.md).
 
 
 ## User guidelines <a name="user"></a>
@@ -47,7 +49,7 @@ In order to install BEMServer, please check the ***INSTALL.md*** file. Once up a
 
 Want to be part of the developing team? Want to contribute to the project and join effort in providing the community with an open source tool to deploy energy management softwares? Then, just download the project, fork it, start developing and make a pull request.
 
-Also check the [CONTRIBUTING.md](https://github.com/HIT2GAP-EU-PROJECT/bemserver/blob/master/CONTRIBUTING.md) file.
+Also check the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ## Related work <a name="documentation"></a>
 

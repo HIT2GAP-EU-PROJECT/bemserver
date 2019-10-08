@@ -2,7 +2,6 @@
 
 Provides facilities for querying database and non-duplication of data
 """
-# pylint: disable=no-member
 
 import abc
 
@@ -172,7 +171,6 @@ class ThingDB(abc.ABC):
             if len(errors) == 0:
                 return errors
         return errors
-
 
     def _validate_single_ref_single_type(
             self, element, attr, _type, prefix, indiv):

@@ -8,8 +8,8 @@ bp = Blueprint('zones', __name__, url_prefix='/zones',
                entity, not a physical one. Zones can be created by managers,
                module developers, and all users of BEMServer to ease their work
                by aggregating spaces. For instance, if a heating system only
-               performs on some of the spaces in a building but not all of them,
-               a zone can be created to point to this set of spaces.<br>
+               performs on some of the spaces in a building but not all of
+               them, a zone can be created to point to this set of spaces.<br>
                To create a zone, one can specify the spaces to be contained in,
                or others already existing zones.<br><br>
                *In the current version of BEMServer, the use of zones is not
@@ -19,7 +19,6 @@ bp = Blueprint('zones', __name__, url_prefix='/zones',
 
 
 def init_app(app):
-    # pylint: disable=unused-variable
     """Initialize application with module"""
 
     from . import views
