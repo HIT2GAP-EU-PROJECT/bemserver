@@ -49,7 +49,7 @@ ENV LC_ALL=C.UTF-8 LANG=C.UTF-8 \
     FLASK_SETTINGS_FILE=${_CONFIG_PATH}/settings.cfg
 
 # Copy entrypoint for container
-COPY deployment/scripts /scripts/
+COPY docker/scripts /scripts/
 RUN chmod +x /scripts/*
 
 ENTRYPOINT ["/scripts/docker-entrypoint.sh"]
