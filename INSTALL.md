@@ -78,7 +78,7 @@ docker run -d --name fuseki -p 3030:3030 \
     -e JVM_ARGS=-Xmx2048M \
     --log-opt max-size=10m --log-opt max-file=3 \
     --restart unless-stopped \
-    nbkinef4\bemserver-fuseki
+    nbkinef4/bemserver-fuseki
 
 # On subsequent runs, just use
 docker restart fuseki
