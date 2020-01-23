@@ -46,7 +46,7 @@ pip install -r requirements.txt
 
 ### Install IfcOpenShell
 
-IfcOpenShell has to be installed manually. The IfcOpenShell-python archive can be found in the [official website](http://ifcopenshell.org/python.html).
+IfcOpenShell has to be installed manually. The IfcOpenShell-python archive can be found in the [official website](http://ifcopenshell.org/python).
 
 **Version >="0.5.0 preview 2" is required.**
 
