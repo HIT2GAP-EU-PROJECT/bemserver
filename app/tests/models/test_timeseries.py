@@ -31,12 +31,17 @@ class TestTimeseries(TestCoreModel):
         assert isinstance(ts.dataframe, pd.DataFrame)
         assert not len(ts.dataframe)
         assert ts.dataframe.index.name == 'index'
-        assert set(ts.dataframe.columns.tolist()) == {
-            'data', 'quality', 'update_ts'}
-        assert ts.dataframe.dtypes.tolist() == [
-            np.dtype('float64'),
-            np.dtype('float64'),
-            np.dtype('datetime64[ns]')]
+
+        assert set(
+            zip(
+                ts.dataframe.columns.tolist(),
+                ts.dataframe.dtypes.tolist(),
+            )
+        ) == {
+            ('quality', np.dtype('float64')),
+            ('update_ts', np.dtype('<M8[ns]')),
+            ('data', np.dtype('float64')),
+        }
 
         assert repr(ts) == (
             '<Timeseries>(count=0, start=NaT, end=NaT, min=nan, max=nan)')
