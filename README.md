@@ -1,3 +1,5 @@
+# BEMServer is being fully refactorized! A newer version is under development [here](https://github.com/BEMServer). The present version is now abandonned (on our side at least).
+
 
 
 <p align="center"><img src="docs/BEM%20SERVER-Color-rgb-logo.png" alt="BEMServer" width="300"/></p>
